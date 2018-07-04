@@ -4,11 +4,11 @@ const path = require('path');
 
 const ServerConfig = require('./config.json');
 const ServerState = ServerConfig.ServerState;
-const PORT = ServerConfig.PORT;
+const PORT = process.env.PORT || ServerConfig.PORT;
 
 const express = require('express');
-//const vhost = require('vhost');     // EXPRESS FOR MULTIPLE SUBDOMAINS
-//const amphere = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
+const vhost = require('vhost');     // EXPRESS FOR MULTIPLE SUBDOMAINS
+const amphere = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
 const homepage = express();
 // const account = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
 // const merchant = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
@@ -95,7 +95,7 @@ admin.use((req, res, next) => {
 */
 
 // amphere.use(vhost('amphere.in', homepage));
-// amphere.use(vhost('www.amphere.in', homepage));
+amphere.use(vhost('amphere-web.herokuapp.com/', homepage));
 // amphere.use(vhost('account.amphere.in', account));
 // amphere.use(vhost('merchant.amphere.in', merchant));
 // amphere.use(vhost('admin.amphere.in', admin));
