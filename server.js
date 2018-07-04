@@ -66,6 +66,15 @@ homepage.get('/', (req, res) => {
 homepage.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '/homepage', '/signup.html'));
 });
+homepage.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, '/homepage', '/about.html'));
+});
+homepage.get('/faq', (req, res) => {
+    res.sendFile(path.join(__dirname, '/homepage', '/faq.html'));
+});
+homepage.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, '/homepage', '/contact.html'));
+});
 homepage.post('/signupWorker', (req, res) => {
     let params = getParameters(req);
     SignupWorker.CreateNewUser({
