@@ -10,7 +10,7 @@ const express = require('express');
 const vhost = require('vhost');     // EXPRESS FOR MULTIPLE SUBDOMAINS
 const amphere = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
 const homepage = express();
-// const account = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
+const account = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
 // const merchant = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
 // const admin = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
 
@@ -29,13 +29,13 @@ homepage.listen(PORT, () => {
     });
 });
 
-//account.use(express.static(path.join(__dirname, 'account')));
-// account.listen(PORT, () => {
-//     ConsoleScreen.StartupScreen({
-//         "PORT" : PORT,
-//         "ServerState" : ServerState
-//     });
-// });
+account.use(express.static(path.join(__dirname, 'account')));
+account.listen(PORT, () => {
+    ConsoleScreen.StartupScreen({
+        "PORT" : PORT,
+        "ServerState" : ServerState
+    });
+});
 
 // merchant.use(express.static(path.join(__dirname, 'merchant')));
 // merchant.listen(PORT, () => {
@@ -77,6 +77,10 @@ homepage.post('/signupWorker', (req, res) => {
     });
 })
 
+account.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/account', '/index.html'));
+});
+
 /*
 //  EXPRESS FOR MULTIPLE SUBDOMAINS
 homepage.use((req, res, next) => {
@@ -95,8 +99,8 @@ admin.use((req, res, next) => {
 */
 
 // amphere.use(vhost('amphere.in', homepage));
-amphere.use(vhost('amphere-web.herokuapp.com/', homepage));
-// amphere.use(vhost('account.amphere.in', account));
+amphere.use(vhost('amphere-web.herokuapp.com', homepage));
+amphere.use(vhost('account.amphere-web.herokuapp.com', account));
 // amphere.use(vhost('merchant.amphere.in', merchant));
 // amphere.use(vhost('admin.amphere.in', admin));
 
