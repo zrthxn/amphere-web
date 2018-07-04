@@ -21,21 +21,28 @@ const ConsoleScreen = require('./util/ConsoleScreen');
 // S E R V E R =============================== S E R V E R ================================ S E R V E R //
 //------------------------------------------------------------------------------------------------------//
 
-homepage.use(express.static(path.join(__dirname, 'homepage')));
-homepage.listen(PORT, () => {
+amphere.listen(PORT, () => {
     ConsoleScreen.StartupScreen({
         "PORT" : PORT,
         "ServerState" : ServerState
     });
 });
 
+homepage.use(express.static(path.join(__dirname, 'homepage')));
+// homepage.listen(PORT, () => {
+//     ConsoleScreen.StartupScreen({
+//         "PORT" : PORT,
+//         "ServerState" : ServerState
+//     });
+// });
+
 account.use(express.static(path.join(__dirname, 'account')));
-account.listen(PORT, () => {
-    ConsoleScreen.StartupScreen({
-        "PORT" : PORT,
-        "ServerState" : ServerState
-    });
-});
+// account.listen(PORT, () => {
+//     ConsoleScreen.StartupScreen({
+//         "PORT" : PORT,
+//         "ServerState" : ServerState
+//     });
+// });
 
 // merchant.use(express.static(path.join(__dirname, 'merchant')));
 // merchant.listen(PORT, () => {
