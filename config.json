@@ -4,11 +4,11 @@
     "data_mode" : "TESTING",
     "other_data" : "data",
     "firebase" : {
-        "apiKey": "AIzaSyBPj5Ve8-vlCinoTNX6VK4LnnFXxgIe9LI",
-        "authDomain": "amphere-testing.firebaseapp.com",
-        "databaseURL": "https://amphere-testing.firebaseio.com",
-        "projectId": "amphere-testing",
-        "storageBucket": "amphere-testing.appspot.com",
-        "messagingSenderId": "577210756593"
+        "apiKey": "AIzaSyARptJYiZdxfivMkykDjLtdxpEOcKO_Ugc",
+        "authDomain": "amphere-database.firebaseapp.com",
+        "databaseURL": "https://amphere-database.firebaseio.com",
+        "projectId": "amphere-database",
+        "storageBucket": "amphere-database.appspot.com",
+        "messagingSenderId": "727459033118"
     }
 }
