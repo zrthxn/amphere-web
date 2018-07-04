@@ -54,10 +54,10 @@ homepage.listen(PORT, () => {
 // });
 
 homepage.get('/', (req, res) => {
-    res.sendFile(__dirname + '/homepage' + '/index.html');
+    res.sendFile(path.join(__dirname, '/homepage', '/index.html'));
 });
 homepage.get('/signup', (req, res) => {
-    res.sendFile(__dirname + '/homepage' + '/signup.html');
+    res.sendFile(path.join(__dirname, '/homepage', '/signup.html'));
 });
 homepage.post('/signupWorker', (req, res) => {
     let params = getParameters(req);
