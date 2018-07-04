@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffd800">
+
+    <title>Sign Up | Amphere Inc.</title>
+    
+    <link rel="stylesheet" type="text/css" href="css/GlobalStyles.css" />
+    <link rel="stylesheet" type="text/css" href="css/Header.css" />
+    <link rel="stylesheet" type="text/css" href="css/SignupPage.css" />
+
+    <script src="js/signup.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <script>
+        $(window).on("scroll", function() {
+            if($(window).scrollTop() > 50) {
+                $("header").addClass("active");
+            } else {
+               $("header").removeClass("active");
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <!--=================== HEADER AND SIDEBAR NAV MENU ===================-->
+    <header>
+        <img class="logo-text" src="assets/amphere-text.svg">
+
+        <input id="sidebar-toggle" type="checkbox" class="checkbox" />
+        <div class="sidebar-shadow"></div>
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a>HOME</a></li>
+                    <li><a>CONTACT</a></li>
+                    <li><a>ABOUT</a></li>
+                </ul>
+            </nav>
+        </div>
+        <label for="sidebar-toggle" class="hamburger"></label>
+    </header>
+
+    <!--=================== SIGN UP FORM ===================-->
+    <div class="cover">
+        <div class="login-container">
+            <form action="">
+                <p class="form-title">Sign Up</p>
+
+                <input id="phone" type="text" class="textbox" placeholder="Phone" required autocomplete="username"/>
+                <input id="name" type="text" class="textbox" placeholder="Name" required autocomplete="name"/>
+                <input id="password" type="password" class="textbox password" placeholder="Password" required autocomplete="new-password"/>
+                <input id="conf-password" type="password" class="textbox password" placeholder="Confirm Password" required  autocomplete="new-password"/>
+
+                <button id="signup-btn" class="button">SIGN UP</button>
+
+                <p>Already have an account? <a href="">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!--=================== FOOTER ===================-->
+    <footer>
+        <p>&copy; Amphere Solutions Inc. 2018</p>
+    </footer>
+
+    <script>
+        var phone = document.getElementById("phone");
+        var _name = document.getElementById("name");
+        var password = document.getElementById("password");
+        var confPassword = document.getElementById("conf-password");
+        
+        document.getElementById("signup-btn").onclick = function () {
+            validityState = validateInputs( phone.value, _name.value, password.value, confPassword.value);
+
+            if(validityState.validity){
+                const request = new XMLHttpRequest();
+                let url = generateSignupQueryURL({
+                    "cncode" : getPhoneCountryCode(),
+                    "phone" : phone.value,
+                    "name" : _name.value,
+                    "password" : password.value
+                });
+
+                request.open('POST', `/signupWorker?${url}`, true);
+                try { 
+                    request.send() 
+                } catch (err) { 
+                    console.log(err) 
+                }
+
+                request.onreadystatechange = event => {
+                    if (request.readyState === 4 && request.status === 200) {
+                        //TODO
+                        console.log("SUCCESS");
+                        //CREATE WEB SESSION TOKEN
+                        //LOGIN
+                    } else {
+                        
+                    }
+                };
+            } else {
+                console.log(validityState.error);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

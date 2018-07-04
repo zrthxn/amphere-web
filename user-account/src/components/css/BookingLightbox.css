@@ -1,0 +1,233 @@
+.lightbox {
+    height: 75%;
+    max-width: 500px;
+    top: 12.5%; 
+}
+
+.session-settings-holder{
+    position: relative;
+    padding: 1em;
+    margin: 0.25em;
+
+    animation-name: options;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes options {
+    0%{
+        opacity: 0;
+    }
+    90%{
+        opacity: 0.25;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.promoHolder {
+    width: 75%;
+    left: 50%;
+    margin-left: 12.5%;
+}
+
+.confirm-session-button {
+    position: fixed;
+    background: linear-gradient(90deg, #ffd700,#ff7300);
+    max-width: 500px;
+    
+    width: 75%;
+    left: 12.5%;
+    bottom: 12.5%;
+
+    padding: 1em;
+    color: #FFF;
+    font-size: 1.25em;
+    font-weight: 600;
+
+    border: none;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px; 
+
+    animation-name: pop-lightbox-button;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
+.button-disabled{
+    background: #cccccc;
+}
+
+@keyframes pop-lightbox-button {
+    from{
+        width: 0;
+        left: 50%;
+        bottom: 50%;
+        opacity: 0;
+    }
+    to{
+        width: 75%;
+        left: 12.5%;
+        bottom: 12.5%;
+        opacity: 1;
+    }
+}
+
+.duration-bar {
+    width: 75%;
+    margin-left: 12.5%;
+    margin-right: 12.5%; 
+}
+
+.duration-group {
+    width: 100%;
+    margin:0;
+    text-align: center;
+}
+
+.duration-btn {
+    display: inline-block;
+    color: #000;
+    width: 50%;
+    text-shadow: none;
+}
+
+.duration-btn.active {
+    background: linear-gradient(90deg, #ffd900,#ff7300);
+}
+
+.duration-btn.active.focus {
+    background: linear-gradient(90deg, #ffd900,#ff7300);
+}
+
+/*==========================================================================*/
+
+.textbox {
+    font-size: 1em;
+    font-weight: 600;
+    text-align: center;
+}
+
+.textbox-small {
+    font-size: 0.8em;
+    font-weight: 400;
+    text-align: center;
+}
+
+.session-settings {
+    text-align: left;
+    max-width: 500px;
+}
+
+/*TYPOGRAPHY================================================================*/
+
+.info {
+    text-align: justify;
+    font-size: 0.8em;
+    line-height: 1em;
+    margin: 1em 0 1em 0;
+}
+
+.session-settings-detail {
+    position: relative;
+    display: inline-block;
+    width: fit-content;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    margin-left: 1rem;
+    margin-right: 0;
+    font-size: 0.8em;
+    max-width: 500px;
+}
+
+.session-settings h2 {
+    text-align: center;
+    margin: 2em 0.5em;
+    max-width: 500px;
+}
+
+.session-settings h3 {
+    text-align: center;
+    max-width: 500px;
+    font-size: 1.25em;
+}
+
+/*FROM GLOBAL================================================================*/
+
+.checkmark {
+    float: right;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+}
+
+.crossmark {
+    float: right;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+}
+
+.spinner {
+    float: right;
+    margin-top: 1rem;
+    margin-right: 1rem;
+}
+
+/*MEDIA QUERY=================================================================*/
+
+@media (min-width: 700px){
+    .lightbox {
+        width: 500px;
+        left: 50%;
+        margin-left: -250px;
+
+        animation-name: pop-lightbox;
+    }
+
+    .confirm-session-button {
+        width: 500px;
+        left: 50%;
+        margin-left: -250px;
+    }
+
+    @keyframes pop-lightbox {
+        from{
+            width: 0%;
+            height: 0%;
+            margin-left: 0px;
+            top: 50%;
+            opacity: 0;
+        }
+        to{
+            width: 500px;
+            height: 75%;
+            margin-left: -250px;
+            top: 12.5%;
+            opacity: 1;
+        }
+    }
+
+    @keyframes pop-lightbox-button {
+        from{
+            width: 0;
+            margin-left: 0px;
+            bottom: 50%;
+            opacity: 0;
+        }
+        to{
+            width: 500px;
+            opacity: 1;
+        }
+    }
+}
+
+@media (max-width:360) {
+    .info {
+        font-size: 0.5em;
+        line-height: 0.8em;
+    }
+
+    .duration-group {
+        font-size: 0.5em !important;
+    }
+}

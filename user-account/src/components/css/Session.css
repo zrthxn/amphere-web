@@ -1,0 +1,111 @@
+.session {
+    background: linear-gradient(-90deg, #ffff0070,#FFF);
+    text-align: center;
+    border: 1px solid #999999;
+    border-radius: 10px;
+    position: relative;
+    padding: 0;
+    width: 100%; 
+    margin-bottom: 1em;
+    z-index: 1000;
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    
+    animation-name: slideIn-right;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
+    @keyframes slideIn-right{
+        from{
+            right:-50px; 
+            opacity:0;
+        } 
+        to{
+            right:0;
+            opacity:1;
+        }
+    }
+
+    @keyframes slideOut-left{
+        from{
+            right:0px; 
+            opacity:1;
+        } 
+        to{
+            right:50px;
+            opacity:0;
+        }
+    }
+
+.session-details-container {
+    padding: 1em;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.session-detail {
+    text-align: left;
+    font-size: 0.8em;
+    line-height: 1.125em;
+    margin: 0;
+}
+
+.session-number {
+    text-align: left;
+    font-size: 1.125em;
+    margin: 0;
+} 
+
+.session-cancel-button {
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    border-radius: 50px;
+    background-color: #FFF;
+    padding: 0.25em 1em;
+    float: right;
+    font-size: 0.8em;
+}
+
+.timeout {
+    background-color: #ff0000;
+    width: 0%;
+    left: 0;
+    bottom: 0;
+    padding: 0.25em;
+
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 0; 
+
+    animation-name: battery;
+    animation-duration: 60s;
+    animation-timing-function: linear;
+}
+
+.timeout-30 {
+    animation-duration: 5s;
+}
+
+.timeout-60 {
+    animation-duration: 10s;
+}
+
+@keyframes battery {
+    0% {
+        background-color: #88ff00;
+        width: 100%;
+        border-bottom-right-radius: 10px;
+    }
+    2%{
+        border-bottom-right-radius: 0; 
+    }
+    50% {
+        background-color: #ffff00;
+        width: 50%;
+    }
+    100% {
+        background-color: #ff0000;
+        width: 0%;
+    }
+}

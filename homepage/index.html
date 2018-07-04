@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffd800">
+
+    <title>Amphere Inc.</title>
+    
+    <link rel="stylesheet" type="text/css" href="css/GlobalStyles.css" />
+    <link rel="stylesheet" type="text/css" href="css/Header.css" />
+    <link rel="stylesheet" type="text/css" href="css/Footer.css">
+    <link rel="stylesheet" type="text/css" href="css/Homepage.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(window).on("scroll", function() {
+            if($(window).scrollTop() > 50) {
+                $("header").addClass("active");
+            } else {
+               $("header").removeClass("active");
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <!--===============//// HEADER AND SIDEBAR NAV MENU ////===============-->
+    <header>
+        <img class="logo-text" src="assets/amphere-text.svg">
+
+        <input id="sidebar-toggle" type="checkbox" class="checkbox" />
+        <div class="sidebar-shadow"></div>
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a>HOME</a></li>
+                    <li><a>CONTACT</a></li>
+                    <li><a>ABOUT</a></li>
+                </ul>
+            </nav>
+        </div>
+        <label for="sidebar-toggle" class="hamburger"></label>
+        <!--Use only one button inside header-->
+        <button class="button btn-small btn-noborder" id="entry-button">My Account</button>
+    </header>
+
+    <!--===============//// CONTENT ////===============-->
+    <section class="hero">
+        <!--HERO BANNER-->
+        <div class="hero-content-container">
+            <h2 class="page-slogan">THE BEST WAY TO<br>CHARGE YOUR PHONE</h2>
+            <p>Lorem Ipsum ist dolor vala</p>
+        </div>
+        
+        <!--This contains ONLY buttons on the HERO <GRID> -->
+        <div class="hero-action-container">
+            <button class="button btn-small">BOOK SESSION</button>
+            <button class="button btn-small btn-white">SIGN UP</button>
+        </div>
+    </section>
+
+    <section>
+        <!--INTRO-->
+        <div></div>
+    </section>
+
+    <section>
+        <!--ABOUT-->
+        <div></div>
+    </section>
+
+    <section>
+        <!--CONTACT-->
+        <div></div>
+    </section>
+
+    <!--===============//// FOOTER ////===============-->
+    <footer>
+        <div class="container">
+            <div class="footer-grid-container">
+                <p>Home</p>
+                <p>About</p>
+                <p>Contact</p>
+                <p>FAQ</p>
+
+                <p>Home</p>
+                <p>About</p>
+                <p>Contact</p>
+                <p>FAQ</p>
+
+                <p class="last">Home</p>
+                <p class="last">About</p>
+                <p class="last">Contact</p>
+                <p class="last">FAQ</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

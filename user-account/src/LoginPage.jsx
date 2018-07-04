@@ -1,0 +1,89 @@
+import React, { Component } from 'react';
+import './GlobalStyles.css';
+import './LoginPage.css';
+import Login from './util/login';
+import Header from './components/Header';
+
+class LoginPage extends Component {
+    constructor(){
+        super();
+        this.state = {
+            inputUserPhone: null,
+            inputUserPass: null,
+            fieldsValidated:  false,
+            keyExists: false,
+            token: null
+        }
+    }
+
+    addUserPhoneCountryCode = (userPhone) => {
+        if(userPhone.target.value===""){
+            userPhone.target.value = "+91 " + userPhone.target.value;
+        }
+    }
+
+    setUserPhoneInput = (userPhone) => {
+        if(userPhone.target.value===""){
+            this.setState({
+                inputUserPhone: null
+            });
+        } else {
+            this.setState({
+                inputUserPhone: userPhone.target.value.trim()
+            });
+        }
+    }
+
+    setUserPasswordInput = (userPass) => {
+        if(userPass.target.value===""){
+            this.setState({
+                inputUserPass: null
+            });
+        } else {
+            this.setState({
+                inputUserPass: userPass.target.value
+            });
+        }
+    }
+
+    validateLogin = () => {
+        if(this.state.inputUserPhone!==null || this.state.inputUserPass!==null){
+            this.setState({
+                fieldsValidated: true
+            });
+            this.props.onValidate({
+                "validated" : true,
+                "details" : {
+                    "phone" : this.state.inputUserPhone,
+                    "password" : this.state.inputUserPass
+                }
+            });
+        } else {
+            // TEMPORWARI
+            alert("Phone or Password empty");
+        }
+    }
+
+    render() {
+        return (
+            <div className="cover">
+                <Header />
+                <div className="login-container">
+                    <p className="page-title">Sign In</p>
+
+                    <input id="phoneInput" type="text" className="textbox" placeholder="Phone" onChange={this.setUserPhoneInput} onFocus={this.addUserPhoneCountryCode}/>
+                    <input id="passwordInput" type="password" className="textbox password" placeholder="Password" onChange={this.setUserPasswordInput}/>
+
+                    <button className="button" onClick={this.validateLogin}>SIGN IN</button>
+
+                    <p>Don't have an account? <a href="https://amphere.in/signup">Sign Up</a></p>
+                        
+                </div>
+                <footer>&copy; Amphere Solutions Inc. 2018</footer>
+            </div>
+            
+        );
+    }
+}
+
+export default LoginPage;

@@ -1,0 +1,27 @@
+.empty-sessions {
+    padding: 7em 1em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    border: 1px dashed #a0a0a0ab;
+    border-radius: 10px;
+    position: relative;
+
+    animation-name: slideIn-bottom;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
+.empty-sessions p{
+    color: #a0a0a0;
+}
+
+@keyframes slideIn-bottom{
+    from{
+        bottom:-50px; 
+        opacity:0;
+    } 
+    to{
+        bottom:0;
+        opacity:1;
+    }
+}

@@ -1,0 +1,53 @@
+.hero {
+    position: relative;
+    background-image: url('../assets/wave.svg');
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: 100vw;
+    height: 100vh;
+    padding: 5em 2em;
+    margin: 0;
+
+    text-align: center;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    background: linear-gradient(135deg,#ffd800,#ff7300);
+}
+
+section {
+    padding: 2em 0;
+}
+
+.page-slogan {
+    font-weight: 600;
+}
+
+/* HERO ACTION CONTAINER MOBILE ================================== HERO ACTION CONTAINER MOBILE */
+/* This contains ONLY buttons on the HERO <GRID> */
+.hero-action-container {
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: space-evenly;
+}
+.hero-action-container .button {
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+
+/*MEDIA QUERIES ============================= MEDIA QUERIES*/
+/*--------------------------------------------------------*/
+
+@media (min-width: 600px) {
+    .page-slogan {
+        font-size: 5em;
+    }
+}
