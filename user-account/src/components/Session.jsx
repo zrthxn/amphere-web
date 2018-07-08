@@ -9,7 +9,7 @@ class Session extends Component {
         this.state = {
             sessionID: "UNASSIGNED",
             startDate: "NULL",
-            locCode: "NULL",
+            location: "NULL",
             duration: "NULL",
             status: "NO-CODE",
             cancelLightboxOpen: false
@@ -20,7 +20,7 @@ class Session extends Component {
         this.setState({
             sessionID: this.props.sessionID,
             startDate: this.props.startDate,
-            locCode: this.props.locCode,
+            location: this.props.location,
             duration: this.props.duration,
             status: "ACTIVATED"
         });
@@ -67,7 +67,7 @@ class Session extends Component {
                     <div className="spacer-small"></div>
                     
                     <p className="session-detail">Started On: {this.state.startDate}</p>
-                    <p className="session-detail">Location Code: {this.state.locCode}</p>
+                    <p className="session-detail">Location Code: {this.state.location}</p>
                     <p className="session-detail">Duration: {this.state.duration}</p>
                 </div>
                 

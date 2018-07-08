@@ -14,12 +14,7 @@ class Header extends Component {
             }
         });
     }
-
-    logoutInitiate = () => {
-        this.props.logoutWorker();
-    }
-
-
+    
     render() {
         return (
             <header>
@@ -48,6 +43,7 @@ class Header extends Component {
                     </nav>
                 </div>
                 <label htmlFor="sidebar-toggle" className="hamburger"></label>
+                <button className="button btn-small btn-noborder" id="exit-button" onClick={this.props.logoutWorker}>Logout</button>
             </header>
         );
     }

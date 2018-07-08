@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './css/SessionsHolder.css'
 import EmptySessions from './EmptySessions.jsx';
 import Session from './Session.jsx';
+import './css/SessionsHolder.css'
 
 class SessionsHolder extends Component {
     constructor(){
@@ -52,10 +52,10 @@ class SessionsHolder extends Component {
     render() {
         let _addNewSession = this.state.sessions.map((sess, index)=>{
             return (
-                <Session sessionID={this.state.sessions[index].sessionID}
+                <Session sid={this.state.sessions[index].sid}
                          key={index}
                          startDate={this.state.sessions[index].startDate}
-                         locCode={this.state.sessions[index].locCode}
+                         location={this.state.sessions[index].location}
                          duration={this.state.sessions[index].duration}
                          cancel = {() => this.cancelSession(index)}/>
             );

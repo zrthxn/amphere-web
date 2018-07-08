@@ -1,14 +1,27 @@
-const firebase = require('../node_modules/firebase');
-const DatabaseConfig = require('../config.json');
-const Hasher = require('./PasswordHasher');
+/**
+ * @author Alisamar Husain
+ * 
+ * Signup User Service API
+ * -----------------------
+ * Send user parameters to
+ * the server as HTTP request
+ * and this function registers
+ * the user.
+ * 
+ * @param phone {}
+ * @param name {}
+ * @param password {}
+ * @param verification
+ */
 
-firebase.initializeApp(DatabaseConfig.firebase);
+const Hasher = require('./PasswordHasher');
+const firebaseSignup = require('./Database');
 
 exports.CreateNewUser = function (params) {
 
-    var usersData = firebase.database();
+    var usersData = firebaseSignup.firebase.database();
 
-    let phone = "+" + params.country_code + " " + params.phone;
+    let phone = "00" + params.country_code + "0" + params.phone;
     let salt = generateSalt(12);
     let _id = generateUserId();
 

@@ -107,6 +107,12 @@
                 console.log(validityState.error);
             }
         }
+
+        document.getElementById('phone').onfocus = function () {
+            if(phone.value===""){
+                phone.value = "+91 " + phone.value;
+            }
+        }
     </script>
 
 </body>

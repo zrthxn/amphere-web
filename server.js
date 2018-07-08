@@ -7,18 +7,19 @@ const ServerState = ServerConfig.ServerState;
 const PORT = process.env.PORT || ServerConfig.PORT;
 
 const express = require('express');
-const vhost = require('vhost');     // EXPRESS FOR MULTIPLE SUBDOMAINS
-const amphere = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
+const vhost = require('vhost');     // VHOST FOR MULTIPLE SUBDOMAINS
+const amphere = express();          // EXPRESS FOR MULTIPLE SUBDOMAINS
 const homepage = express();
-const account = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
-// const merchant = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
-// const admin = express();    // EXPRESS FOR MULTIPLE SUBDOMAINS
+const account = express();          // EXPRESS FOR MULTIPLE SUBDOMAINS
+const merchant = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
+const admin = express();            // EXPRESS FOR MULTIPLE SUBDOMAINS
 
 const SignupWorker = require('./util/SignupWorker');
+const SessionsWorker = require('./util/SessionsWorker');
 const ConsoleScreen = require('./util/ConsoleScreen');
 
 //------------------------------------------------------------------------------------------------------//
-// S E R V E R =============================== S E R V E R ================================ S E R V E R //
+// S E R V E R ============================== E X P R E S S =============================== S E R V E R //
 //------------------------------------------------------------------------------------------------------//
 
 amphere.listen(PORT, () => {
@@ -29,99 +30,101 @@ amphere.listen(PORT, () => {
 });
 
 homepage.use(express.static(path.join(__dirname, 'homepage')));
-// homepage.listen(PORT, () => {
-//     ConsoleScreen.StartupScreen({
-//         "PORT" : PORT,
-//         "ServerState" : ServerState
-//     });
-// });
-
 account.use(express.static(path.join(__dirname, 'account')));
-// account.listen(PORT, () => {
-//     ConsoleScreen.StartupScreen({
-//         "PORT" : PORT,
-//         "ServerState" : ServerState
-//     });
-// });
+merchant.use(express.static(path.join(__dirname, 'merchant')));
+admin.use(express.static(path.join(__dirname, 'admin')));
 
-// merchant.use(express.static(path.join(__dirname, 'merchant')));
-// merchant.listen(PORT, () => {
-//     ConsoleScreen.StartupScreen({
-//         "PORT" : PORT,
-//         "ServerState" : ServerState
-//     });
-// });
+    //--------------------------------------------------------------------------//
+    // R O U T E R ================ E X P R E S S ================= R O U T E R //
+    //--------------------------------------------------------------------------//
 
-// admin.use(express.static(path.join(__dirname, 'admin')));
-// admin.listen(PORT, () => {
-//     ConsoleScreen.StartupScreen({
-//         "PORT" : PORT,
-//         "ServerState" : ServerState
-//     });
-// });
-
-homepage.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/homepage', '/index.html'));
-});
-homepage.get('/signup', (req, res) => {
-    res.sendFile(path.join(__dirname, '/homepage', '/signup.html'));
-});
-homepage.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, '/homepage', '/about.html'));
-});
-homepage.get('/faq', (req, res) => {
-    res.sendFile(path.join(__dirname, '/homepage', '/faq.html'));
-});
-homepage.get('/contact', (req, res) => {
-    res.sendFile(path.join(__dirname, '/homepage', '/contact.html'));
-});
-homepage.post('/signupWorker', (req, res) => {
-    let params = getParameters(req);
-    SignupWorker.CreateNewUser({
-        "country_code" : params.cncode,
-        "phone" : params.phone,
-        "name" : params.name,
-        "password" : params.password,
-        "verify" : params.verify
-    }).then( _res => {
-        if(_res === true){
-            res.status(200).json({"state" : "SUCCESS"});
-            console.log(`\nNEW USER ADDED => \n\t- name: ${params.name} \n\t- phone: ${params.phone}`);
-        } else {
-            res.status(500).json({"state" : "FAILED"});
-        }
+    //---------------------------- HOMEPAGE -----------------------------//
+    homepage.get('/', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'homepage', 'index.html'));
     });
-})
+    homepage.get('/signup', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'homepage', 'signup.html'));
+    });
+    homepage.get('/about', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'homepage', 'about.html'));
+    });
+    homepage.get('/faq', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'homepage', 'faq.html'));
+    });
+    homepage.get('/contact', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'homepage', 'contact.html'));
+    });
+    homepage.post('/signupWorker', (req, res) => {
+        let params = getParameters(req);
+        SignupWorker.CreateNewUser({
+            "country_code" : params.cncode,
+            "phone" : params.phone,
+            "name" : params.name,
+            "password" : params.password,
+            "verify" : params.verify
+        }).then( _res => {
+            if(_res === true){
+                res.status(200).json({"state" : "SUCCESS"});
+                console.log(`\nNEW USER ADDED => \n\t- name: ${params.name} \n\t- phone: ${params.phone}`);
+            } else {
+                res.status(500).json({"state" : "FAILED"});
+            }
+        });
+    })
 
-account.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/account', '/index.html'));
-});
+    //----------------------------- ACCOUNT -----------------------------//    
+    account.get((req, res) => {
+        console.log(req);
+        res.sendFile(path.resolve(__dirname, 'account', 'index.html'));
+    });
+    account.post('/sessionsWorker', (req, res) => {
+        // CHECK VERIFY PARAMETER
+        let params = getParameters(req);
+        SessionsWorker.BookNewSession({
+            "phone" : params.phone,
+            "uid" : params.uid,
+            "location" : params.location,
+            "duration" : params.duration
+        }).then( _res => {
+            if(_res.success === true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "sid" : _res.sid,
+                    "startDate" : _res.startDate
+                });
+                console.log(`\nNEW USER ADDED => \n\t- name: ${params.name} \n\t- phone: ${params.phone}`);
+            } else {
+                res.status(500).json({"state" : "FAILED"});
+            }
+        });
+    })
 
-/*
-//  EXPRESS FOR MULTIPLE SUBDOMAINS
-homepage.use((req, res, next) => {
+    //----------------------------- ADMIN -------------------------------//
+    admin.get('/', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'admin', 'index.html'));
+    });
 
-});
-account.use((req, res, next) => {
+    //---------------------------- MERCHANT -----------------------------//
+    merchant.get('/', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'merchant', 'index.html'));
+    });
 
-});
-merchant.use((req, res, next) => {
+    //==========================================================================//
 
-});
-admin.use((req, res, next) => {
+amphere.use(vhost('amphere.in', homepage));
+amphere.use(vhost('www.amphere.in', homepage));         // SET TO LOCAL
+//amphere.use(vhost('amphere-web.herokuapp.com', homepage));         // SET TO HEROKU
+amphere.use(vhost('account.amphere.in', account));
+amphere.use(vhost('merchant.amphere.in', merchant));
+amphere.use(vhost('admin.amphere.in', admin));
 
-});
-//  ADD CNAME RECORDS TO DNS REGISTRY
-*/
-
-// amphere.use(vhost('amphere.in', homepage));
-amphere.use(vhost('amphere-web.herokuapp.com', homepage));
-amphere.use(vhost('account.amphere-web.herokuapp.com', account));
-// amphere.use(vhost('merchant.amphere.in', merchant));
-// amphere.use(vhost('admin.amphere.in', admin));
+// amphere.use(homepage);
+// amphere.use(account);
+// amphere.use(merchant);
+// amphere.use(admin);
 
 //------------------------------------------------------------------------------------------------------//
-// L E G A C Y =============================== S E R V E R ================================ L E G A C Y //
+// S E R V E R =============================== L E G A C Y ================================ S E R V E R //
 //------------------------------------------------------------------------------------------------------//
 /*
 http.createServer((request,response)=>{                                                        
@@ -166,17 +169,19 @@ http.createServer((request,response)=>{
             break;
 
 		default:
-			let _other = params.action.split('/');
-			if(_other[1]==="css"){
-				getFile(response, `homepage/css/${_other[2]}`, 'text/css');
-			} else if(_other[1]==="assets") {
-                getFile(response, `homepage/assets/${_other[2]}`, 'image/*');
-            } else if(_other[1]==="js") {
-                getFile(response, `homepage/js/${_other[2]}`, 'text/javascript');
-            } else {
-				response.writeHead(404,{'Content-Type':'text/plain'});
-				response.end("404 - File not found");
-			} break;
+            let _other = params.action.split('/');
+            let ext = _other[2].split('.');
+                if(_other[1]==="css"){
+                    getFile(response, `homepage/css/${_other[2]}`, 'text/css');
+                } else if(_other[1]==="assets") {
+                    getFile(response, `homepage/assets/${_other[2]}`, 'image/*');
+                } else if(_other[1]==="js") {
+                    getFile(response, `homepage/js/${_other[2]}`, 'text/javascript');
+                } else {
+                    response.writeHead(404,{'Content-Type':'text/plain'});
+                    response.end("404 - File not found");
+                }
+            break;
     }
 }).listen(PORT);
 */

@@ -30,10 +30,10 @@ class Super extends Component {
     }
 
     logoutWorker = () => {
+        //TEMPORARY ARRANGEMENT ONLY
         this.setState({
             loginValidated: false
         });
-        //TEMPORARY ARRANGEMENT ONLY
     }
 
     render() {

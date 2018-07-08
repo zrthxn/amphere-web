@@ -6,10 +6,18 @@ import SessionsHolder from './components/SessionsHolder';
 import Footer from './components/Footer';
 import BookingLightbox from './components/BookingLightbox';
 
+import BookSession from './util/session';
+
 class App extends Component {
   constructor(){
       super();
-      this.state = {};
+      this.state = {
+          uid : null,
+          phone: null,
+          name : null,
+          lightboxOpen: false,
+
+      };
   }
 
   componentDidMount(){
@@ -24,7 +32,7 @@ class App extends Component {
     })
   }
   
-  lightboxAborter = (_previousParams) => {
+  lightboxAborter = () => {
     this.setState({
       lightboxOpen: false
     })
@@ -37,15 +45,24 @@ class App extends Component {
     this.addNewSession(params);
   }
 
-  addNewSession = (params) => {
-    let _sessionID = 1000 * Math.random().toPrecision(3);
-    let session = {
-      sessionID: _sessionID,
-      startDate: new Date().toLocaleString(),
-      locCode: params.locCode,
-      duration: params.duration 
-    }
-    this.SessionsHolder.addNewSession(session);
+  addNewSession = (params) => {    
+    BookSession.addNewSession({
+        "phone" : this.state.phone,
+        "uid" : this.state.uid,
+        "location" : params.locCode,
+        "duration" : params.duration
+    }).then((response)=>{
+        let session = {
+            sid : response.sid,
+            startDate : response.startDate,
+            location : params.locCode,
+            duration : params.duration
+        }
+        this.SessionsHolder.addNewSession(session);
+    }).catch((err)=>{
+        console.log(err);
+        alert(err);
+    });
   }
 
   render() {
