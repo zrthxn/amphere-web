@@ -1,5 +1,5 @@
 {
-    "PORT" : "8080",
+    "PORT" : "9000",
     "ServerState" : "NORMAL",
     "data_mode" : "TESTING",
     "other_data" : "data",

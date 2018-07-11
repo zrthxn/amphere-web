@@ -14,6 +14,8 @@ const account = express();          // EXPRESS FOR MULTIPLE SUBDOMAINS
 const merchant = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
 const admin = express();            // EXPRESS FOR MULTIPLE SUBDOMAINS
 
+const cookieParser = require('cookie-parser');
+
 const SignupWorker = require('./util/SignupWorker');
 const SessionsWorker = require('./util/SessionsWorker');
 const ConsoleScreen = require('./util/ConsoleScreen');
@@ -38,6 +40,8 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     // R O U T E R ================ E X P R E S S ================= R O U T E R //
     //--------------------------------------------------------------------------//
 
+    homepage.use(cookieParser());
+
     //---------------------------- HOMEPAGE -----------------------------//
     homepage.get('/', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'homepage', 'index.html'));
@@ -54,23 +58,31 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     homepage.get('/contact', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'homepage', 'contact.html'));
     });
+    homepage.get('/redirectToApp', (req, res) => {
+        res.redirect('account.amphere.in:9000');
+    });
     homepage.post('/signupWorker', (req, res) => {
         let params = getParameters(req);
         SignupWorker.CreateNewUser({
-            "country_code" : params.cncode,
             "phone" : params.phone,
             "name" : params.name,
             "password" : params.password,
             "verify" : params.verify
         }).then( _res => {
-            if(_res === true){
-                res.status(200).json({"state" : "SUCCESS"});
+            if(_res.success === true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "uid" : _res.uid,
+                    "phone" : params.phone,
+                    "name" : params.name,
+                    "salt" : _res.salt
+                });
                 console.log(`\nNEW USER ADDED => \n\t- name: ${params.name} \n\t- phone: ${params.phone}`);
             } else {
                 res.status(500).json({"state" : "FAILED"});
             }
         });
-    })
+    });
 
     //----------------------------- ACCOUNT -----------------------------//    
     account.get((req, res) => {
@@ -84,7 +96,8 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             "phone" : params.phone,
             "uid" : params.uid,
             "location" : params.location,
-            "duration" : params.duration
+            "duration" : params.duration,
+            "device" : params.device
         }).then( _res => {
             if(_res.success === true){
                 res.status(200).json({
@@ -92,7 +105,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
                     "sid" : _res.sid,
                     "startDate" : _res.startDate
                 });
-                console.log(`\nNEW USER ADDED => \n\t- name: ${params.name} \n\t- phone: ${params.phone}`);
+                console.log(`\nNEW SESSION ADDED => \n\t- sid: ${_res.sid} \n\t- phone: ${params.phone}`);
             } else {
                 res.status(500).json({"state" : "FAILED"});
             }

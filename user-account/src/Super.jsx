@@ -40,8 +40,7 @@ class Super extends Component {
         return (
             <div>
             {
-                //THIS IS ALSO TEMPORARY
-                this.state.loginValidated ? <App logoutWorker={this.logoutWorker}/> : <LoginPage onValidate={this.loginValidate} />
+                this.state.loginValidated ? <App phone="1234" uid="12" name="ali" logoutWorker={this.logoutWorker}/> : <LoginPage onValidate={this.loginValidate}/>
             }
             </div>
         );

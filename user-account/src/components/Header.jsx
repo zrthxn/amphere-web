@@ -29,8 +29,8 @@ class Header extends Component {
 
                         <div className="sidebar-banner-container">
                             <p>MY ACCOUNT</p>
-                            <h2>Hey Alisamar!</h2>
-                            <p>+91 98230 23812</p>
+                            <h2>Hey {this.props.name}!</h2>
+                            <p>+91 {this.props.phone}</p>
                         </div>
                         
                     </div>
@@ -43,7 +43,13 @@ class Header extends Component {
                     </nav>
                 </div>
                 <label htmlFor="sidebar-toggle" className="hamburger"></label>
-                <button className="button btn-small btn-noborder" id="exit-button" onClick={this.props.logoutWorker}>Logout</button>
+                {
+                    (this.props.button==="true") ? 
+                        <button className="button btn-small btn-noborder" 
+                                id="exit-button"
+                                onClick={this.props.logoutWorker}>Logout</button> :
+                        console.log()
+                }
             </header>
         );
     }

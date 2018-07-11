@@ -67,7 +67,7 @@ class LoginPage extends Component {
     render() {
         return (
             <div className="cover">
-                <Header />
+                <Header button="false"/>
                 <div className="login-container">
                     <p className="page-title">Sign In</p>
 

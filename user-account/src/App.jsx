@@ -22,6 +22,9 @@ class App extends Component {
 
   componentDidMount(){
     this.setState({
+        uid: this.props.uid,
+        phone: this.props.phone,
+        name: this.props.name,
         lightboxOpen: false
     })
   }
@@ -51,14 +54,14 @@ class App extends Component {
         "uid" : this.state.uid,
         "location" : params.locCode,
         "duration" : params.duration
-    }).then((response)=>{
-        let session = {
-            sid : response.sid,
-            startDate : response.startDate,
-            location : params.locCode,
-            duration : params.duration
-        }
-        this.SessionsHolder.addNewSession(session);
+    }).then((responseString)=>{
+        let response = JSON.parse(responseString);
+        this.SessionsHolder.addNewSession({
+          sid : response.sid,
+          startDate : response.startDate,
+          location : params.locCode,
+          duration : params.duration
+        });
     }).catch((err)=>{
         console.log(err);
         alert(err);
@@ -68,18 +71,14 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      {/* {
-        (true)?(
-          <LoginPage />
-        ):(
-          console.log()
-        )
-      } */}
-      
-        <Header logoutWorker={this.props.logoutWorker}/>
-        <Banner name="Alisamar"
-                addNewSession={this.addNewSession.bind(this)} 
+        <Header phone={this.state.phone}
+                name={this.state.name}
+                logoutWorker={this.props.logoutWorker}
+                button="true"/>
+        
+        <Banner addNewSession={this.addNewSession.bind(this)} 
                 lightboxOpener={this.lightboxOpener.bind(this)}/>
+        
         <SessionsHolder ref={SessionsHolder => this.SessionsHolder = SessionsHolder}/>
         {
           this.state.lightboxOpen ? (

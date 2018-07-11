@@ -27,6 +27,19 @@ header.active .logo-text{
     max-height: 2.5em;
 }
 
+header .button {
+	position: absolute;
+	color: #000;
+	top: 1.85em;
+	right: 1em;
+	padding: 0.5em 0.75em;
+	border-radius: 0.75em;
+	margin: 0;
+	transition: all 0.2s ease-in-out;
+} header.active .button {
+	border: 1px solid #000;
+}
+
 /* SIDEBAR NAVIGATION MENU ================================ SIDEBAR NAVIGATION MENU */
 
 .sidebar {

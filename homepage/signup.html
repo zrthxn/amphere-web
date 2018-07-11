@@ -58,7 +58,7 @@
 
                 <button id="signup-btn" class="button">SIGN UP</button>
 
-                <p>Already have an account? <a href="">Sign In</a></p>
+                <p>Already have an account? <a href="http://account.amphere.in:9000">Sign In</a></p>
             </form>
         </div>
     </div>
@@ -80,38 +80,31 @@
             if(validityState.validity){
                 const request = new XMLHttpRequest();
                 let url = generateSignupQueryURL({
-                    "cncode" : getPhoneCountryCode(),
                     "phone" : phone.value,
                     "name" : _name.value,
                     "password" : password.value
                 });
 
                 request.open('POST', `/signupWorker?${url}`, true);
-                try { 
-                    request.send() 
-                } catch (err) { 
-                    console.log(err) 
-                }
+                request.send(); 
 
                 request.onreadystatechange = event => {
                     if (request.readyState === 4 && request.status === 200) {
-                        //TODO
+                        let response = JSON.parse(request.response);
+                        console.log(response);
                         console.log("SUCCESS");
-                        //CREATE WEB SESSION TOKEN
-                        //LOGIN
+
+                        createLoginToken(response).then(()=> {
+                            redirectToApp();
+                        });
                     } else {
-                        
+                        console.log("ERROR");
                     }
                 };
             } else {
                 console.log(validityState.error);
             }
-        }
-
-        document.getElementById('phone').onfocus = function () {
-            if(phone.value===""){
-                phone.value = "+91 " + phone.value;
-            }
+            return false;
         }
     </script>
 

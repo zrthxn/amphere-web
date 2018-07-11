@@ -1,42 +1,39 @@
 exports.addNewSession = (params) => {
     return new Promise((resolve, reject)=>{
         const request = new XMLHttpRequest();
-        let url = generateSignupQueryURL({
+        let url = generateSessionQueryURL({
             "phone" : params.phone,
             "uid" : params.uid,
             "location" : params.location,
-            "duration" : params.duration
+            "duration" : params.duration,
+            "device" : params.device
         });
         
         request.open('POST', `/sessionsWorker?${url}`, true);
         try { 
-            request.send() 
+            request.send();
         } catch (err) { 
-            console.log(err) 
+            console.log(err); 
         }
 
         request.onreadystatechange = event => {
-            if (request.readyState === 4 && request.status === 200) {
+            if (request.readyState === 4  && request.status === 200) {
                 let response = request.response;
-                console.log("SUCCESS");
-                resolve({
-                    "sid" : response.sid,
-                    "startDate" : response.startDate
-                });
+                resolve(response);
             } else {
-                let response = request.response;
-                reject(response.state);
+                reject("ERROR (session.js:24)");
             }
         };
     });    
 }
 
-function generateSignupQueryURL(query) {
+function generateSessionQueryURL(query) {
     return (
         `phone=${query.phone}&` +
         `uid=${query.uid}&` +
         `location=${query.locatione}&` +
         `duration=${query.duration}&` +
+        `device=${query.device}&` +
         `verify=true`
     );
 }

@@ -10,10 +10,11 @@ class BookingLightbox extends Component {
     constructor(){
         super();
         this.state = {
-            duration: "30M",
+            duration: 30,
             locCode: null,
             location: null,
             locCodeValid: null,
+            device: "microUSB",
             promoCode: null,
             promoValid: null
         };
@@ -28,15 +29,29 @@ class BookingLightbox extends Component {
     }
 
     setDuration = (_value) => {
+        let set = 0;
         if(_value===1){
-            this.setState({
-                duration: "30M"
-            })
+            set = 30;
         } else if(_value===2){
-            this.setState({
-                duration: "60M"
-            })
+            set = 60;
         }
+        this.setState({
+            duration: set
+        })
+    }
+
+    setDevice = (_value) => {
+        let set = "";
+        if(_value===1){
+            set = "iOS"
+        } else if(_value===2){
+            set = "microUSB"
+        } else if(_value===3){
+            set = "USB-C"
+        }
+        this.setState({
+            device: set
+        })
     }
 
     locCodeValidator = (_code) => {
@@ -87,17 +102,17 @@ class BookingLightbox extends Component {
                     <div className="session-settings-holder">
                         
                         <button className="cross-button" onClick={this.closeLightbox}></button>
-                        
-                        <div className="session-settings">
-                            <h2>NEW SESSION</h2>
+                        <h2 className="lightbox-title">NEW SESSION</h2>
 
-                            <input id="location-code" 
-                                   required="true"
-                                   className="textbox" 
-                                   placeholder="Enter Location Code"
-                                   onChange={this.locCodeValidator}/>
+                        <div className="location">
 
-                            <p className="session-settings-detail">{this.state.location}</p>
+                            <div className="location-code">
+                                <input id="location-code" 
+                                        required="true"
+                                        className="textbox" 
+                                        placeholder="Enter Location Code"
+                                        onChange={this.locCodeValidator}/>
+                            </div>
                             {
                                 (this.state.locCodeValid) ? <div className="checkmark"></div> : (
                                     (this.state.locCodeValid===null) ?  console.log() : (
@@ -109,57 +124,49 @@ class BookingLightbox extends Component {
                                     )
                                 )
                             }
+                        </div>
 
-                            <h3>Select Duration</h3>
-
+                        <div className="toggle-bars">
                             <ButtonToolbar className="duration-bar">
-                             <ToggleButtonGroup onChange={this.setDuration} type="radio" name="options" defaultValue={1} className="duration-group">
-                              <ToggleButton className="duration-btn" value={1}>30 Mins</ToggleButton>
-                              <ToggleButton className="duration-btn" value={2}>60 Mins</ToggleButton>
-                             </ToggleButtonGroup>
+                                <ToggleButtonGroup onChange={this.setDuration} type="radio" name="options" defaultValue={1} className="toggle-group">
+                                    <ToggleButton className="toggle-btn" value={1}>30 mins</ToggleButton>
+                                    <ToggleButton className="toggle-btn" value={2}>60 mins</ToggleButton>
+                                </ToggleButtonGroup>
                             </ButtonToolbar>
 
-                            <div className="promoHolder">
-                                <h3>Promo Code</h3>
+                            <ButtonToolbar className="device-bar">
+                                <ToggleButtonGroup onChange={this.setDevice} type="radio" name="options" defaultValue={2} className="toggle-group">
+                                    <ToggleButton className="toggle-btn" value={1}>iOS</ToggleButton>
+                                    <ToggleButton className="toggle-btn" value={2}>microUSB</ToggleButton>
+                                    <ToggleButton className="toggle-btn" value={3}>USB-C</ToggleButton>
+                                </ToggleButtonGroup>
+                            </ButtonToolbar>
+                        </div>
 
-                                <input id="promo-code" 
-                                    required="true"
-                                    className="textbox-small" 
-                                    placeholder="Enter Promo Code"
-                                    onChange={this.promoValidator}/>
-
-                                <p className="session-settings-detail">{this.state.promoCode}</p>
-                                {
-                                    (this.state.promoValid) ? <div className="checkmark checkmark-small"></div> : (
-                                        (this.state.promoValid===null) ?  console.log() : (
-                                            (this.state.promoValid==="CHECKING") ? <div className="spinner"></div> : (
-                                                (this.state.promoValid===false) ? <div className="crossmark"></div> : (
-                                                    console.log("INTERNAL ERROR")
-                                                )
-                                            )
-                                        )
-                                    )
-                                }
-                            </div>
-                                
+                        <div className="promo-holder">
+                            <input id="promo-code" 
+                                required="true"
+                                className="textbox-small" 
+                                placeholder="Promo Code (Optional)"
+                                onChange={this.promoValidator}/>
                         </div>
 
                         <p className="info">After booking this session, you will recieve a text SMS
-                            telling you your OTP for this session. This is supposed to be supplied to
-                            the vendor of the restaurant you are at.
+                        telling you your OTP for this session. This is supposed to be supplied to
+                        the vendor of the restaurant you are at.
                         </p>
-                   
-                    </div>
-                    {
-                        (this.state.locCodeValid) ? (
-                            <button className="confirm-session-button" 
-                                    onClick={this.confirmSession}>CONFIRM SESSION</button>
-                        ) : (
-                            <button className="confirm-session-button button-disabled" 
-                                    onClick={this.confirmSession} 
-                                    disabled>CONFIRM SESSION</button>
-                        )
-                    }
+
+                        {
+                            (this.state.locCodeValid) ? (
+                                <button className="confirm-session-button" 
+                                        onClick={this.confirmSession}>CONFIRM SESSION</button>
+                            ) : (
+                                <button className="confirm-session-button button-disabled" 
+                                        onClick={this.confirmSession} 
+                                        disabled>CONFIRM SESSION</button>
+                            )
+                        }
+                    </div>                        
                 </div>
             </div>
         );

@@ -9,14 +9,12 @@ function generateSignupQueryURL(query) {
     }
 
     let result = {
-        "cncode" : query.cncode,
         "phone" : resPhone,
         "name" : resName,
         "password" : query.password,
     };
 
     return (
-        `cncode=${result.cncode}&` +
         `phone=${result.phone}&` +
         `name=${result.name}&` +
         `password=${result.password}&` +
@@ -24,14 +22,27 @@ function generateSignupQueryURL(query) {
     );
 }
 
-function getPhoneCountryCode() {
-    return "91";
-}
-
 function validateInputs(phone, name, password, confPassword) {    
-    
     
     return ({
         "validity" : true
     })
+}
+
+function createLoginToken(params) {
+    return new Promise((resolve, reject)=> {
+        localStorage.setItem("amphere-login-token", JSON.stringify({
+            "uid" : params.uid,
+            "phone" : params.phone,
+            "name" : params.name,
+            "salt" : params.salt
+        }));
+        resolve();
+    });
+}
+
+function redirectToApp() {
+    const redirectRequest = new XMLHttpRequest();
+    redirectRequest.open('GET', `/redirectToApp`, true);
+    redirectRequest.send();
 }

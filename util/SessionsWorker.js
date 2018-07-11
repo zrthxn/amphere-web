@@ -5,31 +5,37 @@ exports.BookNewSession = function (params) {
     var sessionsData = firebaseSessions.firebase.database();
 
     let otp = generateOTP(6);
-    let _sid = generateSessionId();
+    let sid = generateSessionId();
     let date = getDateTime();
 
     return new Promise((resolve,reject) => {
-        sessionsData.ref('sessions/session-' + _sid)
+        sessionsData.ref('sessions/session-' + sid)
         .set({
-            "_sid" : _sid,
+            "sid" : sid,
             "phone" : params.phone,
             "uid" : params.uid,
             "location" : params.location,
             "duration" : params.duration,
+            "device" : params.device,
             "otp" : otp,
             "addedOn" : date,
             "isDeleted" : false
         }).then( error => {
-            if(error){
-                reject(error);
-            } else {
-                resolve({
-                    "success" : true,
-                    "sid" : _sid,
-                    "startDate" : date,
-                });
-            }
-        });    
+            // if(error){
+            //     reject(error);
+            // } else {
+            //     resolve({
+            //         "success" : true,
+            //         "sid" : sid,
+            //         "startDate" : date,
+            //     });
+            // }
+            resolve({
+                "state" : "SUCCESS",
+                "sid" : sid,
+                "startDate" : date,
+            });
+        });
     });    
 }
 
@@ -49,34 +55,34 @@ function getDateTime() {
 //=========================================================
 
 function generateSessionId() {
-    var sid = "";
-    var date = new Date();
+    let sid = "";
+    let date = new Date();
 
-    var min  = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
-    var sec  = (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
-    var mon = ((date.getMonth() + 1) < 10 ? "0" : "") + (date.getMonth() + 1);
-    var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();
+    let min  = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+    let sec  = (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
+    let mon = ((date.getMonth() + 1) < 10 ? "0" : "") + (date.getMonth() + 1);
+    let day  = (date.getDate() < 10 ? "0" : "") + date.getDate();
 
-    var dateOrder = [ mon, day, min, sec ];
+    let dateOrder = [ mon, day, min, sec ];
 
         // GEN 8 RANDOM HEX
-        for(var i=0 ; i<8 ; i++){
+        for(let i=0 ; i<8 ; i++){
             sid = sid + Math.floor(Math.random()*16).toString(16); 
         }
         // GEN 2 DEFINED DATE
-        for(var i=0 ; i<2 ; i++){
+        for(let i=0 ; i<2 ; i++){
             sid = sid + dateOrder[Math.floor(Math.random()*2)].toString(); 
         }
         // GEN 8 RANDOM HEX
-        for(var i=0 ; i<8 ; i++){
+        for(let i=0 ; i<8 ; i++){
             sid = sid + Math.floor(Math.random()*16).toString(16); 
         }
         // GEN 2 DEFINED DATE
-        for(var i=0 ; i<2 ; i++){
+        for(let i=0 ; i<2 ; i++){
             sid = sid + dateOrder[Math.floor(Math.random()*2 + 2)].toString(); 
         }
 
-    // if(){
+    // if( DUPLICATE CHECK ){
 
     // } else {
         return sid;

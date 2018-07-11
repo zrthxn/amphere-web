@@ -21,31 +21,33 @@ exports.CreateNewUser = function (params) {
 
     var usersData = firebaseSignup.firebase.database();
 
-    let phone = "00" + params.country_code + "0" + params.phone;
+    let phone = "00910" + params.phone;
     let salt = generateSalt(12);
-    let _id = generateUserId();
+    let uid = generateUserId();
 
-    usersData.ref('users/user-' + _id)
-    .set({
-        "_id" : _id,
-        "phone" : phone,
-        "name" : resolveName(params.name),
-        "salt" : salt,
-        "password" : Hasher.generateHash(params.password, salt),
-        "addedOn" : getDateTime(),
-        "isDeleted" : false,
-        "login" : true
-    }, error => {
-        if(error){
-            // return new Promise((resolve,reject) => {
-            //     reject(true);
-            // });
-        } else {
-            return new Promise((resolve,reject) => {
-                resolve(true);
-            });
-        }
-    });    
+    return new Promise((resolve,reject) => {
+        usersData.ref('users/user-' + uid)
+        .set({
+            "uid" : uid,
+            "phone" : phone,
+            "name" : resolveName(params.name),
+            "salt" : salt,
+            "password" : Hasher.generateHash(params.password, salt),
+            "addedOn" : getDateTime(),
+            "isDeleted" : false,
+            "login" : true
+        }, error => {
+            if(error){
+                //reject(error);
+            } else {
+                resolve({
+                    "success" : true,
+                    "uid" : uid,
+                    "salt" : salt
+                });
+            }
+        }); 
+    });
 }
 
 function getDateTime() {

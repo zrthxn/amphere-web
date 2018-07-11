@@ -12,12 +12,12 @@ class SessionsHolder extends Component {
         };
     }
 
-    addNewSession = (session) => {
+    addNewSession = (newSession) => {
         let _sessions = this.state.sessions.slice();
-        _sessions.push(session);
+        _sessions.push(newSession);
         this.setState({
             sessions: _sessions,
-            _thisSession: {}
+            _thisSession: newSession
         });
     }
 
@@ -50,6 +50,7 @@ class SessionsHolder extends Component {
     }
 
     render() {
+
         let _addNewSession = this.state.sessions.map((sess, index)=>{
             return (
                 <Session sid={this.state.sessions[index].sid}
@@ -60,6 +61,7 @@ class SessionsHolder extends Component {
                          cancel = {() => this.cancelSession(index)}/>
             );
         })
+
 
         let emptinessValue = this.emptinessChecker() ? <EmptySessions /> : _addNewSession
 
