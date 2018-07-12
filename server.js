@@ -18,6 +18,7 @@ const cookieParser = require('cookie-parser');
 
 const SignupWorker = require('./util/SignupWorker');
 const SessionsWorker = require('./util/SessionsWorker');
+const MerchantWorker = require('./util/MerchantWorker');
 const ConsoleScreen = require('./util/ConsoleScreen');
 
 //------------------------------------------------------------------------------------------------------//
@@ -32,7 +33,7 @@ amphere.listen(PORT, () => {
 });
 
 homepage.use(express.static(path.join(__dirname, 'homepage')));
-account.use(express.static(path.join(__dirname, 'account')));
+account.use(express.static(path.join(__dirname, 'user-account/build')));
 merchant.use(express.static(path.join(__dirname, 'merchant')));
 admin.use(express.static(path.join(__dirname, 'admin')));
 
@@ -41,6 +42,12 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     //--------------------------------------------------------------------------//
 
     homepage.use(cookieParser());
+    homepage.use((req, res, next)=>{
+        res.header("Access-Control-Allow-Origin", req.headers.origin||"*");
+        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
 
     //---------------------------- HOMEPAGE -----------------------------//
     homepage.get('/', (req, res) => {
@@ -59,7 +66,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
         res.sendFile(path.resolve(__dirname, 'homepage', 'contact.html'));
     });
     homepage.get('/redirectToApp', (req, res) => {
-        res.redirect('account.amphere.in:9000');
+        res.redirect('http://account.amphere.in:9000');
     });
     homepage.post('/signupWorker', (req, res) => {
         let params = getParameters(req);
@@ -69,7 +76,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             "password" : params.password,
             "verify" : params.verify
         }).then( _res => {
-            if(_res.success === true){
+            if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
                     "uid" : _res.uid,
@@ -86,8 +93,37 @@ admin.use(express.static(path.join(__dirname, 'admin')));
 
     //----------------------------- ACCOUNT -----------------------------//    
     account.get((req, res) => {
-        console.log(req);
-        res.sendFile(path.resolve(__dirname, 'account', 'index.html'));
+        res.sendFile(path.resolve(__dirname, 'user-account/build', 'index.html'));
+    });
+    account.post('/getUserSalt', (req, res)=> {
+        let params = getParameters(req);
+        LoginWorker.GetUserSalt(params.phone).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "salt" : _res.salt
+                });
+            } else {
+                res.status(200).json({"state" : "NO-USER"});
+            }
+        });
+    });
+    account.post('/loginWorker', (req, res)=> {
+        let params = getParameters(req);
+        LoginWorker.Login({
+            "uid" : params.uid,
+            "password" : params.password,
+            "salt" : params.salt
+        }).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "uid" : _res.uid
+                });
+            } else {
+                res.status(200).json({"state" : "PASSWORD-INCORRECT"});
+            }
+        });
     });
     account.post('/sessionsWorker', (req, res) => {
         // CHECK VERIFY PARAMETER
@@ -99,7 +135,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             "duration" : params.duration,
             "device" : params.device
         }).then( _res => {
-            if(_res.success === true){
+            if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
                     "sid" : _res.sid,
@@ -110,7 +146,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
                 res.status(500).json({"state" : "FAILED"});
             }
         });
-    })
+    });
 
     //----------------------------- ADMIN -------------------------------//
     admin.get('/', (req, res) => {
@@ -120,6 +156,22 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     //---------------------------- MERCHANT -----------------------------//
     merchant.get('/', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'merchant', 'index.html'));
+    });
+    merchant.post('/merchantValidateSession', (req, res)=> {
+        let params = getParameters(req);
+        MerchantWorker.ValidateSession({
+            "sid" : params.sid,
+            "otp" : params.otp
+        }).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "salt" : _res.salt
+                });
+            } else {
+                res.status(200).json({"state" : "NO-USER"});
+            }
+        });
     });
 
     //==========================================================================//

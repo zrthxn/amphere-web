@@ -30,6 +30,14 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+      <script>
+        window.onload = function() {
+          let token = document.cookie.split('=');
+          console.log(token);
+          localStorage.setItem("AMP_TK", token[1]);
+        }
+      </script>
+
     <div id="root"></div>
     <!--
       This HTML file is a template.

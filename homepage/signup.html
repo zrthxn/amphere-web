@@ -93,12 +93,9 @@
                         let response = JSON.parse(request.response);
                         console.log(response);
                         console.log("SUCCESS");
-
                         createLoginToken(response).then(()=> {
                             redirectToApp();
                         });
-                    } else {
-                        console.log("ERROR");
                     }
                 };
             } else {

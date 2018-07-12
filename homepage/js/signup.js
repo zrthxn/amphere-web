@@ -22,8 +22,7 @@ function generateSignupQueryURL(query) {
     );
 }
 
-function validateInputs(phone, name, password, confPassword) {    
-    
+function validateInputs(phone, name, password, confPassword) {
     return ({
         "validity" : true
     })
@@ -31,18 +30,11 @@ function validateInputs(phone, name, password, confPassword) {
 
 function createLoginToken(params) {
     return new Promise((resolve, reject)=> {
-        localStorage.setItem("amphere-login-token", JSON.stringify({
-            "uid" : params.uid,
-            "phone" : params.phone,
-            "name" : params.name,
-            "salt" : params.salt
-        }));
+        document.cookie =  `AMP_TK=${params.uid}; domain=amphere.in`;
         resolve();
     });
 }
 
 function redirectToApp() {
-    const redirectRequest = new XMLHttpRequest();
-    redirectRequest.open('GET', `/redirectToApp`, true);
-    redirectRequest.send();
+    window.location = 'http://account.amphere.in:9000/';
 }

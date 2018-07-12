@@ -10,18 +10,13 @@ exports.addNewSession = (params) => {
         });
         
         request.open('POST', `/sessionsWorker?${url}`, true);
-        try { 
-            request.send();
-        } catch (err) { 
-            console.log(err); 
-        }
+        request.send();
 
         request.onreadystatechange = event => {
             if (request.readyState === 4  && request.status === 200) {
-                let response = request.response;
+                let response = JSON.parse(request.response);
+                console.log(response);
                 resolve(response);
-            } else {
-                reject("ERROR (session.js:24)");
             }
         };
     });    
@@ -31,7 +26,7 @@ function generateSessionQueryURL(query) {
     return (
         `phone=${query.phone}&` +
         `uid=${query.uid}&` +
-        `location=${query.locatione}&` +
+        `location=${query.location}&` +
         `duration=${query.duration}&` +
         `device=${query.device}&` +
         `verify=true`

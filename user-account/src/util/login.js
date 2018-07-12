@@ -1,42 +1,62 @@
-exports.Validate = function (credentials) {
+exports.ValidateByPhone = function (credentials) {
 
-    // const request = new XMLHttpRequest();
-    // // let url = generateSignupQueryURL({
-    // //     "cncode" : getPhoneCountryCode(),
-    // //     "phone" : phone.value,
-    // //     "name" : _name.value,
-    // //     "password" : password.value
-    // // });
+    const requestSalt = new XMLHttpRequest();
+    const requestLogin = new XMLDocument();
 
-    // request.open('POST', `/loginWorker?phone=${credentials.phone}&password=${credentials.password}`, true);
-    // try { 
-    //     request.send() 
-    // } catch (err) {
-    //     console.log(err)
-    // }
+    let urlGetSalt = `phone=${credentials.phone}`;
 
-    // request.onreadystatechange = event => {
-    //     if (request.readyState === 4 && request.status === 200) {
-    //         //TODO
-    //         return new Promise((resolve,reject) => {
-    //             resolve(true);
-    //         });
-    //         console.log("SUCCESS");
-    //         //CREATE WEB SESSION TOKEN
-    //         //LOGIN
-    //     } else {
-            
-    //     }
-    // };
     return new Promise((resolve,reject) => {
-        resolve(true);
+        requestSalt.open('POST', `/getUserSalt?${urlGetSalt}`, false);
+        requestSalt.send();
+        requestSalt.onreadystatechange = event => {
+            if (request.readyState === 4 && request.status === 200) {
+                let responseSalt = requestSalt.response;
+                let url  =  `uid=${responseSalt.uid}&` + `password=${credentials.password}&` + `salt=${responseSalt.salt}`;
+
+                requestLogin.open('POST', `/loginWorker?${url}`, true);
+                requestLogin.send();
+                requestLogin.onreadystatechange = e => {
+                    if (requestLogin.readyState === 4 && requestLogin.status === 200) {
+                        let responseUID = requestLogin.response;
+                        if(responseUID.state==="SUCCESS"){
+                            resolve({
+                                "validated" : true,
+                                "uid" : responseUID.uid
+                            });
+                        } else {
+                            resolve({
+                                "validated" : false
+                            });
+                        }
+                    }
+                }
+            }
+        };
     });
 }
 
-/**
- * @author
- * TODO
- * - SEND LOGIN REQUEST & DATA TO SERVER
- * - GET BACK RESPONSE
- * - RETURN RESULT
- */
+exports.ValidateByToken = function (credentials) {
+
+    const request = new XMLHttpRequest();
+
+    return new Promise((resolve,reject) => {
+        request.open('POST', `/tokenLoginWorker?token=${credentials.uid}`, true);
+        request.send();
+
+        request.onreadystatechange = event => {
+            if (request.readyState === 4 && request.status === 200) {
+                let response = request.response;
+                if(response.state==="SUCCESS"){
+                    resolve({
+                        "validated" : true,
+                        "salt" : response.salt
+                    });
+                } else {
+                    resolve({
+                        "validated" : false
+                    });
+                }
+            }
+        };
+    });
+}

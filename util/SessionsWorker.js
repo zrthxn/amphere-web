@@ -3,6 +3,7 @@ const firebaseSessions = require('./Database');
 exports.BookNewSession = function (params) {
 
     var sessionsData = firebaseSessions.firebase.database();
+    var merchantsData = sessionsData.ref().child('merchants').child('merchant-' + params.location);
 
     let otp = generateOTP(6);
     let sid = generateSessionId();
@@ -12,31 +13,33 @@ exports.BookNewSession = function (params) {
         sessionsData.ref('sessions/session-' + sid)
         .set({
             "sid" : sid,
-            "phone" : params.phone,
             "uid" : params.uid,
+            "phone" : params.phone,
             "location" : params.location,
             "duration" : params.duration,
             "device" : params.device,
             "otp" : otp,
             "addedOn" : date,
             "isDeleted" : false
-        }).then( error => {
-            // if(error){
-            //     reject(error);
-            // } else {
-            //     resolve({
-            //         "success" : true,
-            //         "sid" : sid,
-            //         "startDate" : date,
-            //     });
-            // }
-            resolve({
-                "state" : "SUCCESS",
-                "sid" : sid,
-                "startDate" : date,
-            });
         });
-    });    
+
+        merchantsData.child('sessions/session-' + sid)
+        .set({
+            "sid" : sid,
+            "uid" : params.uid,
+            "phone" : params.phone,
+            "duration" : params.duration,
+            "device" : params.device,
+        });
+
+        //====================== SEND OTP SMS ======================
+
+        resolve({
+            "success": true,
+            "sid" : sid,
+            "startDate" : date,
+        });
+    });
 }
 
 function getDateTime() {

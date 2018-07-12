@@ -53,9 +53,9 @@ class App extends Component {
         "phone" : this.state.phone,
         "uid" : this.state.uid,
         "location" : params.locCode,
+        "device" : params.device,
         "duration" : params.duration
-    }).then((responseString)=>{
-        let response = JSON.parse(responseString);
+    }).then((response)=>{
         this.SessionsHolder.addNewSession({
           sid : response.sid,
           startDate : response.startDate,
@@ -74,7 +74,7 @@ class App extends Component {
         <Header phone={this.state.phone}
                 name={this.state.name}
                 logoutWorker={this.props.logoutWorker}
-                button="true"/>
+                button={true}/>
         
         <Banner addNewSession={this.addNewSession.bind(this)} 
                 lightboxOpener={this.lightboxOpener.bind(this)}/>

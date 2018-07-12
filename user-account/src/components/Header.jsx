@@ -44,7 +44,7 @@ class Header extends Component {
                 </div>
                 <label htmlFor="sidebar-toggle" className="hamburger"></label>
                 {
-                    (this.props.button==="true") ? 
+                    this.props.button ? 
                         <button className="button btn-small btn-noborder" 
                                 id="exit-button"
                                 onClick={this.props.logoutWorker}>Logout</button> :
