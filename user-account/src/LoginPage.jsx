@@ -16,12 +16,6 @@ class LoginPage extends Component {
         }
     }
 
-    addUserPhoneCountryCode = (userPhone) => {
-        if(userPhone.target.value===""){
-            userPhone.target.value = "+91 " + userPhone.target.value;
-        }
-    }
-
     setUserPhoneInput = (userPhone) => {
         if(userPhone.target.value===""){
             this.setState({
@@ -71,7 +65,7 @@ class LoginPage extends Component {
                 <div className="login-container">
                     <p className="page-title">Sign In</p>
 
-                    <input id="phoneInput" type="text" className="textbox" placeholder="Phone" onChange={this.setUserPhoneInput} onFocus={this.addUserPhoneCountryCode}/>
+                    <input id="phoneInput" type="text" className="textbox" placeholder="Phone" onChange={this.setUserPhoneInput}/>
                     <input id="passwordInput" type="password" className="textbox password" placeholder="Password" onChange={this.setUserPasswordInput}/>
 
                     <button className="button" onClick={this.validateLogin}>SIGN IN</button>

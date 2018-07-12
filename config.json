@@ -3,6 +3,10 @@
     "ServerState" : "NORMAL",
     "data_mode" : "TESTING",
     "other_data" : "data",
+    "textlocal" : {
+        "apikey" : "PQQTr4E5Vrc-0zfw2hYyWUTR9h3ak9Z7BivkfjUplT",
+        "sender" : "AMPHRE"
+    },
     "firebase" : {
         "apiKey": "AIzaSyARptJYiZdxfivMkykDjLtdxpEOcKO_Ugc",
         "authDomain": "amphere-database.firebaseapp.com",

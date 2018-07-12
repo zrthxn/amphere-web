@@ -1,3 +1,4 @@
+const SMSConfig = require('../config.json');
 const firebaseSessions = require('./Database');
 
 exports.BookNewSession = function (params) {
@@ -10,6 +11,11 @@ exports.BookNewSession = function (params) {
     let date = getDateTime();
 
     return new Promise((resolve,reject) => {
+        let date = new Date();
+        if(date.getHours()<=9 || date.getHours()>=17){
+            reject("Sessions can only be booked between 9 AM and 9 PM");
+        }
+
         sessionsData.ref('sessions/session-' + sid)
         .set({
             "sid" : sid,
@@ -32,7 +38,30 @@ exports.BookNewSession = function (params) {
             "device" : params.device,
         });
 
-        //====================== SEND OTP SMS ======================
+        //Send SMS to User via textlocal.in
+        //---------------------------------
+
+        sms = `Thank you for booking an Amphere session. Your OTP is ${otp}.`;
+
+        smsURL = `apikey=${SMSConfig.textlocal.apikey}&` +
+                 `numbers=${params.phone}&` +
+                 `sender=${SMSConfig.textlocal.sender}&` +
+                 `message=${sms}`;
+
+        const smsRequest = new XMLHttpRequest();
+        smsRequest.open('POST', 'https://api.textlocal.in/send/?${smsURL}',true);
+        smsRequest.send();
+        smsRequest.onreadystatechange = e => {
+            if (smsRequest.readyState===4 && smsRequest.status === 200) {
+                let smsResponse = smsRequest.response;
+                console.log(`SMS sent to ${params.phone}. TextLocal balance is ${smsRequest.balance}.`);
+                if(smsRequest.balance<=20){
+                    console.log("\n\tWARNING : LOW BALANCE\n")
+                }
+            }
+        }
+
+        //---------------------------------
 
         resolve({
             "success": true,
@@ -52,7 +81,7 @@ function getDateTime() {
     var month = ((date.getMonth() + 1) < 10 ? "0" : "") + (date.getMonth() + 1);
     var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();   
 
-    return ( `${hour}:${min}:${sec} ${day}/${month}/${year}`);
+    return (`${hour}:${min}:${sec} ${day}/${month}/${year}`);
 }
 
 //=========================================================

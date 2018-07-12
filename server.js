@@ -145,6 +145,9 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             } else {
                 res.status(500).json({"state" : "FAILED"});
             }
+        }).catch((err)=>{
+            console.log(err);
+            alert(err);
         });
     });
 

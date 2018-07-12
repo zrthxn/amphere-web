@@ -9,7 +9,7 @@ exports.ValidateByPhone = function (credentials) {
         requestSalt.open('POST', `/getUserSalt?${urlGetSalt}`, false);
         requestSalt.send();
         requestSalt.onreadystatechange = event => {
-            if (request.readyState === 4 && request.status === 200) {
+            if (requestSalt.readyState === 4 && requestSalt.status === 200) {
                 let responseSalt = requestSalt.response;
                 let url  =  `uid=${responseSalt.uid}&` + `password=${credentials.password}&` + `salt=${responseSalt.salt}`;
 

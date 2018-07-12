@@ -6,7 +6,6 @@ import validateLocationCode from '../util/LocationValidation';
 import validatePromoCode from '../util/PromoValidation';
 
 class BookingLightbox extends Component {
-
     constructor(){
         super();
         this.state = {
