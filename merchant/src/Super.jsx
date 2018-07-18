@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
+import logo from './logo.svg';
 import App from './App';
 import LoginPage from './LoginPage';
-import Login from './util/login';
+import Login from './util/merchantLogin';
 
 class Super extends Component {
     constructor(){
         super();
         this.state = {
-            uid: null,
-            phone: null,
-            name: null,
-            sessions: null,
             loginValidated: false
         }
     }
-
     componentDidMount() {
         if(!this.state.loginValidated){
             let result = this.checkLoginToken();
             if(result.validated){
                 this.setState({
-                    uid: result.uid,
+                    mid: result.mid,
                     phone: result.phone,
                     name: result.name,
                     sessions: result.sessions,
@@ -38,7 +34,7 @@ class Super extends Component {
                 if(result.validated===true){
                     return {
                         "validated": true,
-                        "uid": result.uid,
+                        "mid": result.mid,
                         "phone": result.phone,
                         "name": result.name,
                         "sessions": result.sessions
@@ -64,14 +60,14 @@ class Super extends Component {
             }).then((result) => {
                 if(result.validated===true){
                     this.setState({
-                        uid: result.uid,
+                        mid: result.mid,
                         phone: result.phone,
                         name: result.name,
                         sessions: result.sessions,
                         loginValidated: true
                     });
                 } else {
-    
+
                 }
             });
         }
@@ -84,21 +80,20 @@ class Super extends Component {
         });
     }
 
-    render() {
-        return (
-            <div>
-            {
-                this.state.loginValidated ? 
-                <App phone={this.state.phone}
-                     uid={this.state.uid}
-                     name={this.state.name}
-                     sessions={this.state.sessions}
-                     logoutWorker={this.logout}/> : 
-                <LoginPage onValidate={this.login}/>
-            }
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        {
+            this.state.loginValidated ? 
+            <App mid={this.state.mid}
+                 name={this.state.name}
+                 sessions={this.state.sessions}
+                 logoutWorker={this.logout}/> :
+            <LoginPage onValidate={this.login}/>
+        }
+      </div>
+    );
+  }
 }
 
 export default Super;

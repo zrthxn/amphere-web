@@ -1,0 +1,76 @@
+header {
+    background: transparent;
+}
+
+footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    padding: 1em;
+    text-align: center;
+}
+
+.cover {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(135deg,#00ff4080,#fff);
+    text-align: center;
+    z-index: 5000;
+    transition: all 0.2s ease-in-out;
+}
+
+.login-container{
+    height: fit-content;
+    margin-top: 30vh;
+    max-width: 500px;
+
+    font-weight: 300;
+    text-align: center;
+    padding: 0 4em;
+}
+
+.page-title{
+    margin: auto;
+    width: fit-content;
+    font-weight: 200;
+    font-size: 3em;
+    text-align: center;
+}
+
+.textbox {
+    padding: 0.8em 1em;
+    margin-top: 1rem;
+    font-size: 1.25em;
+    font-weight: 400;
+    background: #fff;
+}
+
+.textbox::placeholder {
+    color: #b1b1b1;
+}
+
+/*===================   @MEDIA   =======================*/
+
+@media (min-width: 500px) {
+    .login-container {
+        position: relative;
+        width: 500px;
+        left: 50%;
+        margin-left: -250px;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-container{
+        padding: 2em;
+    }
+
+    .button-main {
+        padding: 1em 2em;
+    }
+
+    .textbox {
+        padding: 0.5em 2em;
+    }
+}

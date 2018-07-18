@@ -21,13 +21,22 @@ const firebaseLogin = require('./Database');
 exports.GetUserSalt = function (_phone) {
     let phone = "00910" + _phone;
     return new Promise((resolve, reject)=>{
-        var salt = "";
-        let firebaseLoginSalt = firebaseLogin.firebase.database();
-        //GET SALT
-        //REFINE SEARCH BY PHONE
-        resolve({
-            "success": true,
-            "salt" : salt
+        let firebaseLoginSalt = firebaseLogin.firebase.database();        
+        firebaseLoginSalt.ref().child('users').orderByChild('phone').equalTo(_phone).on('child_added', function(searchres) {
+            let uid = searchres.key.split('-')[1].toString();
+            if(uid!==null){
+                firebaseLoginSalt.ref('users/user-' + uid).child('salt').on('value', function(salt){
+                    resolve({
+                        "success": true,
+                        "uid" : uid,
+                        "salt" : salt.val()
+                    });
+                });
+            } else {
+                resolve({
+                    "success": false
+                });
+            }
         });
     });
 }
@@ -36,17 +45,44 @@ exports.Login = function (credentials) {
     return new Promise((resolve, reject)=>{
         let firebaseLoginCreds = firebaseLogin.firebase.database();
         var hash = Hasher.generateHash(credentials.password, credentials.salt);
-        var password = firebaseLoginCreds.ref('users/user-' + credentials.uid).child('password');
-        
-        if( hash === password ) {
-            resolve({
-                "success": true,
-                "uid" : credentials.uid
-            });
-        } else {
-            resolve({
-                "success": false
-            });
-        }
+        firebaseLoginCreds.ref('users/user-' + credentials.uid).child('password').on('value', function(pass){
+            var password = pass.val();
+            if( hash === password ) {
+                firebaseLoginCreds.ref('users/user-' + credentials.uid).on('value', function(userDetails){
+                    resolve({
+                        "success": true,
+                        "uid" : userDetails.val().uid,
+                        "phone" : userDetails.val().phone,
+                        "name" : userDetails.val().name,
+                        "sessions" : userDetails.val().sessions
+                    });
+                })
+            } else {
+                resolve({
+                    "success": false
+                });
+            }
+        });
+    });
+}
+
+exports.TokenLogin = function (token) {
+    return new Promise((resolve, reject)=>{
+        let firebaseTokenLogin = firebaseLogin.firebase.database();
+        firebaseTokenLogin.ref('users/user-' + token).on('value', function(userDetails){
+            if(userDetails.val()!==null){
+                resolve({
+                    "success": true,
+                    "uid" : userDetails.val().uid,
+                    "phone" : userDetails.val().phone,
+                    "name" : userDetails.val().name,
+                    "sessions" : userDetails.val().sessions
+                });
+            } else {
+                resolve({
+                    "success": false
+                });
+            }
+        });
     });
 }

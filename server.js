@@ -18,6 +18,7 @@ const cookieParser = require('cookie-parser');
 
 const SignupWorker = require('./util/SignupWorker');
 const SessionsWorker = require('./util/SessionsWorker');
+const LoginWorker = require('./util/LoginWorker');
 const MerchantWorker = require('./util/MerchantWorker');
 const ConsoleScreen = require('./util/ConsoleScreen');
 
@@ -40,14 +41,6 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     //--------------------------------------------------------------------------//
     // R O U T E R ================ E X P R E S S ================= R O U T E R //
     //--------------------------------------------------------------------------//
-
-    homepage.use(cookieParser());
-    homepage.use((req, res, next)=>{
-        res.header("Access-Control-Allow-Origin", req.headers.origin||"*");
-        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
-    });
 
     //---------------------------- HOMEPAGE -----------------------------//
     homepage.get('/', (req, res) => {
@@ -95,13 +88,31 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     account.get((req, res) => {
         res.sendFile(path.resolve(__dirname, 'user-account/build', 'index.html'));
     });
+    account.post('/tokenLoginWorker', (req, res)=>{
+        let params = getParameters(req);
+        LoginWorker.TokenLogin(params.token).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "uid" : _res.uid,
+                    "uid" : _res.uid,
+                    "phone" : _res.phone,
+                    "name" : _res.name,
+                    "sessions" : _res.sessions
+                });
+            } else {
+                res.status(200).json({"state" : "TOKEN-INVALID"});
+            }
+        });
+    })
     account.post('/getUserSalt', (req, res)=> {
         let params = getParameters(req);
         LoginWorker.GetUserSalt(params.phone).then((_res)=>{
             if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
-                    "salt" : _res.salt
+                    "salt" : _res.salt,
+                    "uid" : _res.uid
                 });
             } else {
                 res.status(200).json({"state" : "NO-USER"});
@@ -118,7 +129,11 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
-                    "uid" : _res.uid
+                    "uid" : _res.uid,
+                    "uid" : _res.uid,
+                    "phone" : _res.phone,
+                    "name" : _res.name,
+                    "sessions" : _res.sessions
                 });
             } else {
                 res.status(200).json({"state" : "PASSWORD-INCORRECT"});
@@ -146,8 +161,8 @@ admin.use(express.static(path.join(__dirname, 'admin')));
                 res.status(500).json({"state" : "FAILED"});
             }
         }).catch((err)=>{
-            console.log(err);
-            alert(err);
+            console.log('\n'+err+'\n');
+            res.status(500).send(err);
         });
     });
 
@@ -180,8 +195,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     //==========================================================================//
 
 amphere.use(vhost('amphere.in', homepage));
-amphere.use(vhost('www.amphere.in', homepage));         // SET TO LOCAL
-//amphere.use(vhost('amphere-web.herokuapp.com', homepage));         // SET TO HEROKU
+amphere.use(vhost('www.amphere.in', homepage));
 amphere.use(vhost('account.amphere.in', account));
 amphere.use(vhost('merchant.amphere.in', merchant));
 amphere.use(vhost('admin.amphere.in', admin));

@@ -21,7 +21,7 @@ exports.CreateNewUser = function (params) {
 
     var usersData = firebaseSignup.firebase.database();
 
-    let phone = "00910" + params.phone;
+    let phone = params.phone;
     let salt = generateSalt(12);
     let uid = generateUserId();
 
@@ -50,6 +50,10 @@ exports.CreateNewUser = function (params) {
     });
 }
 
+//==============================================================================================//
+//-------------------------------------- UTILITY FUNCTIONS -------------------------------------//
+//==============================================================================================//
+
 function getDateTime() {
     var date = new Date();
 
@@ -62,8 +66,6 @@ function getDateTime() {
 
     return ( `${hour}:${min}:${sec} ${day}/${month}/${year}`);
 }
-
-//=========================================================
 
 function generateUserId() {
     var userId = "";
@@ -108,8 +110,6 @@ function generateSalt(length) {
     return salt;
 }
 
-//=========================================================
-
 function resolveName(name) {
     _name = name.split('+');
     var result = "";
@@ -120,8 +120,4 @@ function resolveName(name) {
 
     result.trim();
     return result;
-}
-
-function resolveCountryCode() {
-
 }

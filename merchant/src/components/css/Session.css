@@ -1,0 +1,90 @@
+.session {
+    background: linear-gradient(-90deg, #ffff0070,#FFF);
+    text-align: center;
+    border: 1px solid #999999;
+    border-radius: 10px;
+    padding: 0;
+    width: 25em; 
+    margin: 0 0.5em 1em 0.5em;
+
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    
+    animation-name: session-appear;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+} 
+@keyframes session-appear{
+    from{ opacity:0 } 
+    to{ opacity:1 }
+}
+
+.session-details-container {
+    display: grid;
+    padding: 1em;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.session-detail {
+    text-align: left;
+    font-size: 0.8em;
+    line-height: 1.125em;
+    margin: 0;
+}
+
+.session-number {
+    text-align: left;
+    font-size: 1.125em;
+    margin: 0;
+} 
+
+/* SESSION BUTTONS ============================ SESSION BUTTONS */
+
+.session-start-button {
+    border-radius: 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin: 1em -1em -1em -1em;
+    width: 25em;
+    
+    font-weight: 600;
+    background: linear-gradient(90deg, #ffd800,#ff9e00);
+}
+
+.session-activated-button {
+    border-radius: 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin: 1em -1em -1em -1em;
+    width: 25em;
+    
+    font-weight: 600;
+    color: #FFF;
+    background: linear-gradient(90deg, #00ff4c,#008a29);
+}
+
+.session-expired-button {
+    border-radius: 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin: 1em -1em -1em -1em;
+    width: 25em;
+    
+    font-weight: 600;
+    color: #FFF;
+    background: linear-gradient(90deg, #b1b1b1,#444444);
+}
+
+.session-cancel-button {
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    border-radius: 50px;
+    background-color: #FFF;
+    padding: 0.25em 1em;
+    float: right;
+    font-size: 0.8em;
+}
+
+/* ==========================================================*/

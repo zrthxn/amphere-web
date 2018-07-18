@@ -56,8 +56,8 @@
         
         <!--This contains ONLY buttons on the HERO <GRID> -->
         <div class="hero-action-container">
-            <button class="button btn-small">BOOK SESSION</button>
-            <button class="button btn-small btn-white">SIGN UP</button>
+            <button class="button btn-small" id="session-button">BOOK SESSION</button>
+            <button class="button btn-small btn-white" id="signup-button">SIGN UP</button>
         </div>
     </section>
 
@@ -97,6 +97,18 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.getElementById("entry-button").onclick = function() {
+            window.location = "http://account.amphere.in";
+        }
+        document.getElementById("session-button").onclick = function() {
+            window.location = "http://account.amphere.in";
+        }
+        document.getElementById("signup-button").onclick = function() {
+            window.location = "/signup";
+        }
+    </script>
 
 </body>
 

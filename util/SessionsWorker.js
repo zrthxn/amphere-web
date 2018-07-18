@@ -6,7 +6,7 @@ exports.BookNewSession = function (params) {
     var sessionsData = firebaseSessions.firebase.database();
     var merchantsData = sessionsData.ref().child('merchants').child('merchant-' + params.location);
 
-    let otp = generateOTP(6);
+    let otp = generateOTP(4);
     let sid = generateSessionId();
     let date = getDateTime();
 
@@ -38,30 +38,29 @@ exports.BookNewSession = function (params) {
             "device" : params.device,
         });
 
-        //Send SMS to User via textlocal.in
-        //---------------------------------
-
-        sms = `Thank you for booking an Amphere session. Your OTP is ${otp}.`;
-
-        smsURL = `apikey=${SMSConfig.textlocal.apikey}&` +
-                 `numbers=${params.phone}&` +
-                 `sender=${SMSConfig.textlocal.sender}&` +
-                 `message=${sms}`;
-
-        const smsRequest = new XMLHttpRequest();
-        smsRequest.open('POST', 'https://api.textlocal.in/send/?${smsURL}',true);
-        smsRequest.send();
-        smsRequest.onreadystatechange = e => {
-            if (smsRequest.readyState===4 && smsRequest.status === 200) {
-                let smsResponse = smsRequest.response;
-                console.log(`SMS sent to ${params.phone}. TextLocal balance is ${smsRequest.balance}.`);
-                if(smsRequest.balance<=20){
-                    console.log("\n\tWARNING : LOW BALANCE\n")
-                }
-            }
-        }
-
-        //---------------------------------
+            //  Send SMS to User via textlocal.in   //
+            //
+            // sms = `Thank you for booking an Amphere session. Your OTP is ${otp}.`;
+            // smsURL = `apikey=${SMSConfig.textlocal.apikey}` +
+            // `&numbers=91${params.phone}` +
+            // `&sender=${SMSConfig.textlocal.sender}&` +
+            // `&message=${encodeURIComponent(sms)}`;
+            
+            // const smsRequest = new XMLHttpRequest();
+            // smsRequest.open('POST', `https://api.textlocal.in/send/?${smsURL}` ,true);
+            // smsRequest.send();
+            // smsRequest.onreadystatechange = e => {
+            //     if (smsRequest.readyState===4 && smsRequest.status === 200) {
+            //         let smsResponse = JSON.parse(smsRequest.response);
+            //         console.log(smsResponse);
+            //         console.log(`SMS sent to ${phone}. TextLocal balance is ${smsResponse.balance}.`);
+            //         if(smsResponse.balance<=20){
+            //             console.log("\n\tWARNING : LOW BALANCE\n")
+            //         }
+            //     }
+            // }
+            //  =================================   //
+        
 
         resolve({
             "success": true,
@@ -70,6 +69,10 @@ exports.BookNewSession = function (params) {
         });
     });
 }
+
+//==============================================================================================//
+//-------------------------------------- UTILITY FUNCTIONS -------------------------------------//
+//==============================================================================================//
 
 function getDateTime() {
     var date = new Date();
@@ -83,8 +86,6 @@ function getDateTime() {
 
     return (`${hour}:${min}:${sec} ${day}/${month}/${year}`);
 }
-
-//=========================================================
 
 function generateSessionId() {
     let sid = "";
@@ -129,8 +130,6 @@ function generateOTP(length) {
     return otp;
 }
 
-//=========================================================
-
 function resolveName(name) {
     _name = name.split('+');
     var result = "";
@@ -141,8 +140,4 @@ function resolveName(name) {
 
     result.trim();
     return result;
-}
-
-function resolveCountryCode() {
-
 }

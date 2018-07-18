@@ -19,19 +19,24 @@ class Header extends Component {
         return (
             <header>
                 <Image className="logo-text" src="assets/amphere-text.svg" />
+                
+                {/* <button id="logout-init" className="btn-thin btn-logout" onClick={this.logoutInitiate}>Log out</button> */}
 
                 <input id="sidebar-toggle" type="checkbox" className="checkbox" />
                 <div className="sidebar-shadow"></div>
                 <div className="sidebar">
-                    <div className="sidebar-banner">
-
-                        <div className="sidebar-banner-container">
-                            <p>MY ACCOUNT</p>
-                            <h2>Hey {this.props.name}!</h2>
-                            <p>+91 {this.props.phone}</p>
+                    {
+                        this.props.button ? 
+                        <div className="sidebar-banner">
+                            <div className="sidebar-banner-container">
+                                <p>MY ACCOUNT</p>
+                                <h2>Hey {this.props.name}!</h2>
+                                <p>+91 {this.props.phone}</p>
+                            </div>
+                            
                         </div>
-                        
-                    </div>
+                        : console.log()
+                    }
                     <nav className="sidebar-nav">
                         <ul>
                             <li><a>HOME</a></li>
@@ -45,8 +50,9 @@ class Header extends Component {
                     this.props.button ? 
                         <button className="button btn-small btn-noborder" 
                                 id="exit-button"
-                                onClick={this.props.logoutWorker}>Logout</button> :
-                        console.log()
+                                onClick={this.props.logoutWorker}>Logout
+                        </button> 
+                        : console.log()
                 }
             </header>
         );

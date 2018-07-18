@@ -1,0 +1,182 @@
+header {
+    position: fixed;
+    margin: 0;
+    background: linear-gradient(#ffffffab,#ffffff00);
+    text-align: center;
+    height: fit-content;
+    width: 100%;
+    z-index: 1000;
+    transition: all 0.2s linear;
+}
+
+header.active {
+    background: #fff;
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+}
+
+.logo-text {
+    max-width: 50%;
+    margin: 1em 1em;
+    max-height: 3em;
+    transition: all 0.2s ease-in-out;
+}
+
+header.active .logo-text{
+    max-height: 2.5em;
+}
+
+header .button {
+	position: absolute;
+	color: #000;
+	top: 1.85em;
+	right: 1em;
+	padding: 0.5em 0.75em;
+	border-radius: 0.75em;
+	margin: 0;
+	transition: all 0.2s ease-in-out;
+} header.active .button {
+	border: 1px solid #000;
+}
+
+/* SIDEBAR NAVIGATION MENU ================================ SIDEBAR NAVIGATION MENU */
+
+.sidebar {
+	position: absolute;
+	height: 100vh;
+	width: 75%;
+	max-width: 300px;
+    top: 0;
+	background: #fff;
+	z-index: 2000;
+
+	left: -75%;
+	transition: all 0.5s ease-in-out;
+}
+
+.sidebar-shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+	height: 100vh;
+	width: 100vw;
+	background: #000;
+    z-index: 2000;
+	opacity: 0;
+	display: none;
+	transition: all 0.5s ease-in-out;	
+}
+
+/*-----------------BANNER------------------*/
+.sidebar-banner {
+	background: linear-gradient(#ff9e00,#ffd800);
+	height: 12em;
+	padding: 2em;
+}
+
+.sidebar-banner-container {
+	position: relative;
+	top: 4em;
+	text-align: left;
+	line-height: 0.75em;
+}
+
+/*--------------------NAV------------------*/
+.sidebar-nav ul {
+    padding: 0;
+    margin-top: 5em;
+	margin-left: 2em;
+    list-style: none;
+    text-align: left;
+}
+
+.sidebar-nav li {
+	margin-bottom: 1em;
+	font-weight: 600;
+}
+
+.sidebar-nav a {
+	text-decoration: none;
+	color: #4b4b4b;
+}
+
+/*-----------------SIDEBAR TOGGLE-----------------*/
+
+.checkbox {
+	position: absolute;
+	z-index: 5000;
+	right: 1em;
+	display: none;
+}
+
+.checkbox:checked ~ .sidebar {
+	left: 0;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+}
+
+.checkbox:checked ~ .sidebar-shadow {
+	display: block;
+	opacity: 0.5;
+	animation: fadeIn 0.5s ease-in-out;	
+}
+
+@keyframes fadeIn {
+	from{opacity: 0;}
+	to{opacity: 0.5;}
+}
+
+/*-----------------BUTTON-----------------*/
+
+.hamburger {
+    position: absolute;
+    top: 45%;
+	left: 1.5em;
+	width: 25px;
+	height: 3px;
+	background: #000;
+	border-radius: 5px;
+	z-index: 2000;
+	transition: all 0.5s ease-in-out;
+}
+
+.hamburger::before, .hamburger::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	width: 25px;
+	height: 3px;
+	background: #000;
+	border-radius: 5px;
+	transition: all 0.5s ease-in-out;
+}
+
+.hamburger::before {
+	bottom: 0.5em;
+}
+
+.hamburger::after {
+	top: 0.5em;
+}
+
+.checkbox:checked ~ .hamburger::before {
+	bottom: 0;
+    float: left;
+    width: 20px;
+	background: #000;
+	transform: rotate(-45deg);
+}
+
+.checkbox:checked ~ .hamburger {
+    float: left;
+	background: #000;
+	background: transparent;
+}
+
+.checkbox:checked ~ .hamburger::after {
+	top: 0;
+    float: left;
+    width: 20px;
+	background: #000;
+	transform: rotate(45deg);
+}

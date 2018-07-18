@@ -37,17 +37,33 @@
     color: #FFF;
     font-size: 1.25em;
     font-weight: 600;
-    height: 100%;
-    width: 100%;
 
     border: none;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px; 
+/* 
+    animation-name: pop-lightbox-button;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out; */
 }
 .button-disabled{
     background: #cccccc;
 }
 
+/* @keyframes pop-lightbox-button {
+    from{
+        width: 0;
+        left: 50%;
+        bottom: 50%;
+        opacity: 0;
+    }
+    to{
+        width: 75%;
+        left: 12.5%;
+        bottom: 12.5%;
+        opacity: 1;
+    }
+} */
 
 .lightbox-title {
     font-size: 2em;
@@ -205,6 +221,7 @@
 .crossmark {
     grid-column: 3/4;
     grid-row: 3/4;
+    float: right;
     margin-top: -3.4rem;
     margin-right: 2.25rem;
 }
@@ -216,10 +233,10 @@
 }
 
 .cross-button {
-    justify-self: center;
-    align-self: end;
-    grid-column: 4/5;
-    grid-row: 1/2;
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
 }
 
 /*MEDIA QUERY=================================================================*/
