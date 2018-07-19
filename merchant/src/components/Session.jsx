@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './css/Session.css';
 import SessionCancelLightbox from './SessionCancelLightbox';
 import $ from 'jquery';
+import SessionUtil from '../util/session';
 
 class Session extends Component {
 
@@ -9,10 +10,12 @@ class Session extends Component {
         super();
         this.state = {
             sid: "UNASSIGNED",
+            otp: "NULL",
             startDate: "NULL",
             location: "NULL",
             duration: "NULL",
             status: "NO-CODE",
+            timeRemain: 0,
             cancelLightboxOpen: false,
             activated: false,
             expired: false
@@ -20,21 +23,33 @@ class Session extends Component {
     }
 
     componentDidMount() {
+    // FIREBASE TIMER LISTENER HERE
         this.setState({
             sid: this.props.sid,
             startDate: this.props.startDate,
             location: this.props.location,
             duration: this.props.duration,
+            timeRemain: this.props.duration,
             status: "BOOKED"
         });
     }
 
-    componentWillUnmount(){
+    setOTP = (otp) => {
+        this.setState({
+            otp: otp.target.value.trim()
+        });        
     }
 
     activate = () => {
-        this.setState({
-            activated : true
+        SessionUtil.ActivateSession({
+            sid: this.state.sid,
+            otp: this.state.otp
+        }).then(()=>{
+            this.setState({
+                activated : true
+            });
+        }).catch(()=>{
+
         });
     }
 
@@ -42,22 +57,6 @@ class Session extends Component {
         this.setState({
             expired : true
         });
-    }
-
-    setTimeoutFunc = () => {
-        if(this.state.duration === "30M"){
-            return (
-                <div className="timeout timeout-30"></div>
-            );
-        } else if(this.state.duration === "60M"){
-            return (
-                <div className="timeout timeout-60"></div>
-            );
-        } else {
-            return (
-                <div className="timeout"></div>
-            );
-        }
     }
 
     cancelConfirmationDialog = (state) => {
@@ -71,7 +70,6 @@ class Session extends Component {
     }
 
     render() {
-        let timeout = this.setTimeoutFunc();
         return (
             <div className="session">
                 <div className="session-details-container">
@@ -84,7 +82,7 @@ class Session extends Component {
                     <p className="session-detail">Location Code: {this.state.location}</p>
                     <p className="session-detail">Duration: {this.state.duration}</p>
 
-                    <input className="textbox" placeholder="Enter OTP"/>
+                    <input className="textbox" placeholder="Enter OTP" onChange={this.setOTP}/>
 
                     {
                         this.state.activated ?
