@@ -20,13 +20,14 @@ exports.BookNewSession = function (params) {
         .set({
             "sid" : sid,
             "uid" : params.uid,
+            "mid" : params.location,
             "phone" : params.phone,
-            "location" : params.location,
             "duration" : params.duration,
             "device" : params.device,
             "otp" : otp,
             "addedOn" : date,
-            "isDeleted" : false
+            "activated" : false,
+            "expired" : false
         });
 
         merchantsData.child('sessions/session-' + sid)
@@ -36,6 +37,7 @@ exports.BookNewSession = function (params) {
             "phone" : params.phone,
             "duration" : params.duration,
             "device" : params.device,
+            "expired" : false
         });
 
             //  Send SMS to User via textlocal.in   //

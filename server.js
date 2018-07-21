@@ -35,7 +35,7 @@ amphere.listen(PORT, () => {
 
 homepage.use(express.static(path.join(__dirname, 'homepage')));
 account.use(express.static(path.join(__dirname, 'user-account/build')));
-merchant.use(express.static(path.join(__dirname, 'merchant')));
+merchant.use(express.static(path.join(__dirname, 'merchant/build')));
 admin.use(express.static(path.join(__dirname, 'admin')));
 
     //--------------------------------------------------------------------------//
@@ -130,7 +130,6 @@ admin.use(express.static(path.join(__dirname, 'admin')));
                 res.status(200).json({
                     "state" : "SUCCESS",
                     "uid" : _res.uid,
-                    "uid" : _res.uid,
                     "phone" : _res.phone,
                     "name" : _res.name,
                     "sessions" : _res.sessions
@@ -141,7 +140,6 @@ admin.use(express.static(path.join(__dirname, 'admin')));
         });
     });
     account.post('/sessionsWorker', (req, res) => {
-        // CHECK VERIFY PARAMETER
         let params = getParameters(req);
         SessionsWorker.BookNewSession({
             "phone" : params.phone,
@@ -166,30 +164,77 @@ admin.use(express.static(path.join(__dirname, 'admin')));
         });
     });
 
-    //----------------------------- ADMIN -------------------------------//
-    admin.get('/', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'admin', 'index.html'));
-    });
-
     //---------------------------- MERCHANT -----------------------------//
     merchant.get('/', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'merchant', 'index.html'));
     });
-    merchant.post('/merchantValidateSession', (req, res)=> {
+    merchant.post('/getMerchantSalt', (req, res)=> {
         let params = getParameters(req);
-        MerchantWorker.ValidateSession({
+        MerchantWorker.GetMerchantSalt(params.code).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "salt" : _res.salt,
+                    "mid" : _res.mid
+                });
+            } else {
+                res.status(200).json({"state" : "NO-MERCH"});
+            }
+        });
+    });
+    merchant.post('/merchantLoginWorker', (req, res)=> {
+        let params = getParameters(req);
+        MerchantWorker.MerchantLogin({
+            "mid" : params.mid,
+            "password" : params.password,
+            "salt" : params.salt
+        }).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "mid" : _res.mid,
+                    "phone" : _res.phone,
+                    "name" : _res.name,
+                    "sessions" : _res.sessions
+                });
+            } else {
+                res.status(200).json({"state" : "PASSWORD-INCORRECT"});
+            }
+        });
+    });
+    merchant.post('/merchantActivateSession', (req, res)=> {
+        let params = getParameters(req);
+        MerchantWorker.ActivateSession({
             "sid" : params.sid,
             "otp" : params.otp
         }).then((_res)=>{
             if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
-                    "salt" : _res.salt
+                    "time" : _res.time
                 });
             } else {
                 res.status(200).json({"state" : "NO-USER"});
             }
         });
+    });
+    merchant.post('/merchantExpireSession', (req, res)=> {
+        let params = getParameters(req);
+        MerchantWorker.ExpireSession(params.sid).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "time" : _res.time
+                });
+            } else {
+                res.status(200).json({"state" : "NO-USER"});
+            }
+        });
+    });
+
+    //----------------------------- ADMIN -------------------------------//
+    admin.get('/', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'admin', 'index.html'));
     });
 
     //==========================================================================//
@@ -199,11 +244,6 @@ amphere.use(vhost('www.amphere.in', homepage));
 amphere.use(vhost('account.amphere.in', account));
 amphere.use(vhost('merchant.amphere.in', merchant));
 amphere.use(vhost('admin.amphere.in', admin));
-
-// amphere.use(homepage);
-// amphere.use(account);
-// amphere.use(merchant);
-// amphere.use(admin);
 
 //------------------------------------------------------------------------------------------------------//
 // S E R V E R =============================== L E G A C Y ================================ S E R V E R //

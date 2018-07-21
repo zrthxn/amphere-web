@@ -8,10 +8,9 @@ class Session extends Component {
         super();
         this.state = {
             sid: "UNASSIGNED",
-            startDate: "NULL",
-            location: "NULL",
-            duration: "NULL",
-            status: "NO-CODE",
+            startDate: null,
+            location: null,
+            duration: null,
             cancelLightboxOpen: false
         }
     }
@@ -21,28 +20,11 @@ class Session extends Component {
             sid: this.props.sid,
             startDate: this.props.startDate,
             location: this.props.location,
-            duration: this.props.duration,
-            status: "BOOKED"
+            duration: this.props.duration
         });
     }
 
     componentWillUnmount(){
-    }
-
-    setTimeoutFunc = () => {
-        if(this.state.duration === "30M"){
-            return (
-                <div className="timeout timeout-30"></div>
-            );
-        } else if(this.state.duration === "60M"){
-            return (
-                <div className="timeout timeout-60"></div>
-            );
-        } else {
-            return (
-                <div className="timeout"></div>
-            );
-        }
     }
 
     cancelConfirmationDialog = (state) => {
@@ -56,7 +38,6 @@ class Session extends Component {
     }
 
     render() {
-        let timeout = this.setTimeoutFunc();
         return (
             <div className="session">
                 <div className="session-details-container">
@@ -69,15 +50,13 @@ class Session extends Component {
                     <p className="session-detail">Location Code: {this.state.location}</p>
                     <p className="session-detail">Duration: {this.state.duration}</p>
                 </div>
-                
-                {timeout}
 
                 {
                     this.state.cancelLightboxOpen ? (
                         <SessionCancelLightbox confirm={this.cancelSession} 
                                                decline={() => this.cancelConfirmationDialog(false)}/>
                     ) : console.log()
-                }              
+                }
             </div>
         );
     }

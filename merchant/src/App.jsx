@@ -5,11 +5,13 @@ import Banner from './components/Banner';
 import SessionsHolder from './components/SessionsHolder';
 import Footer from './components/Footer';
 
+import MerchantDatabase from './util/Database';
+
 class App extends Component {
   constructor(){
       super();
       this.state = {
-          uid : null,
+          mid : null,
           phone: null,
           name : null,
           lightboxOpen: false,
@@ -19,11 +21,24 @@ class App extends Component {
 
   componentDidMount(){
     this.setState({
-        uid: this.props.uid,
+        mid: this.props.mid,
         phone: this.props.phone,
         name: this.props.name,
         lightboxOpen: false
-    })
+    });
+    let sessionsRef = MerchantDatabase.firebase.database().ref('merchants/merchant-AMP' + /* + this.state.mid + */ '/sessions');
+    sessionsRef.on('child_added', session =>{
+      if(session.val().expired===false){
+        this.SessionsHolder.addNewSession({
+          sid: session.val().sid,
+          uid: session.val().uid,
+          phone: session.val().phone,
+          device: session.val().device,
+          duration: session.val().duration,
+          expired: session.val().expired
+        });
+      }
+    });
   }
 
   render() {

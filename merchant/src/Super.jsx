@@ -11,51 +11,11 @@ class Super extends Component {
             loginValidated: false
         }
     }
-    componentDidMount() {
-        if(!this.state.loginValidated){
-            let result = this.checkLoginToken();
-            if(result.validated){
-                this.setState({
-                    mid: result.mid,
-                    phone: result.phone,
-                    name: result.name,
-                    sessions: result.sessions,
-                    loginValidated: true
-                });
-            }
-        }
-    }
-
-    checkLoginToken = () => {
-        let token = localStorage.getItem('AMP_TK');
-        if(token!==null){
-            let result = Login.ValidateByToken(token);
-            try{
-                if(result.validated===true){
-                    return {
-                        "validated": true,
-                        "mid": result.mid,
-                        "phone": result.phone,
-                        "name": result.name,
-                        "sessions": result.sessions
-                    };
-                } else {
-                    return false;
-                }
-            } catch(e) {
-                return false;
-            }
-        } else {
-            return {
-                "validated" : false
-            };
-        }
-    }
 
     login = (loginObject) => {
         if(loginObject.validated===true){
-            Login.ValidateByPhone({
-                "phone" : loginObject.details.phone,
+            Login.ValidateLogin({
+                "code" : loginObject.details.code,
                 "password" : loginObject.details.password
             }).then((result) => {
                 if(result.validated===true){
@@ -63,7 +23,6 @@ class Super extends Component {
                         mid: result.mid,
                         phone: result.phone,
                         name: result.name,
-                        sessions: result.sessions,
                         loginValidated: true
                     });
                 } else {
@@ -74,7 +33,6 @@ class Super extends Component {
     }
 
     logout = () => {
-        //TEMPORARY ARRANGEMENT ONLY
         this.setState({
             loginValidated: false
         });
@@ -87,7 +45,6 @@ class Super extends Component {
             this.state.loginValidated ? 
             <App mid={this.state.mid}
                  name={this.state.name}
-                 sessions={this.state.sessions}
                  logoutWorker={this.logout}/> :
             <LoginPage onValidate={this.login}/>
         }

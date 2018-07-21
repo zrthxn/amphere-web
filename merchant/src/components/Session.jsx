@@ -4,33 +4,30 @@ import SessionCancelLightbox from './SessionCancelLightbox';
 import $ from 'jquery';
 import SessionUtil from '../util/session';
 
-class Session extends Component {
+import SessionFirebase from '../util/Database';
 
+var Timer = SessionFirebase.firebase.database();
+
+class Session extends Component {
     constructor() {
         super();
         this.state = {
             sid: "UNASSIGNED",
-            otp: "NULL",
-            startDate: "NULL",
-            location: "NULL",
-            duration: "NULL",
-            status: "NO-CODE",
-            timeRemain: 0,
-            cancelLightboxOpen: false,
+            otp: null,
+            startTime: 0,
             activated: false,
-            expired: false
+            expired: false,
+            duration: null,
+            timeRemain: 0,
+            cancelLightboxOpen: false
         }
     }
 
     componentDidMount() {
-    // FIREBASE TIMER LISTENER HERE
         this.setState({
             sid: this.props.sid,
-            startDate: this.props.startDate,
-            location: this.props.location,
             duration: this.props.duration,
             timeRemain: this.props.duration,
-            status: "BOOKED"
         });
     }
 
@@ -44,18 +41,38 @@ class Session extends Component {
         SessionUtil.ActivateSession({
             sid: this.state.sid,
             otp: this.state.otp
-        }).then(()=>{
-            this.setState({
-                activated : true
-            });
-        }).catch(()=>{
-
+        }).then((res)=>{
+            if(res.activated===true){
+                this.setState({
+                    activated : true,
+                    startTime: res.time
+                });
+                Timer.ref('time').on('value', timeNow => {
+                    let timeElapsed = timeNow.val() - this.state.startTime;
+                    let _timeRemain = this.state.duration - timeElapsed;
+                    if(_timeRemain>0){
+                        this.setState({
+                            timeRemain: _timeRemain
+                        });
+                    } else {
+                        this.expire();
+                    }
+                });
+            }
+        }).catch((err)=>{
+            alert(err);
         });
     }
 
     expire = () => {
-        this.setState({
-            expired : true
+        Timer.ref('time').off('value');
+        SessionUtil.ExpireSession({
+            sid: this.state.sid
+        }).then(()=>{    
+            this.setState({
+                timeRemain: 0,
+                expired: true
+            });
         });
     }
 
@@ -78,21 +95,21 @@ class Session extends Component {
                         <button className="session-cancel-button" onClick={() => this.cancelConfirmationDialog(true)}>Cancel</button>
                     </div>
                     <div className="spacer-small"></div>
-                    <p className="session-detail">Started On: {this.state.startDate}</p>
-                    <p className="session-detail">Location Code: {this.state.location}</p>
                     <p className="session-detail">Duration: {this.state.duration}</p>
-
-                    <input className="textbox" placeholder="Enter OTP" onChange={this.setOTP}/>
+                    <p className="session-detail">TIME: {this.state.timeRemain}</p>
 
                     {
                         this.state.activated ?
                         ( 
                             this.state.expired ?
                                 <button className="button session-expired-button">EXPIRED</button> :
-                                <button className="button session-activated-button" onClick={this.expire}>ACTIVE</button> 
-                        ) : 
-                        <button className="button session-start-button" onClick={this.activate}>START</button>
-
+                                <button className="button session-activated-button">ACTIVE</button> 
+                        ) : (
+                            <div>
+                                <input className="textbox" placeholder="Enter OTP" onChange={this.setOTP}/>
+                                <button className="button session-start-button" onClick={this.activate}>START</button>
+                            </div>
+                        )
                     }
                 </div>
 

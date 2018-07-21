@@ -49,36 +49,26 @@ class SessionsHolder extends Component {
     }
 
     render() {
+        let _addNewSession = this.state.sessions.map((sess, index)=>{
+            return (
+                <Session sid={this.state.sessions[index].sid}
+                         uid={this.state.sessions[index].uid}
+                         phone={this.state.sessions[index].phone}
+                         device={this.state.sessions[index].device}
+                         duration={this.state.sessions[index].duration}
+                         expired={this.state.sessions[index].expired}
+                         key={index}
+                         cancel = {() => this.cancelSession(index)}/>
+            );
+        })
 
-        // let _addNewSession = this.state.sessions.map((sess, index)=>{
-        //     return (
-        //         <Session sid={this.state.sessions[index].sid}
-        //                  key={index}
-        //                  startDate={this.state.sessions[index].startDate}
-        //                  location={this.state.sessions[index].location}
-        //                  duration={this.state.sessions[index].duration}
-        //                  cancel = {() => this.cancelSession(index)}/>
-        //     );
-        // })
-
-
-        // let emptinessValue = this.emptinessChecker() ? <EmptySessions /> : _addNewSession
+        let emptinessValue = this.emptinessChecker() ? <EmptySessions /> : _addNewSession
 
         return (
             <div className="sessions-holder container">
-                <Session/>
-                <Session/>
-                <Session/>
-                <Session/>
-                <Session/>
-                <Session/>
-                <Session/>
-                <Session/>
-                <Session/>
-                <Session/>
-                {/* {
-                    this.state.sessions.length!==0 ? emptinessValue : <EmptySessions />
-                } */}
+            {
+                this.state.sessions.length!==0 ? emptinessValue : <EmptySessions />
+            }
             </div>
         );
     }

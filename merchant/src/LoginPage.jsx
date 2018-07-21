@@ -7,48 +7,50 @@ class LoginPage extends Component {
     constructor(){
         super();
         this.state = {
+            inputCode: null,
+            inputPass: null,
+            fieldsValidated: false
         }
     }
 
-    setUserPhoneInput = (userPhone) => {
-        if(userPhone.target.value===""){
+    setCodeInput = (code) => {
+        if(code.target.value===""){
             this.setState({
-                inputUserPhone: null
+                inputCode: null
             });
         } else {
             this.setState({
-                inputUserPhone: userPhone.target.value.trim()
+                inputCode: code.target.value.trim()
             });
         }
     }
 
-    setUserPasswordInput = (userPass) => {
-        if(userPass.target.value===""){
+    setPasswordInput = (pass) => {
+        if(pass.target.value===""){
             this.setState({
-                inputUserPass: null
+                inputPass: null
             });
         } else {
             this.setState({
-                inputUserPass: userPass.target.value
+                inputPass: pass.target.value
             });
         }
     }
 
     validateLogin = () => {
-        if(this.state.inputUserPhone!==null || this.state.inputUserPass!==null){
+        if(this.state.inputCode!==null || this.state.inputPass!==null){
             this.setState({
                 fieldsValidated: true
             });
             this.props.onValidate({
                 "validated" : true,
                 "details" : {
-                    "phone" : this.state.inputUserPhone,
-                    "password" : this.state.inputUserPass
+                    "code" : this.state.inputCode,
+                    "password" : this.state.inputPass
                 }
             });
         } else {
-            // TEMPORWARI
-            alert("Phone or Password empty");
+            alert("Code or Password empty");
         }
     }
 
@@ -56,17 +58,17 @@ class LoginPage extends Component {
         return (
             <div className="cover">
                 <Header button={false}/>
-                <div className="login-container">
+                <form className="login-container">
                     <p className="page-title">Sign In</p>
 
-                    <input id="phoneInput" type="text" className="textbox" placeholder="Phone" onChange={this.setUserPhoneInput}/>
-                    <input id="passwordInput" type="password" className="textbox password" placeholder="Password" onChange={this.setUserPasswordInput}/>
+                    <input id="codeInput" type="text" className="textbox" placeholder="Merchant Code" onChange={this.setCodeInput}/>
+                    <input id="passwordInput" type="password" className="textbox password" placeholder="Password" onChange={this.setPasswordInput}/>
 
                     <button className="button" onClick={this.validateLogin}>SIGN IN</button>
 
                     <p>Don't have an account? <a href="https://amphere.in/signup">Sign Up</a></p>
                         
-                </div>
+                </form>
                 <footer>&copy; Amphere Solutions Inc. 2018</footer>
             </div>
             
