@@ -58,9 +58,6 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     homepage.get('/contact', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'homepage', 'contact.html'));
     });
-    homepage.get('/redirectToApp', (req, res) => {
-        res.redirect('http://account.amphere.in:9000');
-    });
     homepage.post('/signupWorker', (req, res) => {
         let params = getParameters(req);
         SignupWorker.CreateNewUser({
