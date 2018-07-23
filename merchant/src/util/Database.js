@@ -1,8 +1,7 @@
-const firebase = require('../../node_modules/firebase');
+const firebase = require('firebase');
 const DatabaseConfig = require('../config.json');
 
 firebase.initializeApp(DatabaseConfig.firebase);
-
 exports.firebase = firebase;
 
 /**

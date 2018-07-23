@@ -1,0 +1,13 @@
+{
+  "merchants" : {
+    "merchant-AMP" : {
+      "addedOn" : "14:34:51 13/07/2018",
+      "isDeleted" : false,
+      "mid" : "AMP",
+      "name" : "Amphere Solutions",
+      "password" : "f2067a3191c00f615c59234a26874c182dde4f1e457d2f459002eb724d01404c4700fcbc9608a807765239712838cf7225dc45f7f39768ed2ce111509d0b5a7c",
+      "phone" : 26985186,
+      "salt" : "9619469dac7a"
+    }
+  }
+}

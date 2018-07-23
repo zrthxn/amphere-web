@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import App from './App';
 import LoginPage from './LoginPage';
-import Login from './util/merchantLogin';
+
+const Login = require('./util/merchantLogin');
 
 class Super extends Component {
     constructor(){
@@ -13,6 +13,12 @@ class Super extends Component {
     }
 
     login = (loginObject) => {
+        // this.setState({
+        //     mid: "AMP",
+        //     phone: "26985186",
+        //     name: "Amphere Solutions",
+        //     loginValidated: true
+        // });
         if(loginObject.validated===true){
             Login.ValidateLogin({
                 "code" : loginObject.details.code,
@@ -22,11 +28,10 @@ class Super extends Component {
                     this.setState({
                         mid: result.mid,
                         phone: result.phone,
-                        name: result.name,
+                        name: result.name,                        
+                        sessions: result.sessions,
                         loginValidated: true
                     });
-                } else {
-
                 }
             });
         }
@@ -45,8 +50,9 @@ class Super extends Component {
             this.state.loginValidated ? 
             <App mid={this.state.mid}
                  name={this.state.name}
-                 logoutWorker={this.logout}/> :
-            <LoginPage onValidate={this.login}/>
+                 phone={this.state.phone}
+                 logoutWorker={this.logout} /> :
+            <LoginPage onValidate={this.login.bind(this)}/>
         }
       </div>
     );

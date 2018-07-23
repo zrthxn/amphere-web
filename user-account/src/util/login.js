@@ -11,7 +11,7 @@ exports.ValidateByPhone = function (credentials) {
         saltRequest.onreadystatechange = event => {
             if (saltRequest.readyState === 4 && saltRequest.status === 200) {
                 let saltResponse = JSON.parse(saltRequest.response);
-                let url  =  `uid=${saltResponse.uid}&` + `password=${credentials.password}&` + `salt=${saltResponse.salt}`;
+                let url = `uid=${saltResponse.uid}&` + `password=${credentials.password}&` + `salt=${saltResponse.salt}`;
 
                 loginRequest.open('POST', `/loginWorker?${url}`, true);
                 loginRequest.send();

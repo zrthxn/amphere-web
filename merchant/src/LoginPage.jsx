@@ -60,14 +60,10 @@ class LoginPage extends Component {
                 <Header button={false}/>
                 <form className="login-container">
                     <p className="page-title">Sign In</p>
-
                     <input id="codeInput" type="text" className="textbox" placeholder="Merchant Code" onChange={this.setCodeInput}/>
                     <input id="passwordInput" type="password" className="textbox password" placeholder="Password" onChange={this.setPasswordInput}/>
 
-                    <button className="button" onClick={this.validateLogin}>SIGN IN</button>
-
-                    <p>Don't have an account? <a href="https://amphere.in/signup">Sign Up</a></p>
-                        
+                    <button className="button" onClick={this.validateLogin}>SIGN IN</button>                        
                 </form>
                 <footer>&copy; Amphere Solutions Inc. 2018</footer>
             </div>

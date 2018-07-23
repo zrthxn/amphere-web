@@ -8,8 +8,8 @@ const PORT = process.env.PORT || ServerConfig.PORT;
 
 const express = require('express');
 const vhost = require('vhost');     // VHOST FOR MULTIPLE SUBDOMAINS
-const amphere = express();          // EXPRESS FOR MULTIPLE SUBDOMAINS
-const homepage = express();
+const amphere = express();          
+const homepage = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
 const account = express();          // EXPRESS FOR MULTIPLE SUBDOMAINS
 const merchant = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
 const admin = express();            // EXPRESS FOR MULTIPLE SUBDOMAINS
@@ -166,11 +166,13 @@ admin.use(express.static(path.join(__dirname, 'admin')));
 
     //---------------------------- MERCHANT -----------------------------//
     merchant.get('/', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'merchant', 'index.html'));
+        res.sendFile(path.resolve(__dirname, 'merchant/build', 'index.html'));
     });
     merchant.post('/getMerchantSalt', (req, res)=> {
         let params = getParameters(req);
-        MerchantWorker.GetMerchantSalt(params.code).then((_res)=>{
+        MerchantWorker.GetMerchantSalt({
+            "code" : params.code
+        }).then((_res)=>{
             if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
@@ -186,16 +188,15 @@ admin.use(express.static(path.join(__dirname, 'admin')));
         let params = getParameters(req);
         MerchantWorker.MerchantLogin({
             "mid" : params.mid,
-            "password" : params.password,
-            "salt" : params.salt
+            "password" : params.password
+            //"salt" : params.salt
         }).then((_res)=>{
             if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
                     "mid" : _res.mid,
                     "phone" : _res.phone,
-                    "name" : _res.name,
-                    "sessions" : _res.sessions
+                    "name" : _res.name
                 });
             } else {
                 res.status(200).json({"state" : "PASSWORD-INCORRECT"});
@@ -239,11 +240,17 @@ admin.use(express.static(path.join(__dirname, 'admin')));
 
     //==========================================================================//
 
-amphere.use(vhost('amphere.in', homepage));
-amphere.use(vhost('www.amphere.in', homepage));
-amphere.use(vhost('account.amphere.in', account));
-amphere.use(vhost('merchant.amphere.in', merchant));
-amphere.use(vhost('admin.amphere.in', admin));
+// amphere.use(vhost('amphere.in', homepage));
+// amphere.use(vhost('www.amphere.in', homepage));
+// amphere.use(vhost('account.amphere.in', account));
+// amphere.use(vhost('merchant.amphere.in', merchant));
+// amphere.use(vhost('admin.amphere.in', admin));
+
+amphere.use(vhost('boltbite.com', homepage));
+amphere.use(vhost('www.boltbite.com', homepage));
+amphere.use(vhost('account.boltbite.com', account));
+amphere.use(vhost('merchant.boltbite.com', merchant));
+amphere.use(vhost('admin.boltbite.com', admin));
 
 //------------------------------------------------------------------------------------------------------//
 // S E R V E R =============================== L E G A C Y ================================ S E R V E R //

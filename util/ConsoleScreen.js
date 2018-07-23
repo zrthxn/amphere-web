@@ -15,3 +15,11 @@ exports.StartupScreen = function (info){
     
     console.log('\n');
 }
+
+exports.TimerStartupScreen = function (){
+    console.log('\n');
+    console.log("\t- - = = A M P H E R E = = - -");
+    console.log('\n');
+    console.log("\t       --- TIMER ---         ");
+    console.log('\n');
+}

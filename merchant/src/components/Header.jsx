@@ -19,8 +19,6 @@ class Header extends Component {
         return (
             <header>
                 <Image className="logo-text" src="assets/amphere-text.svg" />
-                
-                {/* <button id="logout-init" className="btn-thin btn-logout" onClick={this.logoutInitiate}>Log out</button> */}
 
                 <input id="sidebar-toggle" type="checkbox" className="checkbox" />
                 <div className="sidebar-shadow"></div>
@@ -49,8 +47,7 @@ class Header extends Component {
                 {
                     this.props.button ? 
                         <button className="button btn-small btn-noborder" 
-                                id="exit-button"
-                                onClick={this.props.logoutWorker}>Logout
+                                onClick={this.props.logoutWorker.bind(this)}>Logout
                         </button> 
                         : console.log()
                 }

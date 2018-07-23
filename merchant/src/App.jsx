@@ -13,21 +13,21 @@ class App extends Component {
       this.state = {
           mid : null,
           phone: null,
-          name : null,
-          lightboxOpen: false,
-
+          name : null
       };
   }
 
-  componentDidMount(){
+  componentWillMount() {
     this.setState({
-        mid: this.props.mid,
-        phone: this.props.phone,
-        name: this.props.name,
-        lightboxOpen: false
+      mid: this.props.mid,
+      phone: this.props.phone,
+      name: this.props.name
     });
-    let sessionsRef = MerchantDatabase.firebase.database().ref('merchants/merchant-AMP' + /* + this.state.mid + */ '/sessions');
-    sessionsRef.on('child_added', session =>{
+  }
+
+  componentDidMount(){
+    MerchantDatabase.firebase.database().ref('merchants/merchant-' + this.state.mid + '/sessions')
+    .on('child_added', session =>{
       if(session.val().expired===false){
         this.SessionsHolder.addNewSession({
           sid: session.val().sid,
@@ -43,15 +43,17 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div>
         <Header phone={this.state.phone}
                 name={this.state.name}
-                logoutWorker={this.props.logoutWorker}
+                logoutWorker={()=>{
+                  this.props.logoutWorker(); 
+                }}
                 button={true}/>
         
         <Banner/>
         
-        <SessionsHolder ref={SessionsHolder => this.SessionsHolder = SessionsHolder}/>
+        <SessionsHolder ref={ SessionsHolder => this.SessionsHolder = SessionsHolder }/>
         <Footer />
       </div>
     );

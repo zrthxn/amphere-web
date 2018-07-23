@@ -18,11 +18,10 @@
 const Hasher = require('./PasswordHasher');
 const firebaseLogin = require('./Database');
 
-exports.GetUserSalt = function (_phone) {
-    let phone = "00910" + _phone;
+exports.GetUserSalt = function (phone) {
     return new Promise((resolve, reject)=>{
         let firebaseLoginSalt = firebaseLogin.firebase.database();        
-        firebaseLoginSalt.ref().child('users').orderByChild('phone').equalTo(_phone).on('child_added', function(searchres) {
+        firebaseLoginSalt.ref().child('users').orderByChild('phone').equalTo(phone).on('child_added', function(searchres) {
             let uid = searchres.key.split('-')[1].toString();
             if(uid!==null){
                 firebaseLoginSalt.ref('users/user-' + uid).child('salt').on('value', function(salt){
