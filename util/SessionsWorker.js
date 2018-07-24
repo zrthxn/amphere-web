@@ -13,7 +13,7 @@ exports.BookNewSession = function (params) {
     return new Promise((resolve,reject) => {
         let date = new Date();
         if(date.getHours()<=9 || date.getHours()>=17){
-            reject("Sessions can only be booked between 9 AM and 9 PM");
+            //reject("Sessions can only be booked between 9 AM and 9 PM");
         }
 
         sessionsData.ref('sessions/session-' + sid)
