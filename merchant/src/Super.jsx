@@ -12,17 +12,17 @@ class Super extends Component {
         }
     }
 
-    login = (loginObject) => {
+    login = (params) => {
         // this.setState({
         //     mid: "AMP",
         //     phone: "26985186",
         //     name: "Amphere Solutions",
         //     loginValidated: true
         // });
-        if(loginObject.validated===true){
+        if(params.validated===true){
             Login.ValidateLogin({
-                "code" : loginObject.details.code,
-                "password" : loginObject.details.password
+                "code" : params.details.code,
+                "password" : params.details.password
             }).then((result) => {
                 if(result.validated===true){
                     this.setState({
