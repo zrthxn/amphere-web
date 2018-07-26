@@ -31,7 +31,7 @@ class App extends Component {
       if(session.val().mid===this.state.mid){
         if(session.val().isDeleted===false || true){
           MerchantDatabase.firebase.database().ref('users/user-' + session.val().uid)
-          .on('child_added', user =>{
+          .on('value', user =>{
             this.SessionsHolder.addNewSession({
               sid: session.val().sid,
               uid: session.val().uid,
