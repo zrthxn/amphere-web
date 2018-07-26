@@ -15,31 +15,52 @@ class Super extends Component {
         }
     }
 
+    componentDidMount() {
+        this.checkLoginToken();
+    }
+
+    checkLoginToken = () => {
+        let token = localStorage.getItem('AMP_MTK');
+        if(token!==null){
+            Login.ValidateToken(token).then((result)=>{
+                if(result.validated===true){
+                    this.setState({
+                        mid: result.mid,
+                        phone: result.phone,
+                        name: result.name,
+                        sessions: result.sessions,
+                        loginValidated: true
+                    });
+                } else {
+                    this.setState({loginValidated: false});
+                }
+            });
+        } else {
+            this.setState({loginValidated: false});
+        }
+    }
+
     login = (params) => {
-        this.setState({
-            mid: "AMP",
-            phone: "26985186",
-            name: "Amphere Solutions",
-            loginValidated: true
-        });
-        // if(params.validated===true){
-        //     Login.ValidateLogin({
-        //         "code" : params.details.code,
-        //         "password" : params.details.password
-        //     }).then((result) => {
-        //         if(result.validated===true){
-        //             this.setState({
-        //                 mid: result.mid,
-        //                 phone: result.phone,
-        //                 name: result.name,
-        //                 loginValidated: true
-        //             });
-        //         }
-        //     });
-        // }
+        if(params.validated===true){
+            Login.ValidateLogin({
+                "code" : params.details.code,
+                "password" : params.details.password
+            }).then((result) => {
+                if(result.validated===true){
+                    localStorage.setItem('AMP_MTK', result.token);
+                    this.setState({
+                        mid: result.mid,
+                        phone: result.phone,
+                        name: result.name,
+                        loginValidated: true
+                    });
+                }
+            });
+        }
     }
 
     logout = () => {
+        localStorage.removeItem('AMP_MTK');
         this.setState({
             loginValidated: false
         });

@@ -48,7 +48,6 @@ class Session extends Component {
         this.setState({
             activated : true
         });
-
         // if(this.state._otp === this.state.otp){
         //     SessionUtil.ActivateSession({
         //         "sid": this.state.sid,
@@ -93,22 +92,22 @@ class Session extends Component {
         // });
     }
     
-    cancelSession = () => {
-        if(this.state.timeRemain<=15){
-            alert("session cannot be cancelled after half the time has elapsed");
+    cancelSession = (reasons) => {
+        if(this.state.timeRemain<=(this.state.duration/2)){
+            alert("Session cannot be cancelled after half the time has elapsed");
         } else {
             this.props.cancel();
+            // SessionUtil.CancelSession({
+            //     "sid": this.state.sid,
+            //     "exp": reasons
+            // }).then((res)=>{
+            //     if(res.success===true){
+            //         this.props.cancel();
+            //     }
+            // }).catch((err)=>{
+            //     alert(err);
+            // });
         }
-        // SessionUtil.CancelSession({
-        //     "sid": this.state.sid,
-        //     "exp": this.state.cancelcause
-        // }).then((res)=>{
-        //     if(res.success===true){
-        //         this.props.cancel();
-        //     }
-        // }).catch((err)=>{
-        //     alert(err);
-        // });
     }
 
     paymentComplete = () => {
@@ -180,11 +179,17 @@ class Session extends Component {
                             <button className="button session-expired-button"
                                     onClick={this.paymentComplete}
                                     onPointerEnter={(btn)=>btn.target.innerHTML="BILL PAID"}
-                                    onPointerLeave={(btn)=>btn.target.innerHTML="EXPIRED"}>EXPIRED</button> :
-                            <button className="button session-activated-button"
-                                    onClick={()=>{this.cancelConfirmationDialog(true)}}
-                                    onPointerEnter={(btn)=>btn.target.innerHTML="CANCEL"}
-                                    onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button> 
+                                    onPointerLeave={(btn)=>btn.target.innerHTML="EXPIRED"}>EXPIRED</button> : 
+                                    (
+                                        this.state.timeRemain<=(this.state.duration/2) ? (
+                                            <button className="button session-activated-button">ACTIVE</button>
+                                        ) : (
+                                            <button className="button session-activated-button"
+                                                    onClick={()=>{this.cancelConfirmationDialog(true)}}
+                                                    onPointerEnter={(btn)=>btn.target.innerHTML="CANCEL"}
+                                                    onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button> 
+                                        )
+                                    )
                     ) : (
                             <button className="button session-start-button" onClick={this.activate}>START</button>
                     )

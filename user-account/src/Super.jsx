@@ -16,43 +16,27 @@ class Super extends Component {
     }
 
     componentDidMount() {
-        if(!this.state.loginValidated){
-            let result = this.checkLoginToken();
-            if(result.validated){
-                this.setState({
-                    uid: result.uid,
-                    phone: result.phone,
-                    name: result.name,
-                    sessions: result.sessions,
-                    loginValidated: true
-                });
-            }
-        }
+        this.checkLoginToken();
     }
 
     checkLoginToken = () => {
-        let token = localStorage.getItem('AMP_TK');
+        let token = localStorage.getItem('AMP_MTK');
         if(token!==null){
-            let result = Login.ValidateByToken(token);
-            try{
+            Login.ValidateToken(token).then((result)=>{
                 if(result.validated===true){
-                    return {
-                        "validated": true,
-                        "uid": result.uid,
-                        "phone": result.phone,
-                        "name": result.name,
-                        "sessions": result.sessions
-                    };
+                    this.setState({
+                        mid: result.mid,
+                        phone: result.phone,
+                        name: result.name,
+                        sessions: result.sessions,
+                        loginValidated: true
+                    });
                 } else {
-                    return false;
+                    this.setState({loginValidated: false});
                 }
-            } catch(e) {
-                return false;
-            }
+            });
         } else {
-            return {
-                "validated" : false
-            };
+            this.setState({loginValidated: false});
         }
     }
 
@@ -63,6 +47,7 @@ class Super extends Component {
                 "password" : loginObject.details.password
             }).then((result) => {
                 if(result.validated===true){
+                    localStorage.setItem('AMP_TK', result.token);
                     this.setState({
                         uid: result.uid,
                         phone: result.phone,
@@ -78,7 +63,7 @@ class Super extends Component {
     }
 
     logout = () => {
-        //TEMPORARY ARRANGEMENT ONLY
+        localStorage.removeItem('AMP_TK');
         this.setState({
             loginValidated: false
         });

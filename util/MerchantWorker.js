@@ -63,7 +63,8 @@ exports.MerchantLogin = function (params) {
                 "success": true,
                 "mid" : requiredMerchant.mid,
                 "phone" : requiredMerchant.phone,
-                "name" : requiredMerchant.name
+                "name" : requiredMerchant.name,
+                "token" : hash 
             });
         } else {
             resolve({

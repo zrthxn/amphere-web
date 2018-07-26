@@ -53,7 +53,8 @@ exports.Login = function (credentials) {
                         "uid" : userDetails.val().uid,
                         "phone" : userDetails.val().phone,
                         "name" : userDetails.val().name,
-                        "sessions" : userDetails.val().sessions
+                        "sessions" : userDetails.val().sessions,
+                        "token" : hash
                     });
                 })
             } else {
@@ -68,7 +69,7 @@ exports.Login = function (credentials) {
 exports.TokenLogin = function (token) {
     return new Promise((resolve, reject)=>{
         let firebaseTokenLogin = firebaseLogin.firebase.database();
-        firebaseTokenLogin.ref('users/user-' + token).on('value', function(userDetails){
+        firebaseTokenLogin.ref().orderByChild('password').equalTo(token).on('value', function(userDetails){
             if(userDetails.val()!==null){
                 resolve({
                     "success": true,

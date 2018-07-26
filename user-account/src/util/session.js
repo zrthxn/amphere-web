@@ -30,7 +30,7 @@ function generateSessionQueryURL(query) {
     return (
         `uid=${query.uid}&` +
         `phone=${query.phone}&` +
-        `name=${encodeURIComponent(query.name)}&` +
+        `name=${encodeURI(query.name)}&` +
         `location=${query.location}&` +
         `duration=${query.duration}&` +
         `device=${query.device}&` +

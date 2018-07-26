@@ -53,7 +53,7 @@ exports.CancelSession = (params) => {
     var cancellationRequest = new XMLHttpRequest();
 
     return new Promise((resolve, reject)=>{
-        cancellationRequest.open('POST', `/merchantCancelSession?sid=${params.sid}&cause=${encodeURIComponent(params.exp)}`, true);
+        cancellationRequest.open('POST', `/merchantCancelSession?sid=${params.sid}&cause=${encodeURI(params.exp)}`, true);
         cancellationRequest.send();
         cancellationRequest.onreadystatechange = event => {
             if (cancellationRequest.readyState === 4 && cancellationRequest.status === 200) {

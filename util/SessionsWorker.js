@@ -105,7 +105,7 @@ exports.CancelSession = function (sid, exp) {
     return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
             "isDeleted" : true,
-            "status" : `CANCELLED : ${getDateTime()} : ${decodeURIComponent(exp)}`
+            "status" : `CANCELLED : ${getDateTime()} : "${decodeURI(exp)}"`
         });
         resolve({
             "success":true

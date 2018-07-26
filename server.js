@@ -127,7 +127,8 @@ admin.use(express.static(path.join(__dirname, 'admin')));
                     "uid" : _res.uid,
                     "phone" : _res.phone,
                     "name" : _res.name,
-                    "sessions" : _res.sessions
+                    "sessions" : _res.sessions,
+                    "token" : _res.token
                 });
             } else {
                 res.status(200).json({"state" : "PASSWORD-INCORRECT"});
@@ -139,7 +140,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
         SessionsWorker.BookSession({
             "uid" : params.uid,
             "phone" : params.phone,
-            "name" : decodeURIComponent(params.name),
+            "name" : decodeURI(params.name),
             "location" : params.location,
             "duration" : params.duration,
             "device" : params.device
@@ -185,14 +186,14 @@ admin.use(express.static(path.join(__dirname, 'admin')));
         MerchantWorker.MerchantLogin({
             "mid" : params.mid,
             "password" : params.password
-            //"salt" : params.salt
         }).then((_res)=>{
             if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
                     "mid" : _res.mid,
                     "phone" : _res.phone,
-                    "name" : _res.name
+                    "name" : _res.name,
+                    "token" : _res.token
                 });
             } else {
                 res.status(200).json({"state" : "PASSWORD-INCORRECT"});

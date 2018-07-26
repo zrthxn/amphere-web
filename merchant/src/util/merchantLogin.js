@@ -94,7 +94,8 @@ exports.ValidateLogin = function (credentials) {
                 "validated": true,
                 "mid" : requiredMerchant.mid,
                 "phone" : requiredMerchant.phone,
-                "name" : requiredMerchant.name
+                "name" : requiredMerchant.name,
+                "token" : hash
             });
         } else {
             resolve({
@@ -129,6 +130,18 @@ exports.ValidateLogin = function (credentials) {
     //         }
     //     }
     // });
+}
+
+exports.ValidateToken = function (token) {
+    return new Promise((resolve, reject)=>{
+        let requiredMerchant = getObjects(LocalMerchantsData.merchants, 'password', token)[0];
+        resolve({
+            "validated": true,
+            "mid" : requiredMerchant.mid,
+            "phone" : requiredMerchant.phone,
+            "name" : requiredMerchant.name
+        });
+    });
 }
 
 function getObjects(obj, key, val) {

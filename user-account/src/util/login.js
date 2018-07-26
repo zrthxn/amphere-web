@@ -24,7 +24,8 @@ exports.ValidateByPhone = function (credentials) {
                                 "uid" : loginResponse.uid,
                                 "phone" : loginResponse.phone,
                                 "name" : loginResponse.name,
-                                "sessions" : loginResponse.sessions
+                                "sessions" : loginResponse.sessions,
+                                "token" : loginResponse.token
                             });
                         } else {
                             resolve({
@@ -45,9 +46,6 @@ exports.ValidateByToken = function (token) {
     request.onreadystatechange = event => {
         if (request.readyState === 4 && request.status === 200) {
             let response = JSON.parse(request.response);
-            console.log(response);
-            console.log(JSON.stringify(response));
-            console.log(JSON.stringify(JSON.stringify(response)));
             if(response.state==="SUCCESS"){
                 return {
                     "validated" : true,
