@@ -49,8 +49,9 @@ class App extends Component {
 
   addNewSession = (params) => {    
     BookSession.addNewSession({
-        "phone" : this.state.phone,
         "uid" : this.state.uid,
+        "phone" : this.state.phone,
+        "name" : this.state.name,
         "location" : params.locCode,
         "device" : params.device,
         "duration" : params.duration

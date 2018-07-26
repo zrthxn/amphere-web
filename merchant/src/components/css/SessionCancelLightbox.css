@@ -1,4 +1,90 @@
 .lightbox {
-    height: 50%;
-    top: 25%;
+    display: flex;
+    flex-flow: column;
+    width: 75%;
+    max-width: 500px;
+    height: 60vh;
+    top: 20vh;
+    left: 50%;
+    margin-left: -37.5%;
+    padding: 1em 2em;
+    text-align: center;    
+    animation-name: pop-lightbox;
+}
+@keyframes pop-lightbox {
+    from{
+        width: 0%;
+        height: 0%;
+        margin-left: 0px;
+        top: 50%;
+        opacity: 0;
+    }
+    to{
+        width: 500px;
+        height: 60vh;
+        top: 20vh;
+        margin-left: -250px;
+        opacity: 1;
+    }
+}
+
+.cancel-container {
+    align-self: center;
+    margin: auto;
+}
+
+.textbox {
+    margin-bottom: 1em;
+    font-size: 0.75em; 
+}
+
+.button {
+    padding: 0.5em 0.75em;
+    margin: 0.5em;
+}
+.confirm {
+    color: #FFF;
+    font-weight: 600;
+    background: linear-gradient(#ff0000,#ff2d2d);
+    border: 1px solid #ff0000;
+
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+} .confirm:active {
+    background: linear-gradient(#d60000,#e42929);
+}
+
+@media (min-width: 600px){
+    .lightbox {
+        width: 500px;
+        left: 50%;
+        height: 20em;
+        top: 35vh;
+        margin-left: -250px;
+        animation-name: pop-lightbox;
+    }
+    .textbox {
+        margin-bottom: unset;
+    }
+    .button {
+        padding: 0.5em;
+        margin: 2em 1em;
+    }
+    @keyframes pop-lightbox {
+        from{
+            width: 0%;
+            height: 0%;
+            margin-left: 0px;
+            top: 50%;
+            opacity: 0;
+        }
+        to{
+            width: 500px;
+            height: 20em;
+            margin-left: -250px;
+            top: 35vh;
+            opacity: 1;
+        }
+    }
 }

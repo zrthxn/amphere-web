@@ -1,8 +1,10 @@
 .sessions-holder {
+    grid-area: main;
+
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 1rem;
-    text-align: left;
-    padding: 2em 0;
+    grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+    grid-gap: 1em;
+    grid-auto-flow: dense;
+    padding: 2em 2em;
     z-index: 1000;
 }

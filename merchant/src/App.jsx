@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import './GlobalStyles.css';
 import Header from './components/Header';
 import Banner from './components/Banner';
 import SessionsHolder from './components/SessionsHolder';
 import Footer from './components/Footer';
+
+import './GlobalStyles.css';
 
 import MerchantDatabase from './util/Database';
 
@@ -28,40 +29,31 @@ class App extends Component {
   componentDidMount(){
     MerchantDatabase.firebase.database().ref().child('sessions')
     .on('child_added', session =>{
-      if(session.val().mid===this.state.mid){
-        if(session.val().isDeleted===false || true){
-          MerchantDatabase.firebase.database().ref('users/user-' + session.val().uid)
-          .on('value', user =>{
-            this.SessionsHolder.addNewSession({
-              sid: session.val().sid,
-              uid: session.val().uid,
-              username: user.val().name,
-              userphone: user.val().phone,
-              device: session.val().device,
-              duration: session.val().duration,
-              activated:session.val().activated,
-              expired: session.val().expired,
-              otp: session.val().otp
-            });
+      if(session.val().mid===this.state.mid && session.val().isDeleted===false){
+          this.SessionsHolder.addNewSession({
+            sid: session.val().sid,
+            uid: session.val().uid,
+            username: session.val().name,
+            userphone: session.val().phone,
+            device: session.val().device,
+            duration: session.val().duration,
+            activated:session.val().activated,
+            expired: session.val().expired,
+            otp: session.val().otp
           });
-        }
       }
     });
   }
 
   render() {
     return (
-      <div>
+      <div className="App">
         <Header phone={this.state.phone}
                 name={this.state.name}
-                logoutWorker={()=>{
-                  this.props.logoutWorker(); 
-                }}
+                logoutWorker={()=>{this.props.logoutWorker()}}
                 button={true}/>
-        
         <Banner/>
-        
-        <SessionsHolder ref={ SessionsHolder => this.SessionsHolder = SessionsHolder }/>
+        <div className="holder-container"><SessionsHolder ref={ SessionsHolder => this.SessionsHolder = SessionsHolder }/></div>
         <Footer />
       </div>
     );

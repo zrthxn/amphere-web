@@ -47,3 +47,52 @@ exports.ExpireSession = (params) => {
         }
     });
 }
+
+exports.CancelSession = (params) => {
+
+    var cancellationRequest = new XMLHttpRequest();
+
+    return new Promise((resolve, reject)=>{
+        cancellationRequest.open('POST', `/merchantCancelSession?sid=${params.sid}&cause=${encodeURIComponent(params.exp)}`, true);
+        cancellationRequest.send();
+        cancellationRequest.onreadystatechange = event => {
+            if (cancellationRequest.readyState === 4 && cancellationRequest.status === 200) {
+                let cancellationResponse = JSON.parse(cancellationRequest.response);
+                if(cancellationResponse.state==="SUCCESS"){
+                    resolve({
+                        "cancelled" : true,
+                        "time" : cancellationResponse.time
+                    });
+                } else {
+                    resolve({
+                        "cancelled" : false
+                    });
+                }
+            }
+        }
+    });
+}
+
+exports.CompleteSession = (params) => {
+
+    var completionRequest = new XMLHttpRequest();
+
+    return new Promise((resolve, reject)=>{
+        completionRequest.open('POST', `/merchantCompleteSession?sid=${params.sid}`, true);
+        completionRequest.send();
+        completionRequest.onreadystatechange = event => {
+            if (completionRequest.readyState === 4 && completionRequest.status === 200) {
+                let completionResponse = JSON.parse(completionRequest.response);
+                if(completionResponse.state==="SUCCESS"){
+                    resolve({
+                        "completed" : true
+                    });
+                } else {
+                    resolve({
+                        "completed" : false
+                    });
+                }
+            }
+        }
+    });
+}

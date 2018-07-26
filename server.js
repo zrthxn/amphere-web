@@ -14,8 +14,6 @@ const account = express();          // EXPRESS FOR MULTIPLE SUBDOMAINS
 const merchant = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
 const admin = express();            // EXPRESS FOR MULTIPLE SUBDOMAINS
 
-const cookieParser = require('cookie-parser');
-
 const SignupWorker = require('./util/SignupWorker');
 const SessionsWorker = require('./util/SessionsWorker');
 const LoginWorker = require('./util/LoginWorker');
@@ -138,9 +136,10 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     });
     account.post('/sessionsWorker', (req, res) => {
         let params = getParameters(req);
-        SessionsWorker.BookNewSession({
-            "phone" : params.phone,
+        SessionsWorker.BookSession({
             "uid" : params.uid,
+            "phone" : params.phone,
+            "name" : decodeURIComponent(params.name),
             "location" : params.location,
             "duration" : params.duration,
             "device" : params.device
@@ -202,7 +201,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     });
     merchant.post('/merchantActivateSession', (req, res)=> {
         let params = getParameters(req);
-        MerchantWorker.ActivateSession({
+        SessionsWorker.ActivateSession({
             "sid" : params.sid,
             "otp" : params.otp
         }).then((_res)=>{
@@ -218,11 +217,34 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     });
     merchant.post('/merchantExpireSession', (req, res)=> {
         let params = getParameters(req);
-        MerchantWorker.ExpireSession(params.sid).then((_res)=>{
+        SessionsWorker.ExpireSession(params.sid).then((_res)=>{
             if(_res.success===true){
                 res.status(200).json({
-                    "state" : "SUCCESS",
-                    "time" : _res.time
+                    "state" : "SUCCESS"
+                });
+            } else {
+                res.status(200).json({"state" : "NO-USER"});
+            }
+        });
+    });
+    merchant.post('/merchantCancelSession', (req, res)=> {
+        let params = getParameters(req);
+        SessionsWorker.CancelSession(params.sid, params.exp).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS"
+                });
+            } else {
+                res.status(200).json({"state" : "NO-USER"});
+            }
+        });
+    });
+    merchant.post('/merchantCompleteSession', (req, res)=> {
+        let params = getParameters(req);
+        SessionsWorker.CompleteSession(params.sid).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS"
                 });
             } else {
                 res.status(200).json({"state" : "NO-USER"});
@@ -341,4 +363,21 @@ function getFile(filepath){
             return(_file);
 		}
 	})
+}
+
+function getObjects(obj, key, val) {
+    var objects = [];
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] === 'object') {
+            objects = objects.concat(getObjects(obj[i], key, val));    
+        } else if (i === key && obj[i] === val || i === key && val === '') {
+            objects.push(obj);
+        } else if (obj[i] === val && key === ''){
+            if (objects.lastIndexOf(obj) === -1){
+                objects.push(obj);
+            }
+        }
+    }
+    return objects;
 }

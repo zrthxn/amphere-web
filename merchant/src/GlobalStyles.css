@@ -8,8 +8,11 @@ body {
   font-family: 'Roboto', sans-serif; 
 }
 
-.App {
-  text-align: center;
+.holder-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-areas: ". main .";
 }
 
 /* TYPOGRAPHY ================================================== TYPOGRAPHY */
@@ -30,9 +33,6 @@ h3{
   line-height: 0.5em;
   font-weight: 400;
   font-size: 1em;
-}
-
-p {
 }
 
 /* TEXTBOXES ============================================== TEXTBOXES */
@@ -82,7 +82,7 @@ p {
   z-index: 20000;
 
   animation-name: pop-lightbox;
-  animation-duration: 0.5s;
+  animation-duration: 0.2s;
   animation-timing-function: ease-in-out;
 }
 

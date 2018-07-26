@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './css/Session.css';
 import SessionCancelLightbox from './SessionCancelLightbox';
-import $ from 'jquery';
 import SessionUtil from '../util/session';
+
+import './css/Session.css';
 
 import SessionFirebase from '../util/Database';
 
@@ -25,6 +25,7 @@ class Session extends Component {
             startTime: 0,
             timeRemain: 0,
             cancelLightboxOpen: false,
+            table: null
         }
     }
 
@@ -43,62 +44,90 @@ class Session extends Component {
         });
     }
 
-    setOTP = (otp_f) => {
-        this.setState({
-            _otp: otp_f.target.value.trim()
-        });
-    }
-
     activate = () => {
-        if(true){
-
-        }
-        SessionUtil.ActivateSession({
-            "sid": this.state.sid,
-            "otp": this.state._otp
-        }).then((res)=>{
-            if(res.activated===true){
-                this.setState({
-                    activated : true,
-                    startTime: res.time
-                });
-                Timer.ref('time').on('value', timeNow => {
-                    let timeElapsed = timeNow.val() - this.state.startTime;
-                    let _timeRemain = this.state.duration - timeElapsed;
-                    if(_timeRemain>0){
-                        this.setState({
-                            timeRemain: _timeRemain
-                        });
-                    } else {
-                        this.expire();
-                    }
-                });
-            }
-        }).catch((err)=>{
-            alert(err);
+        this.setState({
+            activated : true
         });
+
+        // if(this.state._otp === this.state.otp){
+        //     SessionUtil.ActivateSession({
+        //         "sid": this.state.sid,
+        //         "otp": this.state._otp
+        //     }).then((res)=>{
+        //         if(res.activated===true){
+        //             this.setState({
+        //                 activated : true,
+        //                 startTime: res.time
+        //             });
+        //             Timer.ref('time').on('value', timeNow => {
+        //                 let timeElapsed = timeNow.val() - this.state.startTime;
+        //                 let _timeRemain = this.state.duration - timeElapsed;
+        //                 if(_timeRemain>0){
+        //                     this.setState({
+        //                         timeRemain: _timeRemain
+        //                     });
+        //                 } else {
+        //                     this.expire();
+        //                 }
+        //             });
+        //         }
+        //     });
+        // } else {
+        //    alert("Incorrect OTP! Please try again.");
+        // }
     }
 
     expire = () => {
-        Timer.ref('time').off('value');
-        SessionUtil.ExpireSession({
-            sid: this.state.sid
-        }).then(()=>{    
-            this.setState({
-                timeRemain: 0,
-                expired: true
-            });
+        this.setState({
+            timeRemain: 0,
+            expired: true
         });
+        // Timer.ref('time').off('value');
+        // SessionUtil.ExpireSession({
+        //     sid: this.state.sid
+        // }).then(()=>{    
+        //     this.setState({
+        //         timeRemain: 0,
+        //         expired: true
+        //     });
+        // });
+    }
+    
+    cancelSession = () => {
+        if(this.state.timeRemain<=15){
+            alert("session cannot be cancelled after half the time has elapsed");
+        } else {
+            this.props.cancel();
+        }
+        // SessionUtil.CancelSession({
+        //     "sid": this.state.sid,
+        //     "exp": this.state.cancelcause
+        // }).then((res)=>{
+        //     if(res.success===true){
+        //         this.props.cancel();
+        //     }
+        // }).catch((err)=>{
+        //     alert(err);
+        // });
+    }
+
+    paymentComplete = () => {
+        this.props.complete();
+        // SessionUtil.CompleteSession({
+        //     "sid": this.state.sid
+        // }).then((res)=>{
+        //     if(res.success===true){
+        //         this.props.complete();
+        //     }
+        // }).catch((err)=>{
+        //     alert(err);
+        // });
     }
 
     cancelConfirmationDialog = (state) => {
         this.setState({
             cancelLightboxOpen: state
         })
-    }
-
-    cancelSession = () => {
-        this.props.cancel();
     }
 
     render() {
@@ -110,14 +139,18 @@ class Session extends Component {
                     <p className="user-phone">{this.state.userphone}</p>
                     <p className="user-name">{this.state.username}</p>
 
-                    <input type="text" className="textbox-small user-table" placeholder="Table No."/>
+                    {
+                        this.state.activated ? 
+                        <p className="user-table-lock">Table No. {this.state.table}</p> :
+                        <input type="text" className="textbox-small user-table" placeholder="Table No." onChange={(table)=>{this.setState({table: table.target.value.trim()})}}/>
+                    }
                 </div>
 
                 <div className="user-device-container">
                 {
-                    this.state.device==="iOS" ? <img src="assets/ios.svg" alt="" className="user-device"/> : (
-                        this.state.device==="microUSB" ? <img src="assets/microusb.svg" alt="" className="user-device"/> : (
-                            this.state.device==="USB-C" ? <img src="assets/usbc.svg" alt="" className="user-device"/> : console.log()
+                    this.state.device==="iOS" ? <img src="assets/ios.svg" alt="iOS" className="user-device"/> : (
+                        this.state.device==="microUSB" ? <img src="assets/microusb.svg" alt="microUSB" className="user-device"/> : (
+                            this.state.device==="USB-C" ? <img src="assets/usbc.svg" alt="USB-C" className="user-device"/> : console.log("DEVICE ERROR : Session.jsx ::149")
                         )
                     )
                 }
@@ -128,16 +161,30 @@ class Session extends Component {
                     <p className="timer-detail">Minutes</p>
                 </div>
 
-                <div className="otp">
-                    <input type="text" className="textbox otp" placeholder="Enter OTP" onChange={this.setOTP}/>
+                <div>
+                {
+                    this.state.activated ? 
+                    <input id="otp" type="text" className="textbox otp lock" placeholder={this.state._otp} disabled/> :
+                    <input id="otp"
+                           type="text"
+                           className="textbox otp" 
+                           placeholder="Enter OTP"
+                           onChange={(otp_f)=>{this.setState({_otp: otp_f.target.value.trim()})}}/>
+                }
                 </div>
 
                 {
                     this.state.activated ?
                     ( 
                         this.state.expired ?
-                            <button className="button session-expired-button">EXPIRED</button> :
-                            <button className="button session-activated-button" onClick={()=>{this.cancelConfirmationDialog(true)}}>ACTIVE</button> 
+                            <button className="button session-expired-button"
+                                    onClick={this.paymentComplete}
+                                    onPointerEnter={(btn)=>btn.target.innerHTML="BILL PAID"}
+                                    onPointerLeave={(btn)=>btn.target.innerHTML="EXPIRED"}>EXPIRED</button> :
+                            <button className="button session-activated-button"
+                                    onClick={()=>{this.cancelConfirmationDialog(true)}}
+                                    onPointerEnter={(btn)=>btn.target.innerHTML="CANCEL"}
+                                    onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button> 
                     ) : (
                             <button className="button session-start-button" onClick={this.activate}>START</button>
                     )
@@ -145,10 +192,7 @@ class Session extends Component {
 
                 {
                     this.state.cancelLightboxOpen ? 
-                    <SessionCancelLightbox 
-                        confirm={this.cancelSession} 
-                        decline={() => this.cancelConfirmationDialog(false)}/> : 
-                    console.log()
+                    <SessionCancelLightbox confirm={this.cancelSession} decline={() => this.cancelConfirmationDialog(false)}/> : console.log()
                 }            
             </div>
         );

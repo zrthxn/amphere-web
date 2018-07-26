@@ -25,8 +25,15 @@ class SessionsHolder extends Component {
         let _sessions = this.state.sessions.slice();
         delete _sessions[index];
         this.setState({
-            sessions: _sessions,
-            _thisSession: {}
+            sessions: _sessions
+        });
+    }
+
+    completeSession = (index, sid) => {
+        let _sessions = this.state.sessions.slice();
+        delete _sessions[index];
+        this.setState({
+            sessions: _sessions
         });
     }
 
@@ -53,21 +60,25 @@ class SessionsHolder extends Component {
             return (
                 <Session sid={this.state.sessions[index].sid}
                          uid={this.state.sessions[index].uid}
-                         phone={this.state.sessions[index].phone}
+                         username={this.state.sessions[index].username}
+                         userphone={this.state.sessions[index].userphone}
                          device={this.state.sessions[index].device}
                          duration={this.state.sessions[index].duration}
                          expired={this.state.sessions[index].expired}
                          key={index}
+                         complete = {()=>{this.completeSession(index, this.state.sessions[index].sid)}}
                          cancel = {() => this.cancelSession(index)}/>
             );
         })
 
-        let emptinessValue = this.emptinessChecker() ? <EmptySessions /> : _addNewSession
-
         return (
-            <div className="sessions-holder container">
+            <div className="sessions-holder">
             {
-                this.state.sessions.length!==0 ? emptinessValue : <EmptySessions />
+                this.state.sessions.length!==0 ? (
+                    !this.emptinessChecker() ? (
+                        _addNewSession 
+                    ) : <EmptySessions />
+                ) : <EmptySessions />
             }
             </div>
         );

@@ -95,54 +95,6 @@ exports.MerchantLogin = function (params) {
     // });
 }
 
-exports.ActivateSession = function (session) {
-    return new Promise((resolve, reject)=> {
-        var otpFirebase = MerchantFirebase.firebase.database();
-        var time;
-        otpFirebase.ref().orderByKey().equalTo('time').on('child_added', t => {
-            time = t.val();
-            otpFirebase.ref('sessions/session-' + session.sid).orderByKey().equalTo('otp').on('child_added', function(_otp){
-                var otp = _otp.val();
-                if(session.otp === otp){
-                    otpFirebase.ref('sessions/session-' + session.sid).update({
-                        "activated" : true
-                    });
-                    resolve({
-                        "success":true,
-                        "time" : time
-                    });
-                } else {
-                    resolve(false);
-                }
-            });
-        });
-    });
-}
-
-exports.ExpireSession = function (sid) {
-    var expireFirebase = MerchantFirebase.firebase.database();
-    var time, mid;
-
-    return new Promise((resolve, reject)=> {
-        expireFirebase.ref('sessions/session-' + sid).orderByKey().equalTo('mid').on('child_added', m => {
-            mid = m.val();
-            expireFirebase.ref().orderByKey().equalTo('time').on('child_added', t => {
-                time = t.val();
-                expireFirebase.ref('sessions/session-' + sid).update({
-                    "expired" : true
-                });
-                expireFirebase.ref('merchants/merchant-' + mid + '/sessions/session-' + sid).update({
-                    "expired" : true
-                });
-                resolve({
-                    "success":true,
-                    "time" : time
-                });
-            });
-        });
-    });
-}
-
 function getObjects(obj, key, val) {
     var objects = [];
     for (var i in obj) {

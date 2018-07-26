@@ -2,8 +2,9 @@ exports.addNewSession = (params) => {
     return new Promise((resolve, reject)=>{
         const request = new XMLHttpRequest();
         let url = generateSessionQueryURL({
-            "phone" : params.phone,
             "uid" : params.uid,
+            "phone" : params.phone,
+            "name" : params.name,
             "location" : params.location,
             "duration" : params.duration,
             "device" : params.device
@@ -27,8 +28,9 @@ exports.addNewSession = (params) => {
 
 function generateSessionQueryURL(query) {
     return (
-        `phone=${query.phone}&` +
         `uid=${query.uid}&` +
+        `phone=${query.phone}&` +
+        `name=${encodeURIComponent(query.name)}&` +
         `location=${query.location}&` +
         `duration=${query.duration}&` +
         `device=${query.device}&` +

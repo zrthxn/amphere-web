@@ -1,10 +1,12 @@
 const SMSConfig = require('../config.json').textlocal;
 const firebaseSessions = require('./Database');
+const http = require('http');
 
-exports.BookNewSession = function (params) {
+var SessionsData = firebaseSessions.firebase.database();
 
-    var sessionsData = firebaseSessions.firebase.database();
-    var merchantsData = sessionsData.ref().child('merchants').child('merchant-' + params.location);
+exports.BookSession = function (params) {
+    
+    var merchantsData = SessionsData.ref().child('merchants').child('merchant-' + params.location);
 
     let otp = generateOTP(4);
     let sid = generateSessionId();
@@ -12,61 +14,116 @@ exports.BookNewSession = function (params) {
 
     return new Promise((resolve,reject) => {
 
-        sessionsData.ref('sessions/session-' + sid)
-        .set({
+        sessionsData.ref('sessions/session-' + sid).set({
             "sid" : sid,
             "uid" : params.uid,
             "mid" : params.location,
             "phone" : params.phone,
+            "name" : params.name,
             "duration" : params.duration,
             "device" : params.device,
             "otp" : otp,
             "addedOn" : date,
             "activated" : false,
             "expired" : false,
-            "isDeleted" : false
+            "isDeleted" : false,
+            "status" : "BOOKED"
         });
 
-        // merchantsData.child('sessions/session-' + sid)
-        // .set({
-        //     "sid" : sid,
-        //     "uid" : params.uid,
-        //     "phone" : params.phone,
-        //     "duration" : params.duration,
-        //     "device" : params.device,
-        //     "activated" : false,
-        //     "expired" : false,
-        //     "isDeleted" : false
-        // });
+        //  Send SMS to User via textlocal.in   //
 
-            //  Send SMS to User via textlocal.in   //
-            //
-            // sms = `Thank you for booking an Amphere session. Your OTP is ${otp}.`;
-            // smsURL = `apikey=${SMSConfig.apikey}` +
-            // `&numbers=91${params.phone}` +
-            // `&sender=${SMSConfig.sender}&` +
-            // `&message=${encodeURIComponent(sms)}`;
-            
-            // const smsRequest = new XMLHttpRequest();
-            // smsRequest.open('POST', `https://api.textlocal.in/send/?${smsURL}` ,true);
-            // smsRequest.send();
-            // smsRequest.onreadystatechange = e => {
-            //     if (smsRequest.readyState===4 && smsRequest.status === 200) {
-            //         let smsResponse = JSON.parse(smsRequest.response);
-            //         console.log(smsResponse);
-            //         console.log(`SMS sent to ${phone}. TextLocal balance is ${smsResponse.balance}.`);
-            //         if(smsResponse.balance<=20){
-            //             console.log("\n\tWARNING : LOW BALANCE\n")
-            //         }
-            //     }
-            // }
-            //  =================================   //
+        // sms = `Thank you for booking an Amphere session! Your OTP is ${otp}.`;
+        // smsURL = `apikey=${SMSConfig.apikey}` +
+        // `&numbers=91${params.phone}` +
+        // `&sender=${SMSConfig.sender}&` +
+        // `&message=${encodeURIComponent(sms)}`;
         
+        // http.
 
+        // const smsRequest = new XMLHttpRequest();
+        // smsRequest.open('POST', `https://api.textlocal.in/send/?${smsURL}` ,true);
+        // smsRequest.send();
+        // smsRequest.onreadystatechange = e => {
+        //     if (smsRequest.readyState===4 && smsRequest.status === 200) {
+        //         let smsResponse = JSON.parse(smsRequest.response);
+        //         console.log(smsResponse);
+        //         console.log(`SMS sent to ${phone}. TextLocal balance is ${smsResponse.balance}.`);
+        //         if(smsResponse.balance<=20){
+        //             console.log("\n\tWARNING : LOW BALANCE\n")
+        //         }
+        //     }
+        // }
+        //  =================================   //
+        
         resolve({
             "success": true,
             "sid" : sid,
             "startDate" : date,
+        });
+    });
+}
+
+exports.ActivateSession = function (session) {
+    return new Promise((resolve, reject)=> {
+        SessionsData.ref().orderByKey().equalTo('time').on('value', (time)=>{
+            SessionsData.ref('sessions/session-' + session.sid).orderByKey().equalTo('otp')
+            .on('child_added', function(_otp){
+                var otp = _otp.val();
+                if(session.otp === otp){
+                    SessionsData.ref('sessions/session-' + session.sid).update({
+                        "activated" : true,
+                        "status" : `ACTIVATED : ${getDateTime()}`
+                    });
+                    resolve({
+                        "success":true,
+                        "time" : time.val()
+                    });
+                } else {
+                    resolve(false);
+                }
+            });
+        });
+    });
+}
+
+exports.ExpireSession = function (sid) {=
+    return new Promise((resolve, reject)=> {=
+        SessionsData.ref('sessions/session-' + sid).update({
+            "expired" : true,
+            "status" : `EXPIRED : ${getDateTime()}`
+        });
+        resolve({
+            "success":true
+        });
+    });
+}
+
+exports.CancelSession = function (sid, exp) {
+
+    // ADD TO SPREADSHEET HERE
+
+    return new Promise((resolve, reject)=> {
+        SessionsData.ref('sessions/session-' + sid).update({
+            "isDeleted" : true,
+            "status" : `CANCELLED : ${getDateTime()} : ${decodeURIComponent(exp)}`
+        });
+        resolve({
+            "success":true
+        });
+    });
+}
+
+exports.CompleteSession = function (sid) {
+
+    // ADD TO SPREADSHEET HERE
+
+    return new Promise((resolve, reject)=> {
+        SessionsData.ref('sessions/session-' + sid).update({
+            "isDeleted" : true,
+            "status" : `COMPLETED : ${getDateTime()}`
+        });
+        resolve({
+            "success":true
         });
     });
 }
@@ -129,16 +186,4 @@ function generateOTP(length) {
         otp = otp + Math.floor(Math.random()*10).toString();
     }
     return otp;
-}
-
-function resolveName(name) {
-    _name = name.split('+');
-    var result = "";
-
-    for(var i=0 ; i<_name.length ; i++){
-        result = result + ((result==="") ? "" : " ") + _name[i];
-    }
-
-    result.trim();
-    return result;
 }
