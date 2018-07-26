@@ -54,8 +54,8 @@ class Session extends Component {
 
         }
         SessionUtil.ActivateSession({
-            sid: this.state.sid,
-            otp: this.state._otp
+            "sid": this.state.sid,
+            "otp": this.state._otp
         }).then((res)=>{
             if(res.activated===true){
                 this.setState({
@@ -129,7 +129,7 @@ class Session extends Component {
                 </div>
 
                 <div className="otp">
-                    <input type="text" className="textbox otp" placeholder="Enter OTP"/>
+                    <input type="text" className="textbox otp" placeholder="Enter OTP" onChange={this.setOTP}/>
                 </div>
 
                 {
