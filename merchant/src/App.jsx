@@ -26,17 +26,20 @@ class App extends Component {
   }
 
   componentDidMount(){
-    MerchantDatabase.firebase.database().ref('merchants/merchant-' + this.state.mid + '/sessions')
+    MerchantDatabase.firebase.database().ref().child('sessions')
     .on('child_added', session =>{
-      if(session.val().expired===false){
-        this.SessionsHolder.addNewSession({
-          sid: session.val().sid,
-          uid: session.val().uid,
-          phone: session.val().phone,
-          device: session.val().device,
-          duration: session.val().duration,
-          expired: session.val().expired
-        });
+      if(session.val().mid===this.state.mid){
+        if(session.val().isDeleted===false || true){
+          this.SessionsHolder.addNewSession({
+            sid: session.val().sid,
+            uid: session.val().uid,
+            phone: session.val().phone,
+            device: session.val().device,
+            duration: session.val().duration,
+            activated:session.val().activated,
+            expired: session.val().expired
+          });
+        }
       }
     });
   }

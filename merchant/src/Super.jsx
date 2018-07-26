@@ -8,7 +8,11 @@ class Super extends Component {
     constructor(){
         super();
         this.state = {
-            loginValidated: false
+            mid: "AMP",
+            phone: "26985186",
+            name: "Amphere Solutions",
+            loginValidated: true,
+            loginValidated: true
         }
     }
 

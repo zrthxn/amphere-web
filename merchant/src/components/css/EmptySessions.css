@@ -6,6 +6,7 @@
     border: 1px dashed #a0a0a0ab;
     border-radius: 10px;
     position: relative;
+    text-align: center;
 
     animation-name: slideIn-bottom;
     animation-duration: 0.5s;

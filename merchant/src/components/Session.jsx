@@ -17,17 +17,24 @@ class Session extends Component {
             startTime: 0,
             activated: false,
             expired: false,
+            device: null,
             duration: null,
             timeRemain: 0,
-            cancelLightboxOpen: false
+            cancelLightboxOpen: false,
+
+            username: "Alisamar Husain",
+            userphone: "9971521167",
         }
     }
 
     componentDidMount() {
         this.setState({
             sid: this.props.sid,
+            device: this.props.device,
             duration: this.props.duration,
             timeRemain: this.props.duration,
+            activated: this.props.activated,
+            expired: this.props.expired,
         });
     }
 
@@ -89,35 +96,51 @@ class Session extends Component {
     render() {
         return (
             <div className="session">
-                <div className="session-details-container">
-                    <div className="session-number">
-                        <strong>SESSION: {this.state.sid}</strong>
-                        <button className="session-cancel-button" onClick={() => this.cancelConfirmationDialog(true)}>Cancel</button>
-                    </div>
-                    <div className="spacer-small"></div>
-                    <p className="session-detail">Duration: {this.state.duration}</p>
-                    <p className="session-detail">TIME: {this.state.timeRemain}</p>
+                <h2 className="title">SESSION</h2>
 
-                    {
-                        this.state.activated ?
-                        ( 
-                            this.state.expired ?
-                                <button className="button session-expired-button">EXPIRED</button> :
-                                <button className="button session-activated-button">ACTIVE</button> 
-                        ) : (
-                            <div>
-                                <input className="textbox" placeholder="Enter OTP" onChange={this.setOTP}/>
-                                <button className="button session-start-button" onClick={this.activate}>START</button>
-                            </div>
+                <div className="user-details">
+                    <p className="user-phone">{this.state.userphone}</p>
+                    <p className="user-name">{this.state.username}</p>
+
+                    <input type="text" className="textbox-small user-table" placeholder="Table No."/>
+                </div>
+
+                <div className="user-device-container">
+                {
+                    this.state.device==="iOS" ? <img src="assets/ios.svg" alt="" className="user-device"/> : (
+                        this.state.device==="microUSB" ? <img src="assets/microusb.svg" alt="" className="user-device"/> : (
+                            this.state.device==="USB-C" ? <img src="assets/usbc.svg" alt="" className="user-device"/> : console.log()
                         )
-                    }
+                    )
+                }
+                </div>
+
+                <div className="timer">
+                    <p className="timer-remain">{this.state.timeRemain}</p>
+                    <p className="timer-detail">Minutes</p>
+                </div>
+
+                <div className="otp">
+                    <input type="text" className="textbox otp" placeholder="Enter OTP"/>
                 </div>
 
                 {
-                    this.state.cancelLightboxOpen ? (
-                        <SessionCancelLightbox confirm={this.cancelSession} 
-                                               decline={() => this.cancelConfirmationDialog(false)}/>
-                    ) : console.log()
+                    this.state.activated ?
+                    ( 
+                        this.state.expired ?
+                            <button className="button session-expired-button">EXPIRED</button> :
+                            <button className="button session-activated-button" onClick={()=>{this.cancelConfirmationDialog(true)}}>ACTIVE</button> 
+                    ) : (
+                            <button className="button session-start-button" onClick={this.activate}>START</button>
+                    )
+                }
+
+                {
+                    this.state.cancelLightboxOpen ? 
+                    <SessionCancelLightbox 
+                        confirm={this.cancelSession} 
+                        decline={() => this.cancelConfirmationDialog(false)}/> : 
+                    console.log()
                 }            
             </div>
         );

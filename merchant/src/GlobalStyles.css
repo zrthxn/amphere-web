@@ -75,7 +75,7 @@ p {
   background-color: #FFF;
   border-radius: 20px;
   width: 75%;
-  height: 75%;
+  height: 75vh;
   top: 12.5%;
   left: 50%;
   margin-left: -37.5%;
@@ -97,7 +97,7 @@ p {
   }
   to{
       width: 75%;
-      height: 75%;
+      height: 75vh;
       margin-left: -37.5%;
       left: 50%;
       top: 12.5%;

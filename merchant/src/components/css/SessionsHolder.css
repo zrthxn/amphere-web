@@ -1,8 +1,9 @@
 .sessions-holder {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 2em 2em;
-    width: 75%;
-    max-width: 750px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 1rem;
+    
+    text-align: left;
+    padding: 2em 0;
     z-index: 1000;
 }

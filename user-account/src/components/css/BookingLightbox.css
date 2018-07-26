@@ -1,7 +1,7 @@
 .lightbox {
-    height: 60%;
+    height: 60vh;
     max-width: 500px;
-    top: 20%; 
+    top: 20vh; 
 }
 
 .session-settings-holder{
@@ -23,9 +23,9 @@
 }
 
 @keyframes options {
-    0%{ opacity: 0; }
-    90%{ opacity: 0.25; }
-    100%{ opacity: 1; }
+    0%{ opacity: 0 }
+    90%{ opacity: 0.25 }
+    100%{ opacity: 1 }
 }
 
 .confirm-session-button {
@@ -63,10 +63,6 @@
 
     margin-top: auto;
     margin-bottom: auto; 
-
-    /* display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 5fr 1fr; */
 }
 .location .location-code {
     height: fit-content;
@@ -242,7 +238,7 @@
         }
         to{
             width: 500px;
-            height: 60%;
+            height: 60vh;
             margin-left: -250px;
             top: 20%;
             opacity: 1;

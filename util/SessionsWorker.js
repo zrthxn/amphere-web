@@ -1,4 +1,4 @@
-const SMSConfig = require('../config.json');
+const SMSConfig = require('../config.json').textlocal;
 const firebaseSessions = require('./Database');
 
 exports.BookNewSession = function (params) {
@@ -11,10 +11,6 @@ exports.BookNewSession = function (params) {
     let date = getDateTime();
 
     return new Promise((resolve,reject) => {
-        let date = new Date();
-        if(date.getHours()<=9 || date.getHours()>=17){
-            //reject("Sessions can only be booked between 9 AM and 9 PM");
-        }
 
         sessionsData.ref('sessions/session-' + sid)
         .set({
@@ -27,25 +23,28 @@ exports.BookNewSession = function (params) {
             "otp" : otp,
             "addedOn" : date,
             "activated" : false,
-            "expired" : false
+            "expired" : false,
+            "isDeleted" : false
         });
 
-        merchantsData.child('sessions/session-' + sid)
-        .set({
-            "sid" : sid,
-            "uid" : params.uid,
-            "phone" : params.phone,
-            "duration" : params.duration,
-            "device" : params.device,
-            "expired" : false
-        });
+        // merchantsData.child('sessions/session-' + sid)
+        // .set({
+        //     "sid" : sid,
+        //     "uid" : params.uid,
+        //     "phone" : params.phone,
+        //     "duration" : params.duration,
+        //     "device" : params.device,
+        //     "activated" : false,
+        //     "expired" : false,
+        //     "isDeleted" : false
+        // });
 
             //  Send SMS to User via textlocal.in   //
             //
             // sms = `Thank you for booking an Amphere session. Your OTP is ${otp}.`;
-            // smsURL = `apikey=${SMSConfig.textlocal.apikey}` +
+            // smsURL = `apikey=${SMSConfig.apikey}` +
             // `&numbers=91${params.phone}` +
-            // `&sender=${SMSConfig.textlocal.sender}&` +
+            // `&sender=${SMSConfig.sender}&` +
             // `&message=${encodeURIComponent(sms)}`;
             
             // const smsRequest = new XMLHttpRequest();

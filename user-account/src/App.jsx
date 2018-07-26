@@ -16,7 +16,6 @@ class App extends Component {
           phone: null,
           name : null,
           lightboxOpen: false,
-
       };
   }
 
