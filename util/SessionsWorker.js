@@ -86,8 +86,8 @@ exports.ActivateSession = function (session) {
     });
 }
 
-exports.ExpireSession = function (sid) {=
-    return new Promise((resolve, reject)=> {=
+exports.ExpireSession = function (sid) {
+    return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
             "expired" : true,
             "status" : `EXPIRED : ${getDateTime()}`
