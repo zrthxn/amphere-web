@@ -30,14 +30,19 @@ class App extends Component {
     .on('child_added', session =>{
       if(session.val().mid===this.state.mid){
         if(session.val().isDeleted===false || true){
-          this.SessionsHolder.addNewSession({
-            sid: session.val().sid,
-            uid: session.val().uid,
-            phone: session.val().phone,
-            device: session.val().device,
-            duration: session.val().duration,
-            activated:session.val().activated,
-            expired: session.val().expired
+          MerchantDatabase.firebase.database().ref('users/user-' + session.val().uid)
+          .on('value', user =>{
+            this.SessionsHolder.addNewSession({
+              sid: session.val().sid,
+              uid: session.val().uid,
+              username: user.val().name,
+              userphone: user.val().phone,
+              device: session.val().device,
+              duration: session.val().duration,
+              activated:session.val().activated,
+              expired: session.val().expired,
+              otp: session.val().otp
+            });
           });
         }
       }

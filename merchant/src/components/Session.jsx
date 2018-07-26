@@ -12,39 +12,47 @@ class Session extends Component {
     constructor() {
         super();
         this.state = {
-            sid: "UNASSIGNED",
-            otp: null,
-            startTime: 0,
-            activated: false,
-            expired: false,
+            sid: null,
+            uid: null,
+            username: null,
+            userphone: null,
             device: null,
             duration: null,
+            activated: false,
+            expired: false,
+            otp: null,
+            _otp: null,
+            startTime: 0,
             timeRemain: 0,
             cancelLightboxOpen: false,
-
-            username: "Alisamar Husain",
-            userphone: "9971521167",
         }
     }
 
     componentDidMount() {
         this.setState({
             sid: this.props.sid,
+            uid: this.props.uid,
+            username: this.props.username,
+            userphone: this.props.userphone,
             device: this.props.device,
             duration: this.props.duration,
             timeRemain: this.props.duration,
             activated: this.props.activated,
             expired: this.props.expired,
+            otp: this.props.otp
         });
     }
 
-    setOTP = (otp) => {
+    setOTP = (otp_f) => {
         this.setState({
-            otp: otp.target.value.trim()
-        });        
+            _otp: otp_f.target.value.trim()
+        });
     }
 
     activate = () => {
+        if(true){
+            
+        }
         SessionUtil.ActivateSession({
             sid: this.state.sid,
             otp: this.state.otp
