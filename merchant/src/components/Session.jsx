@@ -51,11 +51,11 @@ class Session extends Component {
 
     activate = () => {
         if(true){
-            
+
         }
         SessionUtil.ActivateSession({
             sid: this.state.sid,
-            otp: this.state.otp
+            otp: this.state._otp
         }).then((res)=>{
             if(res.activated===true){
                 this.setState({
