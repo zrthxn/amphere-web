@@ -14,7 +14,7 @@ exports.BookSession = function (params) {
 
     return new Promise((resolve,reject) => {
 
-        sessionsData.ref('sessions/session-' + sid).set({
+        SessionsData.ref('sessions/session-' + sid).set({
             "sid" : sid,
             "uid" : params.uid,
             "mid" : params.location,
