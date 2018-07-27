@@ -64,7 +64,10 @@ class SessionsHolder extends Component {
                          userphone={this.state.sessions[index].userphone}
                          device={this.state.sessions[index].device}
                          duration={this.state.sessions[index].duration}
+                         startTime={this.state.sessions[index].startTime}
+                         activated={this.state.sessions[index].activated}
                          expired={this.state.sessions[index].expired}
+                         otp={this.state.sessions[index].otp}
                          key={index}
                          complete = {()=>{this.completeSession(index, this.state.sessions[index].sid)}}
                          cancel = {() => this.cancelSession(index)}/>

@@ -21,6 +21,7 @@ exports.BookSession = function (params) {
             "phone" : params.phone,
             "name" : params.name,
             "duration" : params.duration,
+            "startTime" : null,
             "device" : params.device,
             "otp" : otp,
             "addedOn" : date,

@@ -37,6 +37,7 @@ class App extends Component {
             userphone: session.val().phone,
             device: session.val().device,
             duration: session.val().duration,
+            startTime: session.val().startTime,
             activated:session.val().activated,
             expired: session.val().expired,
             otp: session.val().otp
@@ -52,8 +53,19 @@ class App extends Component {
                 name={this.state.name}
                 logoutWorker={()=>{this.props.logoutWorker()}}
                 button={true}/>
-        <Banner/>
-        <div className="holder-container"><SessionsHolder ref={ SessionsHolder => this.SessionsHolder = SessionsHolder }/></div>
+        <Banner>
+          {/* <ToggleTabButtons>
+            <TabButton key={1}/>
+            <TabButton key={2}/>
+          </ToggleTabButtons> */}
+        </Banner>
+
+        <div className="holder-container">
+          {/* <ToggleTabs> */}
+            <SessionsHolder ref={ SessionsHolder => this.SessionsHolder = SessionsHolder }/>
+            {/* <PreviousSessionsHolder key={2}/>
+          </ToggleTabs>           */}
+        </div>
         <Footer />
       </div>
     );

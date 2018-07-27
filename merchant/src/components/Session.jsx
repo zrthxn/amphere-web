@@ -37,51 +37,47 @@ class Session extends Component {
             userphone: this.props.userphone,
             device: this.props.device,
             duration: this.props.duration,
-            timeRemain: this.props.duration,
+            startTime: this.props.startTime,
             activated: this.props.activated,
             expired: this.props.expired,
             otp: this.props.otp
         });
+        if(this.state.activated===true){
+            Timer.ref('time').on('value', TimerFunction(timeNow));
+        }
     }
 
     activate = () => {
         this.setState({
             activated : true
         });
-        // if(this.state._otp === this.state.otp){
-        //     SessionUtil.ActivateSession({
-        //         "sid": this.state.sid,
-        //         "otp": this.state._otp
-        //     }).then((res)=>{
-        //         if(res.activated===true){
-        //             this.setState({
-        //                 activated : true,
-        //                 startTime: res.time
-        //             });
-        //             Timer.ref('time').on('value', timeNow => {
-        //                 let timeElapsed = timeNow.val() - this.state.startTime;
-        //                 let _timeRemain = this.state.duration - timeElapsed;
-        //                 if(_timeRemain>0){
-        //                     this.setState({
-        //                         timeRemain: _timeRemain
-        //                     });
-        //                 } else {
-        //                     this.expire();
-        //                 }
-        //             });
-        //         }
-        //     });
-        // } else {
-        //    alert("Incorrect OTP! Please try again.");
-        // }
+        if(this.state._otp === this.state.otp){
+            SessionUtil.ActivateSession({
+                "sid": this.state.sid,
+                "otp": this.state._otp
+            }).then((res)=>{
+                if(res.activated===true){
+                    Timer.ref('sessions/session-' + this.state.sid).update({
+                        "startTime" : res.time
+                    });
+                    this.setState({
+                        activated : true,
+                        startTime: res.time
+                    });
+                    Timer.ref('time').on('value', TimerFunction(timeNow));
+                }
+            });
+        } else {
+           alert("Incorrect OTP! Please try again.");
+        }
     }
 
     expire = () => {
+        Timer.ref('time').off('value');
         this.setState({
             timeRemain: 0,
             expired: true
         });
-        // Timer.ref('time').off('value');
         // SessionUtil.ExpireSession({
         //     sid: this.state.sid
         // }).then(()=>{    
@@ -96,6 +92,7 @@ class Session extends Component {
         if(this.state.timeRemain<=(this.state.duration/2)){
             alert("Session cannot be cancelled after half the time has elapsed");
         } else {
+            Timer.ref('time').off('value');
             this.props.cancel();
             // SessionUtil.CancelSession({
             //     "sid": this.state.sid,
@@ -121,6 +118,16 @@ class Session extends Component {
         // }).catch((err)=>{
         //     alert(err);
         // });
+    }
+
+    TimerFunction(timeNow) {
+        let timeElapsed = timeNow.val() - this.state.startTime;
+        let _timeRemain = this.state.duration - timeElapsed;
+        if(_timeRemain>0){
+            this.setState({timeRemain: _timeRemain});
+        } else {
+            this.expire();
+        }
     }
 
     cancelConfirmationDialog = (state) => {
