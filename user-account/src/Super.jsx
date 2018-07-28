@@ -11,7 +11,7 @@ class Super extends Component {
             phone: null,
             name: null,
             sessions: null,
-            loginValidated: false
+            loginValidated: true
         }
     }
 
@@ -20,23 +20,22 @@ class Super extends Component {
     }
 
     checkLoginToken = () => {
-        let token = localStorage.getItem('AMP_MTK');
+        let token = localStorage.getItem('AMP_TK');
         if(token!==null){
-            Login.ValidateToken(token).then((result)=>{
+            token = token.split('/');
+            Login.ValidateByToken({
+                "uid" : token[0],
+                "hash" : token[1]
+            }).then((result)=>{
                 if(result.validated===true){
                     this.setState({
-                        mid: result.mid,
+                        uid: result.uid,
                         phone: result.phone,
                         name: result.name,
-                        sessions: result.sessions,
                         loginValidated: true
                     });
-                } else {
-                    this.setState({loginValidated: false});
                 }
             });
-        } else {
-            this.setState({loginValidated: false});
         }
     }
 
@@ -52,11 +51,10 @@ class Super extends Component {
                         uid: result.uid,
                         phone: result.phone,
                         name: result.name,
-                        sessions: result.sessions,
                         loginValidated: true
                     });
                 } else {
-    
+                    alert("Phone or password incorrect");
                 }
             });
         }

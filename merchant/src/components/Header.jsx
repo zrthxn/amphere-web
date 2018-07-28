@@ -47,7 +47,7 @@ class Header extends Component {
                 {
                     this.props.button ? 
                         <button className="button btn-small btn-noborder" 
-                                onClick={this.props.logoutWorker.bind(this)}>Logout
+                                onClick={()=>this.props.logoutWorker()}>Logout
                         </button> 
                         : console.log()
                 }

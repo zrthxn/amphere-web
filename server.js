@@ -83,43 +83,11 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     account.get((req, res) => {
         res.sendFile(path.resolve(__dirname, 'user-account/build', 'index.html'));
     });
-    account.post('/tokenLoginWorker', (req, res)=>{
-        let params = getParameters(req);
-        LoginWorker.TokenLogin(params.token).then((_res)=>{
-            if(_res.success===true){
-                res.status(200).json({
-                    "state" : "SUCCESS",
-                    "uid" : _res.uid,
-                    "uid" : _res.uid,
-                    "phone" : _res.phone,
-                    "name" : _res.name,
-                    "sessions" : _res.sessions
-                });
-            } else {
-                res.status(200).json({"state" : "TOKEN-INVALID"});
-            }
-        });
-    })
-    account.post('/getUserSalt', (req, res)=> {
-        let params = getParameters(req);
-        LoginWorker.GetUserSalt(params.phone).then((_res)=>{
-            if(_res.success===true){
-                res.status(200).json({
-                    "state" : "SUCCESS",
-                    "salt" : _res.salt,
-                    "uid" : _res.uid
-                });
-            } else {
-                res.status(200).json({"state" : "NO-USER"});
-            }
-        });
-    });
-    account.post('/loginWorker', (req, res)=> {
+    account.post('/userLoginWorker', (req, res)=> {
         let params = getParameters(req);
         LoginWorker.Login({
-            "uid" : params.uid,
-            "password" : params.password,
-            "salt" : params.salt
+            "phone" : params.phone,
+            "password" : params.password
         }).then((_res)=>{
             if(_res.success===true){
                 res.status(200).json({
@@ -127,11 +95,28 @@ admin.use(express.static(path.join(__dirname, 'admin')));
                     "uid" : _res.uid,
                     "phone" : _res.phone,
                     "name" : _res.name,
-                    "sessions" : _res.sessions,
                     "token" : _res.token
                 });
             } else {
                 res.status(200).json({"state" : "PASSWORD-INCORRECT"});
+            }
+        });
+    });
+    account.post('/userTokenLoginWorker', (req, res)=>{
+        let params = getParameters(req);
+        LoginWorker.TokenLogin({
+            "uid" : params.uid,
+            "hash" : params.hash
+        }).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS",
+                    "uid" : _res.uid,
+                    "phone" : _res.phone,
+                    "name" : _res.name
+                });
+            } else {
+                res.status(200).json({"state" : "TOKEN-INVALID"});
             }
         });
     });
@@ -160,25 +145,46 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             res.status(500).send(err);
         });
     });
+    account.post('/userCancelSession', (req, res)=> {
+        let params = getParameters(req);
+        SessionsWorker.CancelSession(params.sid, params.exp).then((_res)=>{
+            if(_res.success===true){
+                res.status(200).json({
+                    "state" : "SUCCESS"
+                });
+            } else {
+                res.status(200).json({"state" : "NO-USER"});
+            }
+        });
+    });
 
     //---------------------------- MERCHANT -----------------------------//
     merchant.get('/', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'merchant/build', 'index.html'));
     });
-    merchant.post('/getMerchantSalt', (req, res)=> {
+    merchant.post('/sessionsWorker', (req, res) => {
         let params = getParameters(req);
-        MerchantWorker.GetMerchantSalt({
-            "code" : params.code
-        }).then((_res)=>{
+        SessionsWorker.BookDeadSession({
+            "uid" : params.uid,
+            "phone" : params.phone,
+            "name" : decodeURI(params.name),
+            "location" : params.location,
+            "duration" : params.duration,
+            "device" : params.device
+        }).then( _res => {
             if(_res.success===true){
                 res.status(200).json({
                     "state" : "SUCCESS",
-                    "salt" : _res.salt,
-                    "mid" : _res.mid
+                    "sid" : _res.sid,
+                    "startDate" : _res.startDate
                 });
+                console.log(`\nNEW DEAD SESSION ADDED => \n\t- sid: ${_res.sid} \n\t- phone: ${params.phone}`);
             } else {
-                res.status(200).json({"state" : "NO-MERCH"});
+                res.status(500).json({"state" : "FAILED"});
             }
+        }).catch((err)=>{
+            console.log('\n'+err+'\n');
+            res.status(500).send(err);
         });
     });
     merchant.post('/merchantLoginWorker', (req, res)=> {

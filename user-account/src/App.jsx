@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import BookingLightbox from './components/BookingLightbox';
 
 import BookSession from './util/session';
+import UserData from './util/Database';
 
 class App extends Component {
   constructor(){
@@ -19,53 +20,62 @@ class App extends Component {
       };
   }
 
-  componentDidMount(){
+  componentWillMount() {
     this.setState({
-        uid: this.props.uid,
-        phone: this.props.phone,
-        name: this.props.name,
-        lightboxOpen: false
-    })
-  }
-
-  lightboxOpener = () => {
-    this.setState({
-      lightboxOpen: true
-    })
-  }
-  
-  lightboxAborter = () => {
-    this.setState({
-      lightboxOpen: false
-    })
-  }
-
-  paramsHandler = (params) => {
-    this.setState({
+      uid: "1783b50707d439e93451",//this.props.uid,
+      phone: this.props.phone,
+      name: this.props.name,
       lightboxOpen: false
     });
+  }
+
+  componentDidMount(){
+    UserData.firebase.database().ref().child('sessions')
+    .on('child_added', session =>{
+      if(session.val().uid===this.state.uid && session.val().isDeleted===false){
+          this.SessionsHolder.addNewSession({
+            sid: session.val().sid,
+            mid: session.val().mid,
+            device: session.val().device,
+            duration: session.val().duration,
+            startTime: session.val().startTime,
+            activated:session.val().activated,
+            expired: session.val().expired
+          });
+      }
+    });
+  }
+
+  lightboxOpener = () => {this.setState({lightboxOpen: true})}
+  lightboxAborter = () => {this.setState({lightboxOpen: false})}
+
+  paramsHandler = (params) => {
+    this.setState({lightboxOpen: false});
     this.addNewSession(params);
   }
 
   addNewSession = (params) => {    
-    BookSession.addNewSession({
-        "uid" : this.state.uid,
-        "phone" : this.state.phone,
-        "name" : this.state.name,
-        "location" : params.locCode,
-        "device" : params.device,
-        "duration" : params.duration
-    }).then((response)=>{
+    // BookSession.addNewSession({
+    //     "uid" : this.state.uid,
+    //     "phone" : this.state.phone,
+    //     "name" : this.state.name,
+    //     "location" : params.locCode,
+    //     "device" : params.device,
+    //     "duration" : params.duration
+    // }).then((response)=>{
         this.SessionsHolder.addNewSession({
-          sid : response.sid,
-          startDate : response.startDate,
-          location : params.locCode,
-          duration : params.duration
+          sid : "response.sid",
+          mid : params.locCode,
+          duration : params.duration,
+          device: params.device,
+          startTime: params.startTime || 0,
+          activated: params.activated || false,
+          expired: params.expired || false
         });
-    }).catch((err)=>{
-        console.log(err);
-        alert(err);
-    });
+    // }).catch((err)=>{
+    //     console.log(err);
+    //     alert(err);
+    // });
   }
 
   render() {

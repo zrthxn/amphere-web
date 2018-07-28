@@ -5,7 +5,6 @@ import SessionUtil from '../util/session';
 import './css/Session.css';
 
 import SessionFirebase from '../util/Database';
-
 var Timer = SessionFirebase.firebase.database();
 
 class Session extends Component {
@@ -21,7 +20,8 @@ class Session extends Component {
             activated: false,
             expired: false,
             otp: null,
-            _otp: null,
+            dead: false,
+            _otp: "AMPDEAD",
             startTime: 0,
             timeRemain: 0,
             cancelLightboxOpen: false,
@@ -29,7 +29,12 @@ class Session extends Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        let tableLST = localStorage.getItem('session-'+ this.props.sid + '-table');
+        let tab;
+        if(tableLST!==null){
+            tab = tableLST.split('-')[1];
+        }
         this.setState({
             sid: this.props.sid,
             uid: this.props.uid,
@@ -37,39 +42,62 @@ class Session extends Component {
             userphone: this.props.userphone,
             device: this.props.device,
             duration: this.props.duration,
+            timeRemain: this.props.duration,
             startTime: this.props.startTime,
             activated: this.props.activated,
             expired: this.props.expired,
-            otp: this.props.otp
+            otp: this.props.otp,
+            dead: this.props.dead,
+            table: tab
         });
+    }
+
+    componentDidMount() {
         if(this.state.activated===true){
-            Timer.ref('time').on('value', TimerFunction(timeNow));
+            Timer.ref('time').on('value', (timeNow)=>{
+                let timeElapsed = timeNow.val() - this.state.startTime;
+                let _timeRemain = this.state.duration - timeElapsed;
+                if(_timeRemain>0){
+                    this.setState({timeRemain: _timeRemain});
+                } else {
+                    this.expire();
+                }
+            });
         }
     }
 
     activate = () => {
-        this.setState({
-            activated : true
-        });
         if(this.state._otp === this.state.otp){
-            SessionUtil.ActivateSession({
-                "sid": this.state.sid,
-                "otp": this.state._otp
-            }).then((res)=>{
-                if(res.activated===true){
-                    Timer.ref('sessions/session-' + this.state.sid).update({
-                        "startTime" : res.time
-                    });
-                    this.setState({
-                        activated : true,
-                        startTime: res.time
-                    });
-                    Timer.ref('time').on('value', TimerFunction(timeNow));
-                }
-            });
+            this.setState({activated : true});
+            localStorage.setItem('session-'+ this.state.sid + '-table', 'table-' + this.state.table);
         } else {
            alert("Incorrect OTP! Please try again.");
         }
+        // if(this.state._otp === this.state.otp){
+        //     SessionUtil.ActivateSession({
+        //         "sid": this.state.sid,
+        //         "otp": this.state._otp
+        //     }).then((res)=>{
+        //         if(res.activated===true){
+        //             Timer.ref('sessions/session-' + this.state.sid).update({"startTime" : res.time});
+        //             this.setState({
+        //                 activated : true,
+        //                 startTime: res.time
+        //             });
+        //             Timer.ref('time').on('value', (timeNow)=>{
+        //                 let timeElapsed = timeNow.val() - this.state.startTime;
+        //                 let _timeRemain = this.state.duration - timeElapsed;
+        //                 if(_timeRemain>0){
+        //                     this.setState({timeRemain: _timeRemain});
+        //                 } else {
+        //                     this.expire();
+        //                 }
+        //             });
+        //         }
+        //     });
+        // } else {
+        //    alert("Incorrect OTP! Please try again.");
+        // }
     }
 
     expire = () => {
@@ -108,6 +136,7 @@ class Session extends Component {
     }
 
     paymentComplete = () => {
+        localStorage.removeItem('session-'+ this.props.sid + '-table');
         this.props.complete();
         // SessionUtil.CompleteSession({
         //     "sid": this.state.sid
@@ -120,16 +149,6 @@ class Session extends Component {
         // });
     }
 
-    TimerFunction(timeNow) {
-        let timeElapsed = timeNow.val() - this.state.startTime;
-        let _timeRemain = this.state.duration - timeElapsed;
-        if(_timeRemain>0){
-            this.setState({timeRemain: _timeRemain});
-        } else {
-            this.expire();
-        }
-    }
-
     cancelConfirmationDialog = (state) => {
         this.setState({
             cancelLightboxOpen: state
@@ -139,16 +158,24 @@ class Session extends Component {
     render() {
         return (
             <div className="session">
-                <h2 className="title">SESSION</h2>
+                {
+                    this.state.dead ? <h2 className="title">DEAD SESSION</h2> :<h2 className="title">SESSION</h2>
+                }
 
                 <div className="user-details">
                     <p className="user-phone">{this.state.userphone}</p>
                     <p className="user-name">{this.state.username}</p>
-
                     {
-                        this.state.activated ? 
-                        <p className="user-table-lock">Table No. {this.state.table}</p> :
-                        <input type="text" className="textbox-small user-table" placeholder="Table No." onChange={(table)=>{this.setState({table: table.target.value.trim()})}}/>
+
+                        this.state.dead ? <p>For 0% battery</p> : (
+                            this.state.activated ? 
+                            <input id="otp" type="text" className="textbox-small otp lock" placeholder={this.state.otp} disabled/> :
+                            <input id="otp"
+                                type="text"
+                                className="textbox-small otp" 
+                                placeholder="Enter OTP"
+                                onChange={(otp_f)=>{this.setState({_otp: otp_f.target.value.trim()})}}/>
+                        )                        
                     }
                 </div>
 
@@ -167,15 +194,14 @@ class Session extends Component {
                     <p className="timer-detail">Minutes</p>
                 </div>
 
-                <div>
+                <div className="user-table">
                 {
-                    this.state.activated ? 
-                    <input id="otp" type="text" className="textbox otp lock" placeholder={this.state._otp} disabled/> :
-                    <input id="otp"
-                           type="text"
-                           className="textbox otp" 
-                           placeholder="Enter OTP"
-                           onChange={(otp_f)=>{this.setState({_otp: otp_f.target.value.trim()})}}/>
+                    this.state.activated ? (
+                        <div>
+                            <input type="text" className="textbox user-table-lock" placeholder={"Table " + this.state.table} disabled/>
+                        </div>
+                    ) :
+                    <input type="text" className="textbox user-table-field" placeholder="Table No." onChange={(table)=>{this.setState({table: table.target.value.trim()})}}/>
                 }
                 </div>
 
@@ -192,13 +218,13 @@ class Session extends Component {
                                             <button className="button session-activated-button">ACTIVE</button>
                                         ) : (
                                             <button className="button session-activated-button"
-                                                    onClick={()=>{this.cancelConfirmationDialog(true)}}
+                                                    onClick={() => this.cancelConfirmationDialog(true)}
                                                     onPointerEnter={(btn)=>btn.target.innerHTML="CANCEL"}
                                                     onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button> 
                                         )
                                     )
                     ) : (
-                            <button className="button session-start-button" onClick={this.activate}>START</button>
+                            <button className="button session-start-button" onClick={() => this.activate()}>START</button>
                     )
                 }
 

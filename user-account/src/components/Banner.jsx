@@ -14,8 +14,9 @@ class Banner extends Component {
                         <div className="spacer"></div>
                         <div>
                             <h2><strong>MY SESSIONS</strong></h2>
-                            <p>Lorem Ipsum ist dolor vala</p>
-                            <p>Lorem Ipsum ist dolor vala ist dolor vala</p>
+                            <br/>
+                            <p>The sessions you have booked will appear here.</p>
+                            <p>Give your OTP to start a session.</p>
 
                             {/* <p>MY ACCOUNT</p>
                             <h2>Hey {this.props.name}!</h2>

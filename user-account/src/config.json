@@ -1,0 +1,18 @@
+{
+    "PORT" : "9000",
+    "ServerState" : "NORMAL",
+    "data_mode" : "TESTING",
+    "other_data" : "data",
+    "textlocal" : {
+        "apikey" : "PQQTr4E5Vrc-0zfw2hYyWUTR9h3ak9Z7BivkfjUplT",
+        "sender" : "TXTLCL"
+    },
+    "firebase" : {
+        "apiKey": "AIzaSyARptJYiZdxfivMkykDjLtdxpEOcKO_Ugc",
+        "authDomain": "amphere-database.firebaseapp.com",
+        "databaseURL": "https://amphere-database.firebaseio.com",
+        "projectId": "amphere-database",
+        "storageBucket": "amphere-database.appspot.com",
+        "messagingSenderId": "727459033118"
+    }
+}

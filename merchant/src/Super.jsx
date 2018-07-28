@@ -22,7 +22,11 @@ class Super extends Component {
     checkLoginToken = () => {
         let token = localStorage.getItem('AMP_MTK');
         if(token!==null){
-            Login.ValidateToken(token).then((result)=>{
+            token = token.split('/');
+            Login.ValidateToken({
+                "mid" : token[0],
+                "hash" : token[1]
+            }).then((result)=>{
                 if(result.validated===true){
                     this.setState({
                         mid: result.mid,
@@ -74,7 +78,7 @@ class Super extends Component {
             <App mid={this.state.mid}
                  name={this.state.name}
                  phone={this.state.phone}
-                 logoutWorker={this.logout} /> :
+                 logoutWorker={()=>this.logout()} /> :
             <LoginPage onValidate={this.login.bind(this)}/>
         }
       </div>

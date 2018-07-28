@@ -1,14 +1,14 @@
 exports.addNewSession = (params) => {
     return new Promise((resolve, reject)=>{
         const request = new XMLHttpRequest();
-        let url = generateSessionQueryURL({
-            "uid" : params.uid,
-            "phone" : params.phone,
-            "name" : params.name,
-            "location" : params.location,
-            "duration" : params.duration,
-            "device" : params.device
-        });
+
+        let url = `uid=${params.uid}&` +
+        `phone=${params.phone}&` +
+        `name=${encodeURI(params.name)}&` +
+        `location=${params.location}&` +
+        `duration=${params.duration}&` +
+        `device=${params.device}&` +
+        `verify=true`
         
         request.open('POST', `/sessionsWorker?${url}`, true);
         request.send();
@@ -26,14 +26,27 @@ exports.addNewSession = (params) => {
     });    
 }
 
-function generateSessionQueryURL(query) {
-    return (
-        `uid=${query.uid}&` +
-        `phone=${query.phone}&` +
-        `name=${encodeURI(query.name)}&` +
-        `location=${query.location}&` +
-        `duration=${query.duration}&` +
-        `device=${query.device}&` +
-        `verify=true`
-    );
+exports.CancelSession = (params) => {
+
+    var cancellationRequest = new XMLHttpRequest();
+
+    return new Promise((resolve, reject)=>{
+        cancellationRequest.open('POST', `/userCancelSession?sid=${params.sid}&cause=${encodeURI(params.exp)}`, true);
+        cancellationRequest.send();
+        cancellationRequest.onreadystatechange = event => {
+            if (cancellationRequest.readyState === 4 && cancellationRequest.status === 200) {
+                let cancellationResponse = JSON.parse(cancellationRequest.response);
+                if(cancellationResponse.state==="SUCCESS"){
+                    resolve({
+                        "cancelled" : true,
+                        "time" : cancellationResponse.time
+                    });
+                } else {
+                    resolve({
+                        "cancelled" : false
+                    });
+                }
+            }
+        }
+    });
 }

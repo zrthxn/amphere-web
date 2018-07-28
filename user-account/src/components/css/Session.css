@@ -1,5 +1,5 @@
 .session {
-    background: linear-gradient(-90deg, #ffff0070,#FFF);
+    background-color: #FFF;
     text-align: center;
     border: 1px solid #999999;
     border-radius: 10px;
@@ -16,96 +16,125 @@
     animation-duration: 0.5s;
     animation-timing-function: ease-in-out;
 }
-
-    @keyframes slideIn-right{
-        from{
-            right:-50px; 
-            opacity:0;
-        } 
-        to{
-            right:0;
-            opacity:1;
-        }
+@keyframes slideIn-right{
+    from{
+        right:-50px; 
+        opacity:0;
+    } 
+    to{
+        right:0;
+        opacity:1;
     }
-
-    @keyframes slideOut-left{
-        from{
-            right:0px; 
-            opacity:1;
-        } 
-        to{
-            right:50px;
-            opacity:0;
-        }
-    }
-
-.session-details-container {
-    padding: 1em;
-    box-sizing: border-box;
-    margin: 0;
 }
 
-.session-detail {
+.session-details-container {
+    padding: 0.75em;
+    box-sizing: border-box;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr auto auto;
+}
+
+.session-cancel-button {
+    border: 1px solid #ff0000;
+    width: fit-content;
+    height: fit-content;
+    color: #ff0000;
+    border-radius: 50px;
+    background-color: #FFF;
+    padding: 0.25em 0.75em;
+    justify-self: right;
+    font-size: 0.65em;
+    grid-row: 1/2;
+    grid-column: 2/3;
+}
+.session-number {
+    text-align: left;
+    float: left;
+    font-size: 1.125em;
+    margin-bottom: 0.25em;
+    grid-row: 1/2;
+    grid-column: 1/2;
+} 
+.session-detail-location {
     text-align: left;
     font-size: 0.8em;
     line-height: 1.125em;
     margin: 0;
+    grid-row: 2/3;
+    grid-column: 1/2;
 }
-
-.session-number {
+.session-detail-duration {
     text-align: left;
-    font-size: 1.125em;
-    margin: 0;
-} 
-
-.session-cancel-button {
-    border: 1px solid #ff0000;
-    color: #ff0000;
-    border-radius: 50px;
-    background-color: #FFF;
-    padding: 0.25em 1em;
-    float: right;
     font-size: 0.8em;
+    line-height: 1.125em;
+    margin: 0;
+    grid-row: 3/4;
+    grid-column: 1/2;
+}
+.session-detail-time {
+    font-size: 0.8em;
+    line-height: 1.125em;
+    margin: 0;
+    grid-row: 2/4;
+    grid-column: 2/3;
+    justify-self: right;
+    display: flex;
+    flex-flow: row;
 }
 
-.timeout {
-    background-color: #ff0000;
-    width: 0%;
-    left: 0;
-    bottom: 0;
-    padding: 0.25em;
-
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 0; 
-
-    animation-name: battery;
-    animation-duration: 60s;
-    animation-timing-function: linear;
+.session-time-counter {
+    text-align: right;
+    font-size: 2em;
+    line-height: 1.125em;
+    margin: 0 0.25rem 0 0;
+    grid-row: 2/4;
+    grid-column: 2/3;
+}
+.session-time {
+    text-align: left;
+    align-self: center;
+    font-size: 0.75em;
+    line-height: 1.125em;
+    margin: 0 0.25rem 0 0;
+    grid-row: 2/4;
+    grid-column: 2/3;
 }
 
-.timeout-30 {
-    animation-duration: 5s;
+.active-indicator {
+    position: absolute;
+    left: 50%;
+    margin-left: -2em;
+    padding: 0.25rem 0.75rem;
+    background-color: #00d812;
+    width: 4em;
+    height: fit-content;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    animation: glide 0.5s ease-in-out;
+    transform-origin: top;
 }
-
-.timeout-60 {
-    animation-duration: 10s;
+.expired-indicator {
+    position: absolute;
+    left: 50%;
+    margin-left: -2em;
+    padding: 0.25rem 0.75rem;
+    background-color: #888888;
+    width: 4em;
+    height: fit-content;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    animation: glide 0.5s ease-in-out;
+    transform-origin: top;
 }
-
-@keyframes battery {
-    0% {
-        background-color: #88ff00;
-        width: 100%;
-        border-bottom-right-radius: 10px;
-    }
-    2%{
-        border-bottom-right-radius: 0; 
-    }
-    50% {
-        background-color: #ffff00;
-        width: 50%;
-    }
-    100% {
-        background-color: #ff0000;
-        width: 0%;
-    }
+.indicator-text {
+    color: #FFF;
+    font-size: 0.5em;
+    font-weight: 400;
+    margin: 0;
+}
+@keyframes glide {
+    from {transform: scaleY(0)}
+    to {transform: scaleY(1)}
 }

@@ -1,65 +1,79 @@
-const SMSConfig = require('../config.json').textlocal;
 const firebaseSessions = require('./Database');
-const http = require('http');
+const SMSWorker = require('./SMSWorker');
 
 var SessionsData = firebaseSessions.firebase.database();
 
 exports.BookSession = function (params) {
-    
-    var merchantsData = SessionsData.ref().child('merchants').child('merchant-' + params.location);
-
     let otp = generateOTP(4);
     let sid = generateSessionId();
     let date = getDateTime();
 
     return new Promise((resolve,reject) => {
-
-        SessionsData.ref('sessions/session-' + sid).set({
-            "sid" : sid,
-            "uid" : params.uid,
-            "mid" : params.location,
-            "phone" : params.phone,
-            "name" : params.name,
-            "duration" : params.duration,
-            "startTime" : null,
-            "device" : params.device,
-            "otp" : otp,
-            "addedOn" : date,
-            "activated" : false,
-            "expired" : false,
-            "isDeleted" : false,
-            "status" : "BOOKED"
+        SessionsData.ref().child('time').on('value', (time)=>{
+            if(time.val()>=(1440-60)){
+                reject("TIME-RESET");
+            } else {
+                SessionsData.ref('sessions/session-' + sid).set({
+                    "sid" : sid,
+                    "uid" : params.uid,
+                    "mid" : params.location,
+                    "phone" : params.phone,
+                    "name" : params.name,
+                    "duration" : params.duration,
+                    "startTime" : null,
+                    "device" : params.device,
+                    "otp" : otp,
+                    "addedOn" : date,
+                    "activated" : false,
+                    "expired" : false,
+                    "isDeleted" : false,
+                    "status" : "BOOKED"
+                });
+                
+                SMSWorker.SendSMSSessionOTP(otp, params.phone).then(()=>{
+                    resolve({
+                        "success": true,
+                        "sid" : sid,
+                        "startDate" : date,
+                    });
+                });
+            }
         });
+    });
+}
 
-        //  Send SMS to User via textlocal.in   //
+exports.BookDeadSession = function (params) {
+    let sid = generateSessionId();
+    let date = getDateTime();
 
-        // sms = `Thank you for booking an Amphere session! Your OTP is ${otp}.`;
-        // smsURL = `apikey=${SMSConfig.apikey}` +
-        // `&numbers=91${params.phone}` +
-        // `&sender=${SMSConfig.sender}&` +
-        // `&message=${encodeURIComponent(sms)}`;
-        
-        // http.
-
-        // const smsRequest = new XMLHttpRequest();
-        // smsRequest.open('POST', `https://api.textlocal.in/send/?${smsURL}` ,true);
-        // smsRequest.send();
-        // smsRequest.onreadystatechange = e => {
-        //     if (smsRequest.readyState===4 && smsRequest.status === 200) {
-        //         let smsResponse = JSON.parse(smsRequest.response);
-        //         console.log(smsResponse);
-        //         console.log(`SMS sent to ${phone}. TextLocal balance is ${smsResponse.balance}.`);
-        //         if(smsResponse.balance<=20){
-        //             console.log("\n\tWARNING : LOW BALANCE\n")
-        //         }
-        //     }
-        // }
-        //  =================================   //
-        
-        resolve({
-            "success": true,
-            "sid" : sid,
-            "startDate" : date,
+    return new Promise((resolve,reject) => {
+        SessionsData.ref().child('time').on('value', (time)=>{
+            if(time.val()>=(1440-60)){
+                reject("TIME-RESET");
+            } else {
+                SessionsData.ref('sessions/session-' + sid).set({
+                    "sid" : sid,
+                    "uid" : params.uid,
+                    "mid" : params.location,
+                    "phone" : params.phone,
+                    "name" : params.name,
+                    "duration" : params.duration,
+                    "startTime" : null,
+                    "device" : params.device,
+                    "otp" : "AMPDEAD",
+                    "dead" : true,
+                    "addedOn" : date,
+                    "activated" : false,
+                    "expired" : false,
+                    "isDeleted" : false,
+                    "status" : "BOOKED"
+                });
+                resolve({
+                    "success": true,
+                    "sid" : sid,
+                    "startDate" : date,
+                });
+            }
         });
     });
 }
@@ -91,6 +105,7 @@ exports.ExpireSession = function (sid) {
     return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
             "expired" : true,
+            "activated" : false,
             "status" : `EXPIRED : ${getDateTime()}`
         });
         resolve({
@@ -105,6 +120,7 @@ exports.CancelSession = function (sid, exp) {
 
     return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
+            "activated" : false,
             "isDeleted" : true,
             "status" : `CANCELLED : ${getDateTime()} : "${decodeURI(exp)}"`
         });
@@ -120,6 +136,7 @@ exports.CompleteSession = function (sid) {
 
     return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
+            "activated" : false,
             "isDeleted" : true,
             "status" : `COMPLETED : ${getDateTime()}`
         });

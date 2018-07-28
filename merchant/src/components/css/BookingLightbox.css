@@ -1,7 +1,8 @@
 .lightbox {
-    height: 60vh;
+    height: 30em;
     max-width: 500px;
-    top: 20%; 
+    top: 15vh; 
+    padding: 0;
 }
 
 .session-settings-holder{
@@ -23,9 +24,9 @@
 }
 
 @keyframes options {
-    0%{ opacity: 0; }
-    90%{ opacity: 0.25; }
-    100%{ opacity: 1; }
+    0%{ opacity: 0 }
+    90%{ opacity: 0.25 }
+    100%{ opacity: 1 }
 }
 
 .confirm-session-button {
@@ -37,33 +38,17 @@
     color: #FFF;
     font-size: 1.25em;
     font-weight: 600;
+    height: 100%;
+    width: 100%;
 
     border: none;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px; 
-/* 
-    animation-name: pop-lightbox-button;
-    animation-duration: 0.5s;
-    animation-timing-function: ease-in-out; */
 }
 .button-disabled{
     background: #cccccc;
 }
 
-/* @keyframes pop-lightbox-button {
-    from{
-        width: 0;
-        left: 50%;
-        bottom: 50%;
-        opacity: 0;
-    }
-    to{
-        width: 75%;
-        left: 12.5%;
-        bottom: 12.5%;
-        opacity: 1;
-    }
-} */
 
 .lightbox-title {
     font-size: 2em;
@@ -79,10 +64,6 @@
 
     margin-top: auto;
     margin-bottom: auto; 
-
-    /* display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 5fr 1fr; */
 }
 .location .location-code {
     height: fit-content;
@@ -101,9 +82,8 @@
 /*==========================================================================*/
 
 .toggle-bars {
-    width: 75%;
+    width: 100%;
     height: fit-content;
-    margin-left: 12.5%;
     margin-right: 12.5%;
     grid-column: 2/4;
     grid-row: 4/5;
@@ -221,7 +201,6 @@
 .crossmark {
     grid-column: 3/4;
     grid-row: 3/4;
-    float: right;
     margin-top: -3.4rem;
     margin-right: 2.25rem;
 }
@@ -233,10 +212,11 @@
 }
 
 .cross-button {
-    grid-column-start: 4;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
+    margin: 0.65em 0 0 0;
+    justify-self: center;
+    align-self: end;
+    grid-column: 4/5;
+    grid-row: 1/2;
 }
 
 /*MEDIA QUERY=================================================================*/
@@ -248,33 +228,35 @@
         margin-left: -250px;
         animation-name: pop-lightbox;
     }
-
     @keyframes pop-lightbox {
         from{
-            width: 0%;
-            height: 0%;
-            margin-left: 0px;
-            top: 50%;
             opacity: 0;
         }
         to{
-            width: 500px;
-            height: 60vh;
-            margin-left: -250px;
-            top: 20%;
             opacity: 1;
         }
     }
 }
 
-@media (max-width:400) {
-    .info {
-        font-size: 0.5em;
-        line-height: 0.8em;
+@media (max-width:500px) {
+    .session-settings-holder{
+        grid-gap: 0.5em;
     }
-
-    .toggle-bars {
-        width: 100%;
-        font-size: 0.8em;
+    .cross-button {
+        margin: 0.65em 0.65em 0 0;
+        padding: 0.5em;
+    } .cross-button:before , .cross-button:after{
+        width: 1.5em;
+      }
+    .info {
+        font-size: 0.75em;
+        line-height: 1em;
+    }
+    .device-bar .toggle-btn {
+        width: 42.5%;
+    } .device-bar .toggle-btn:first-of-type {
+        width: fit-content;
+    } .device-bar .toggle-btn:last-of-type {
+        width: fit-content;
     }
 }

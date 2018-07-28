@@ -2,20 +2,15 @@ import React, { Component } from 'react';
 import './css/BookingLightbox.css';
 import '../GlobalStyles.css';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
-import validateLocationCode from '../util/LocationValidation';
-import validatePromoCode from '../util/PromoValidation';
 
 class BookingLightbox extends Component {
     constructor(){
         super();
         this.state = {
             duration: 30,
-            locCode: null,
-            location: null,
-            locCodeValid: null,
+            phone: null,
+            phoneValid: false,
             device: "microUSB",
-            promoCode: null,
-            promoValid: null
         };
     }
 
@@ -50,47 +45,20 @@ class BookingLightbox extends Component {
         }
         this.setState({
             device: set
-        })
+        });
     }
 
-    locCodeValidator = (_code) => {
-        let result = validateLocationCode(_code.target.value);
-        if(result){
+    addPhone = (_phone) => {
+        if(_phone.target.value!==""){
             this.setState({
-                location: "Amphere Solutions",
-                locCode: _code.target.value,
-                locCodeValid: true
-            })
-        } else if (result===null) {
+                phoneValid: true,
+                phone: _phone.target.value
+            });
+        } else {
             this.setState({
-                location: null,
-                locCodeValid: null
-            })
-        }else {
-            this.setState({
-                location: "Invalid Code",
-                locCodeValid: false
-            })
-        }
-    }
-
-    promoValidator = (_code) => {
-        let result = validatePromoCode(_code.target.value);
-        if(result){
-            this.setState({
-                promoCode: "Amphere Solutions",
-                promoValid: true
-            })
-        } else if (result===null) {
-            this.setState({
-                promoCode: null,
-                promoValid: null
-            })
-        }else {
-            this.setState({
-                promoCode: "Invalid Code",
-                promoValid: false
-            })
+                phoneValid: false,
+                phone: null
+            });
         }
     }
 
@@ -109,8 +77,8 @@ class BookingLightbox extends Component {
                                 <input id="location-code" 
                                         required="true"
                                         className="textbox" 
-                                        placeholder="Enter Location Code"
-                                        onChange={this.locCodeValidator}/>
+                                        placeholder="Enter Phone"
+                                        onChange={this.addPhone}/>
                             </div>
                             {
                                 (this.state.locCodeValid) ? <div className="checkmark"></div> : (
@@ -142,21 +110,12 @@ class BookingLightbox extends Component {
                             </ButtonToolbar>
                         </div>
 
-                        <div className="promo-holder">
-                            <input id="promo-code" 
-                                required="true"
-                                className="textbox-small" 
-                                placeholder="Promo Code (Optional)"
-                                onChange={this.promoValidator}/>
-                        </div>
-
-                        <p className="info">After booking this session, you will recieve a text SMS
-                        telling you your OTP for this session. This is supposed to be supplied to
-                        the vendor of the restaurant you are at.
+                        <p className="info">This window is for booking a session for customers with 0% battery or those unable of booking online.
+                        Please use it only for it's intended pupose.
                         </p>
 
                         {
-                            (this.state.locCodeValid) ? (
+                            (this.state.phoneValid) ? (
                                 <button className="confirm-session-button" 
                                         onClick={this.confirmSession}>CONFIRM SESSION</button>
                             ) : (

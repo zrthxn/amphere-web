@@ -87,19 +87,9 @@ p {
 
 @keyframes pop-lightbox {
   from{
-      width: 0%;
-      height: 0%;
-      left: 50%;
-      margin-left: 0;
-      top: 50%;
       opacity: 0;
   }
   to{
-      width: 75%;
-      height: 75vh;
-      margin-left: -37.5%;
-      left: 50%;
-      top: 12.5vh;
       opacity: 1;
   }
 }

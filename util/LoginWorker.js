@@ -18,49 +18,29 @@
 const Hasher = require('./PasswordHasher');
 const firebaseLogin = require('./Database');
 
-exports.GetUserSalt = function (phone) {
-    return new Promise((resolve, reject)=>{
-        let firebaseLoginSalt = firebaseLogin.firebase.database();        
-        firebaseLoginSalt.ref().child('users').orderByChild('phone').equalTo(phone).on('child_added', function(searchres) {
-            let uid = searchres.key.split('-')[1].toString();
-            if(uid!==null){
-                firebaseLoginSalt.ref('users/user-' + uid).child('salt').on('value', function(salt){
-                    resolve({
-                        "success": true,
-                        "uid" : uid,
-                        "salt" : salt.val()
-                    });
-                });
-            } else {
-                resolve({
-                    "success": false
-                });
-            }
-        });
-    });
-}
+var firebaseLoginCreds = firebaseLogin.firebase.database();
 
 exports.Login = function (credentials) {
-    return new Promise((resolve, reject)=>{
-        let firebaseLoginCreds = firebaseLogin.firebase.database();
-        var hash = Hasher.generateHash(credentials.password, credentials.salt);
-        firebaseLoginCreds.ref('users/user-' + credentials.uid).child('password').on('value', function(pass){
-            var password = pass.val();
-            if( hash === password ) {
-                firebaseLoginCreds.ref('users/user-' + credentials.uid).on('value', function(userDetails){
+    return new Promise((resolve, reject)=>{       
+        firebaseLoginCreds.ref().child('users').orderByChild('phone').equalTo(credentials.phone)
+        .on('child_added', (user) => {
+            if(user.val()!==null){
+                var hash = Hasher.generateHash(credentials.password, user.val().salt);
+                if(hash===user.val().password) {
                     resolve({
                         "success": true,
-                        "uid" : userDetails.val().uid,
-                        "phone" : userDetails.val().phone,
-                        "name" : userDetails.val().name,
-                        "sessions" : userDetails.val().sessions,
-                        "token" : hash
+                        "uid" : user.val().uid,
+                        "phone" : user.val().phone,
+                        "name" : user.val().name,
+                        "token" : user.val().uid + "/" + hash
                     });
-                })
+                } else {
+                    resolve({
+                        "success": false
+                    });
+                }
             } else {
-                resolve({
-                    "success": false
-                });
+                reject("NO_USER");
             }
         });
     });
@@ -68,15 +48,14 @@ exports.Login = function (credentials) {
 
 exports.TokenLogin = function (token) {
     return new Promise((resolve, reject)=>{
-        let firebaseTokenLogin = firebaseLogin.firebase.database();
-        firebaseTokenLogin.ref().orderByChild('password').equalTo(token).on('value', function(userDetails){
-            if(userDetails.val()!==null){
+        firebaseLoginCreds.ref().child('users').orderByChild('uid').equalTo(token.uid)
+        .on('child_added', (user) => {
+            if(user.val().uid===token.uid && user.val().password===token.hash){
                 resolve({
                     "success": true,
-                    "uid" : userDetails.val().uid,
-                    "phone" : userDetails.val().phone,
-                    "name" : userDetails.val().name,
-                    "sessions" : userDetails.val().sessions
+                    "uid" : user.val().uid,
+                    "phone" : user.val().phone,
+                    "name" : user.val().name
                 });
             } else {
                 resolve({

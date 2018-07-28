@@ -1,15 +1,23 @@
-export default function validateLocationCode (code) {
-        if(code === "AMP"){
-            return true;
-        } else if(code==="") {
-            return null;
-        } else {
-            return false;
-        }
-}
+const LocationValidation = require('./Database').firebase.database();
 
-/*
-THIS FILE WILL USE THE      fetch()     METHOD POST A REQUEST TO GET DATA FROM THE EXPRESS JS ROUTER 
-ON THE BACKEND WHICH WILL HAVE ROUTES FOR THE URL THAT THIS METHOD POSTS TO. THOSE ROUTES WILL HAVE
-FUNCTIONS THAT GET DATA FROM THE        FIREBASE        DB AND RESPOND WITH DATA + 200OK.
-*/
+exports.validateLocationCode = (code) => {
+    let getcode;
+    return new Promise((resolve, reject)=> {
+        LocationValidation.ref().child('merchants').orderByChild('mid').equalTo(code)
+        .on('child_added', merch => {
+            if(merch.val()!==null){
+                getcode = merch.val().mid;
+                if(code===getcode){
+                    resolve({
+                        valid: true,
+                        code: getcode
+                    });
+                } else if(code==="") {
+                    resolve({valid: null});
+                } else {
+                    resolve({valid: false});
+                }
+            }
+        });
+    });
+}

@@ -1,3 +1,31 @@
+exports.addNewSession = (params) => {
+    return new Promise((resolve, reject)=>{
+        const request = new XMLHttpRequest();
+
+        let url = `uid=${params.uid}&` +
+        `phone=${params.phone}&` +
+        `name=${encodeURI(params.name)}&` +
+        `location=${params.location}&` +
+        `duration=${params.duration}&` +
+        `device=${params.device}&` +
+        `verify=true`
+        
+        request.open('POST', `/sessionsWorker?${url}`, true);
+        request.send();
+
+        request.onreadystatechange = event => {
+            if (request.readyState === 4 && request.status === 200) {
+                let response = JSON.parse(request.response);
+                console.log(response);
+                resolve(response);
+            } else if(request.readyState === 4 && request.status===500) {
+                let err = request.responseText;
+                alert(err);
+            }
+        };
+    });    
+}
+
 exports.ActivateSession = (params) => {
 
     var activationRequest = new XMLHttpRequest();

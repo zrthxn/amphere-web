@@ -14,8 +14,11 @@ class Banner extends Component {
                     <div className="spacer"></div>
                     <div>
                         <h2><strong>MY SESSIONS</strong></h2>
-                        <p>Lorem Ipsum ist dolor vala</p>
-                        <p>Lorem Ipsum ist dolor vala ist dolor vala</p>
+                        <br/>
+                        <p>The sessions booked with your <b>Merchant Code</b> will appear here.</p>
+                        <p>Use the OTP sent to the customer to start a session.</p>
+
+                        <button id="book-session" className="button btn-white" onClick={this.openLightbox}>BOOK SESSION</button>
                     </div>
                 </div>              
             </div>

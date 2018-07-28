@@ -30,8 +30,12 @@ class SessionCancelLightbox extends Component {
 
                         <input type="text" className="textbox" placeholder="Explaination" onChange={this.setReasons}/>
 
-                        <button className="button btn-thin" onClick={this.props.decline}>CLOSE</button>
-                        <button className="button btn-thin confirm" onClick={this.props.confirm(this.state.reasons)}>CONFIRM</button>
+                        <button className="button btn-thin" onClick={() => this.props.decline()}>CLOSE</button>
+                        {
+                            this.state.reasons===null ? <button className="button confirm" disabled>CONFIRM</button> : (
+                                <button className="button btn-thin confirm" onClick={() => this.props.confirm(this.state.reasons)}>CONFIRM</button>
+                            )
+                        }
                     </div>
                 </div>
             </div>

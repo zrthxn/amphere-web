@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './css/BookingLightbox.css';
 import '../GlobalStyles.css';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
-import validateLocationCode from '../util/LocationValidation';
+
+import LocationValidation from '../util/LocationValidation';
 import validatePromoCode from '../util/PromoValidation';
 
 class BookingLightbox extends Component {
@@ -50,28 +51,27 @@ class BookingLightbox extends Component {
         }
         this.setState({
             device: set
-        })
+        });
     }
 
     locCodeValidator = (_code) => {
-        let result = validateLocationCode(_code.target.value);
-        if(result){
-            this.setState({
-                location: "Amphere Solutions",
-                locCode: _code.target.value,
-                locCodeValid: true
-            })
-        } else if (result===null) {
-            this.setState({
-                location: null,
-                locCodeValid: null
-            })
-        }else {
-            this.setState({
-                location: "Invalid Code",
-                locCodeValid: false
-            })
-        }
+        LocationValidation.validateLocationCode(_code.target.value).then((result)=>{
+            if(result.valid===true){
+                this.setState({
+                    locCode: result.code,
+                    locCodeValid: true
+                });
+            } else if(result.valid===null) {
+                this.setState({
+                    location: null,
+                    locCodeValid: null
+                });
+            } else if(result.valid===false) {
+                this.setState({
+                    locCodeValid: false
+                });
+            }
+        });
     }
 
     promoValidator = (_code) => {
@@ -152,7 +152,7 @@ class BookingLightbox extends Component {
 
                         <p className="info">After booking this session, you will recieve a text SMS
                         telling you your OTP for this session. This is supposed to be supplied to
-                        the vendor of the restaurant you are at.
+                        the vendor of the restaurant.
                         </p>
 
                         {

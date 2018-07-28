@@ -1,7 +1,7 @@
 .lightbox {
-    height: 60vh;
+    height: 30em;
     max-width: 500px;
-    top: 20vh; 
+    top: 15vh; 
 }
 
 .session-settings-holder{
@@ -81,9 +81,8 @@
 /*==========================================================================*/
 
 .toggle-bars {
-    width: 75%;
+    width: 100%;
     height: fit-content;
-    margin-left: 12.5%;
     margin-right: 12.5%;
     grid-column: 2/4;
     grid-row: 4/5;
@@ -212,6 +211,7 @@
 }
 
 .cross-button {
+    margin: 0.65em 0 0 0;
     justify-self: center;
     align-self: end;
     grid-column: 4/5;
@@ -227,33 +227,35 @@
         margin-left: -250px;
         animation-name: pop-lightbox;
     }
-
     @keyframes pop-lightbox {
         from{
-            width: 0%;
-            height: 0%;
-            margin-left: 0px;
-            top: 50%;
             opacity: 0;
         }
         to{
-            width: 500px;
-            height: 60vh;
-            margin-left: -250px;
-            top: 20%;
             opacity: 1;
         }
     }
 }
 
-@media (max-width:400) {
-    .info {
-        font-size: 0.5em;
-        line-height: 0.8em;
+@media (max-width:500px) {
+    .session-settings-holder{
+        grid-gap: 0.5em;
     }
-
-    .toggle-bars {
-        width: 100%;
-        font-size: 0.8em;
+    .cross-button {
+        margin: 0.65em 0.65em 0 0;
+        padding: 0.5em;
+    } .cross-button:before , .cross-button:after{
+        width: 1.5em;
+      }
+    .info {
+        font-size: 0.75em;
+        line-height: 1em;
+    }
+    .device-bar .toggle-btn {
+        width: 42.5%;
+    } .device-bar .toggle-btn:first-of-type {
+        width: fit-content;
+    } .device-bar .toggle-btn:last-of-type {
+        width: fit-content;
     }
 }

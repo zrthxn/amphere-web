@@ -23,7 +23,15 @@ class SessionsHolder extends Component {
 
     cancelSession = (index) => {
         let _sessions = this.state.sessions.slice();
-        //_sessions.splice(index, 1);
+        delete _sessions[index];
+        this.setState({
+            sessions: _sessions,
+            _thisSession: {}
+        });
+    }
+
+    completeSession = (index) => {
+        let _sessions = this.state.sessions.slice();
         delete _sessions[index];
         this.setState({
             sessions: _sessions,
@@ -54,10 +62,14 @@ class SessionsHolder extends Component {
         let _addNewSession = this.state.sessions.map((sess, index)=>{
             return (
                 <Session sid={this.state.sessions[index].sid}
-                         key={index}
-                         startDate={this.state.sessions[index].startDate}
-                         location={this.state.sessions[index].location}
+                         mid={this.state.sessions[index].mid}
+                         device={this.state.sessions[index].device}
                          duration={this.state.sessions[index].duration}
+                         startTime={this.state.sessions[index].startTime}
+                         activated={this.state.sessions[index].activated}
+                         expired={this.state.sessions[index].expired}
+                         key={index}
+                         complete = {()=>{this.completeSession(index, this.state.sessions[index].sid)}}
                          cancel = {() => this.cancelSession(index)}/>
             );
         })

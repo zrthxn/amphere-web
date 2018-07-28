@@ -7,7 +7,6 @@
     top: 20vh;
     left: 50%;
     margin-left: -37.5%;
-    padding: 1em 2em;
     text-align: center;    
     animation-name: pop-lightbox;
 }
@@ -29,6 +28,7 @@
 }
 
 .cancel-container {
+    padding: 2em;
     align-self: center;
     margin: auto;
 }
@@ -42,6 +42,7 @@
     padding: 0.5em 0.75em;
     margin: 0.5em;
 }
+
 .confirm {
     color: #FFF;
     font-weight: 600;
@@ -53,6 +54,9 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
 } .confirm:active {
     background: linear-gradient(#d60000,#e42929);
+} .confirm:disabled {
+    border: 1px solid #8e8e8e;
+    background: #8e8e8e;
 }
 
 @media (min-width: 600px){

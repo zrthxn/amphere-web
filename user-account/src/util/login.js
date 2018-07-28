@@ -1,64 +1,54 @@
 exports.ValidateByPhone = function (credentials) {
 
-    const saltRequest = new XMLHttpRequest();
     const loginRequest = new XMLHttpRequest();
-
-    let urlGetSalt = `phone=${credentials.phone}`;
-
-    return new Promise((resolve,reject) => {
-        saltRequest.open('POST', `/getUserSalt?${urlGetSalt}`, true);
-        saltRequest.send();
-        saltRequest.onreadystatechange = event => {
-            if (saltRequest.readyState === 4 && saltRequest.status === 200) {
-                let saltResponse = JSON.parse(saltRequest.response);
-                let url = `uid=${saltResponse.uid}&` + `password=${credentials.password}&` + `salt=${saltResponse.salt}`;
-
-                loginRequest.open('POST', `/loginWorker?${url}`, true);
-                loginRequest.send();
-                loginRequest.onreadystatechange = e => {
-                    if (loginRequest.readyState === 4 && loginRequest.status === 200) {
-                        let loginResponse = JSON.parse(loginRequest.response);
-                        if(loginResponse.state==="SUCCESS"){
-                            resolve({
-                                "validated" : true,
-                                "uid" : loginResponse.uid,
-                                "phone" : loginResponse.phone,
-                                "name" : loginResponse.name,
-                                "sessions" : loginResponse.sessions,
-                                "token" : loginResponse.token
-                            });
-                        } else {
-                            resolve({
-                                "validated" : false
-                            });
-                        }
-                    }
+    
+    return new Promise((resolve,reject)=>{
+        loginRequest.open('POST', `/userLoginWorker?phone=${credentials.phone}&password=${credentials.password}`, true);
+        loginRequest.send();
+        loginRequest.onreadystatechange = e => {
+            if (loginRequest.readyState === 4 && loginRequest.status === 200) {
+                let loginResponse = JSON.parse(loginRequest.response);
+                if(loginResponse.state==="SUCCESS"){
+                    resolve({
+                        "validated" : true,
+                        "uid" : loginResponse.uid,
+                        "phone" : loginResponse.phone,
+                        "name" : loginResponse.name,
+                        "token" : loginResponse.token
+                    });
+                } else {
+                    resolve({
+                        "validated" : false
+                    });
                 }
             }
-        };
+        }
     });
 }
 
 exports.ValidateByToken = function (token) {
-    const request = new XMLHttpRequest();
-    request.open('POST', `/tokenLoginWorker?token=${token}`, false);
-    request.send();
-    request.onreadystatechange = event => {
-        if (request.readyState === 4 && request.status === 200) {
-            let response = JSON.parse(request.response);
-            if(response.state==="SUCCESS"){
-                return {
-                    "validated" : true,
-                    "uid" : response.uid,
-                    "phone" : response.phone,
-                    "name" : response.name,
-                    "sessions" : response.sessions
-                };
-            } else {
-                return {
-                    "validated" : false
-                };
+
+    const tokenRequest = new XMLHttpRequest();
+
+    return new Promise((resolve,reject)=>{
+        tokenRequest.open('POST', `/userTokenLoginWorker?uid=${token.uid}&hash=${token.hash}`, true);
+        tokenRequest.send();
+        tokenRequest.onreadystatechange = event => {
+            if (tokenRequest.readyState === 4 && tokenRequest.status === 200) {
+                let tokenResponse = JSON.parse(tokenRequest.response);
+                if(tokenResponse.state==="SUCCESS"){
+                    resolve({
+                        "validated" : true,
+                        "uid" : tokenResponse.uid,
+                        "phone" : tokenResponse.phone,
+                        "name" : tokenResponse.name
+                    });
+                } else {
+                    resolve({
+                        "validated" : false
+                    });
+                }
             }
-        }
-    };
+        };
+    });
 }

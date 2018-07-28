@@ -68,6 +68,7 @@ class SessionsHolder extends Component {
                          activated={this.state.sessions[index].activated}
                          expired={this.state.sessions[index].expired}
                          otp={this.state.sessions[index].otp}
+                         dead={this.state.sessions[index].dead}
                          key={index}
                          complete = {()=>{this.completeSession(index, this.state.sessions[index].sid)}}
                          cancel = {() => this.cancelSession(index)}/>

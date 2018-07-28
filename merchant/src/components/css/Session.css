@@ -38,15 +38,30 @@
 /* ==========================================================*/
 
 .otp {
-    padding: 0.5em !important;
+    padding: 0.25em !important;
+    text-align: center;
+} .otp::placeholder {
+    font-size: 0.8em;
 }
 
+.user-table {
+    grid-row: 3/4;
+    grid-column: 2/3;
+}
 .user-table-lock {
-    margin: 0;
-    padding: 0;
-    font-size: 0.9em;
-    font-weight: 600;
-    color: #8a8a8a;
+    margin-bottom: 0;
+    text-align: center;
+    padding: 1em 0 !important;
+    font-weight: 600 !important;
+    background-color: #e0e0e0 !important;
+} .user-table-lock::placeholder {
+    color: #000 !important;
+}
+.user-table-field {
+    margin-bottom: 0;
+    text-align: center;
+    padding: 1em 0 !important;
+    font-weight: 600 !important;
 }
 
 /* ==========================================================*/
@@ -73,13 +88,7 @@
 .user-details .user-name {
     opacity: 0.75;
 }
-.user-details .user-table {
-    padding: 0.75em;
-    height: 1.25em;
-    text-align: center;
-} .user-table::placeholder {
-    font-size: 0.8em;
-}
+
 
 .user-device-container {
     grid-row: 3/4;
