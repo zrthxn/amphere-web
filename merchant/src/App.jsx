@@ -57,16 +57,16 @@ class App extends Component {
   }
 
   addNewSession = (params) => {    
-    // BookSession.addNewSession({
-    //     "uid" : "null",
-    //     "phone" : params.phone,
-    //     "name" : "Unknown",
-    //     "location" : this.state.mid,
-    //     "device" : params.device,
-    //     "duration" : params.duration
-    // }).then((response)=>{
+    BookSession.addNewSession({
+        "uid" : "null",
+        "phone" : params.phone,
+        "name" : "Unknown",
+        "location" : this.state.mid,
+        "device" : params.device,
+        "duration" : params.duration
+    }).then((response)=>{
         this.SessionsHolder.addNewSession({
-          sid : "response.sid",
+          sid : response.sid,
           mid : this.state.mid,
           userphone:  params.phone,
           username: "Dead Session",
@@ -78,10 +78,10 @@ class App extends Component {
           otp: "AMPDEAD", 
           dead: true
         });
-    // }).catch((err)=>{
-    //     console.log(err);
-    //     alert(err);
-    // });
+    }).catch((err)=>{
+        console.log(err);
+        alert(err);
+    });
   }
 
   render() {
@@ -89,23 +89,14 @@ class App extends Component {
       <div className="App">
         <Header phone={this.state.phone}
                 name={this.state.name}
-                logoutWorker={()=>this.props.logoutWorker()}
+                logoutWorker={this.props.logoutWorker}
                 button={true}/>
-        {/* <Banner>
-          <ToggleTabButtons>
-            <TabButton key={1}/>
-            <TabButton key={2}/>
-          </ToggleTabButtons>
-        </Banner> */}
 
-        <Banner addNewSession={this.addNewSession.bind(this)} 
+        <Banner addNewSession={this.addNewSession.bind(this)}
                 lightboxOpener={this.lightboxOpener.bind(this)}/>
 
         <div className="holder-container">
-          {/* <ToggleTabs> */}
             <SessionsHolder ref={ SessionsHolder => this.SessionsHolder = SessionsHolder }/>
-            {/* <PreviousSessionsHolder key={2}/>
-          </ToggleTabs>           */}
         </div>
 
         {

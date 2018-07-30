@@ -68,85 +68,72 @@ class Session extends Component {
 
     activate = () => {
         if(this.state._otp === this.state.otp){
-            this.setState({activated : true});
             localStorage.setItem('session-'+ this.state.sid + '-table', 'table-' + this.state.table);
+            SessionUtil.ActivateSession({
+                "sid": this.state.sid,
+                "otp": this.state._otp
+            }).then((res)=>{
+                if(res.activated===true){
+                    this.setState({
+                        activated : true,
+                        startTime: res.time
+                    });
+                    Timer.ref('time').on('value', (timeNow)=>{
+                        let timeElapsed = timeNow.val() - this.state.startTime;
+                        let _timeRemain = this.state.duration - timeElapsed;
+                        if(_timeRemain>0){
+                            this.setState({timeRemain: _timeRemain});
+                        } else {
+                            this.expire();
+                        }
+                    });
+                }
+            });
         } else {
            alert("Incorrect OTP! Please try again.");
         }
-        // if(this.state._otp === this.state.otp){
-        //     SessionUtil.ActivateSession({
-        //         "sid": this.state.sid,
-        //         "otp": this.state._otp
-        //     }).then((res)=>{
-        //         if(res.activated===true){
-        //             Timer.ref('sessions/session-' + this.state.sid).update({"startTime" : res.time});
-        //             this.setState({
-        //                 activated : true,
-        //                 startTime: res.time
-        //             });
-        //             Timer.ref('time').on('value', (timeNow)=>{
-        //                 let timeElapsed = timeNow.val() - this.state.startTime;
-        //                 let _timeRemain = this.state.duration - timeElapsed;
-        //                 if(_timeRemain>0){
-        //                     this.setState({timeRemain: _timeRemain});
-        //                 } else {
-        //                     this.expire();
-        //                 }
-        //             });
-        //         }
-        //     });
-        // } else {
-        //    alert("Incorrect OTP! Please try again.");
-        // }
     }
 
     expire = () => {
         Timer.ref('time').off('value');
-        this.setState({
-            timeRemain: 0,
-            expired: true
+        SessionUtil.ExpireSession(this.state.sid).then(()=>{    
+            this.setState({
+                timeRemain: 0,
+                expired: true
+            });
         });
-        // SessionUtil.ExpireSession({
-        //     sid: this.state.sid
-        // }).then(()=>{    
-        //     this.setState({
-        //         timeRemain: 0,
-        //         expired: true
-        //     });
-        // });
     }
     
     cancelSession = (reasons) => {
+        this.cancelConfirmationDialog(false);
         if(this.state.timeRemain<=(this.state.duration/2)){
             alert("Session cannot be cancelled after half the time has elapsed");
         } else {
             Timer.ref('time').off('value');
-            this.props.cancel();
-            // SessionUtil.CancelSession({
-            //     "sid": this.state.sid,
-            //     "exp": reasons
-            // }).then((res)=>{
-            //     if(res.success===true){
-            //         this.props.cancel();
-            //     }
-            // }).catch((err)=>{
-            //     alert(err);
-            // });
+            SessionUtil.CancelSession({
+                "sid": this.state.sid,
+                "exp": reasons
+            }).then((res)=>{
+                if(res.cancelled===true){
+                    this.props.cancel();
+                }
+            }).catch((err)=>{
+                alert(err);
+            });
         }
     }
 
     paymentComplete = () => {
         localStorage.removeItem('session-'+ this.props.sid + '-table');
-        this.props.complete();
-        // SessionUtil.CompleteSession({
-        //     "sid": this.state.sid
-        // }).then((res)=>{
-        //     if(res.success===true){
-        //         this.props.complete();
-        //     }
-        // }).catch((err)=>{
-        //     alert(err);
-        // });
+        SessionUtil.CompleteSession({
+            "sid": this.state.sid
+        }).then((res)=>{
+            if(res===true){
+                this.props.complete();
+            }
+        }).catch((err)=>{
+            alert(err);
+        });
     }
 
     cancelConfirmationDialog = (state) => {
@@ -212,17 +199,13 @@ class Session extends Component {
                             <button className="button session-expired-button"
                                     onClick={this.paymentComplete}
                                     onPointerEnter={(btn)=>btn.target.innerHTML="BILL PAID"}
-                                    onPointerLeave={(btn)=>btn.target.innerHTML="EXPIRED"}>EXPIRED</button> : 
-                                    (
-                                        this.state.timeRemain<=(this.state.duration/2) ? (
-                                            <button className="button session-activated-button">ACTIVE</button>
-                                        ) : (
-                                            <button className="button session-activated-button"
-                                                    onClick={() => this.cancelConfirmationDialog(true)}
-                                                    onPointerEnter={(btn)=>btn.target.innerHTML="CANCEL"}
-                                                    onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button> 
-                                        )
-                                    )
+                                    onPointerLeave={(btn)=>btn.target.innerHTML="EXPIRED"}>EXPIRED</button>
+                            :         
+                            <button className="button session-activated-button"
+                                    onClick={() => this.cancelConfirmationDialog(true)}
+                                    onPointerEnter={(btn)=>btn.target.innerHTML="CANCEL"}
+                                    onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button> 
+                                    
                     ) : (
                             <button className="button session-start-button" onClick={() => this.activate()}>START</button>
                     )
@@ -230,7 +213,7 @@ class Session extends Component {
 
                 {
                     this.state.cancelLightboxOpen ? 
-                    <SessionCancelLightbox confirm={this.cancelSession} decline={() => this.cancelConfirmationDialog(false)}/> : console.log()
+                    <SessionCancelLightbox confirm={(R)=>this.cancelSession(R)} decline={() => this.cancelConfirmationDialog(false)}/> : console.log()
                 }            
             </div>
         );

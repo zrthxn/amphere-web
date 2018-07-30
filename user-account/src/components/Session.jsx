@@ -88,30 +88,30 @@ class Session extends Component {
                 alert("Session cannot be cancelled after half the time has elapsed");
             } else {
                 Timer.ref('time').off('value');
-                this.props.cancel();
-                // SessionUtil.CancelSession({
-                //     "sid": this.state.sid,
-                //     "exp": "USER-CANCELLED"
-                // }).then((res)=>{
-                //     if(res.success===true){
-                //         this.props.cancel();
-                //     }
-                // }).catch((err)=>{
-                //     alert(err);
-                // });
+                // this.props.cancel();
+                SessionUtil.CancelSession({
+                    "sid": this.state.sid,
+                    "exp": "USER-CANCELLED"
+                }).then((res)=>{
+                    if(res.success===true){
+                        this.props.cancel();
+                    }
+                }).catch((err)=>{
+                    alert(err);
+                });
             }
         } else {
-            this.props.cancel();
-            // SessionUtil.CancelSession({
-            //     "sid": this.state.sid,
-            //     "exp": "USER-CANCELLED"
-            // }).then((res)=>{
-            //     if(res.success===true){
-            //         this.props.cancel();
-            //     }
-            // }).catch((err)=>{
-            //     alert(err);
-            // });
+            // this.props.cancel();
+            SessionUtil.CancelSession({
+                "sid": this.state.sid,
+                "exp": "USER-CANCELLED"
+            }).then((res)=>{
+                if(res.success===true){
+                    this.props.cancel();
+                }
+            }).catch((err)=>{
+                alert(err);
+            });
         }
     }
 
@@ -150,7 +150,7 @@ class Session extends Component {
 
                 {
                     this.state.cancelLightboxOpen ? (
-                        <SessionCancelLightbox confirm={this.cancelSession} 
+                        <SessionCancelLightbox confirm={()=>this.cancelSession()} 
                                                decline={() => this.cancelConfirmationDialog(false)}/>
                     ) : console.log()
                 }

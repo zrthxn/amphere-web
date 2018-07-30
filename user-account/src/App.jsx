@@ -22,7 +22,7 @@ class App extends Component {
 
   componentWillMount() {
     this.setState({
-      uid: "1783b50707d439e93451",//this.props.uid,
+      uid: this.props.uid,
       phone: this.props.phone,
       name: this.props.name,
       lightboxOpen: false
@@ -30,9 +30,10 @@ class App extends Component {
   }
 
   componentDidMount(){
-    UserData.firebase.database().ref().child('sessions')
-    .on('child_added', session =>{
+    UserData.firebase.database().ref().child('sessions').orderByChild('uid').equalTo(this.state.uid)
+    .once('child_added', session =>{
       if(session.val().uid===this.state.uid && session.val().isDeleted===false){
+        console.log("PREV SESSION");
           this.SessionsHolder.addNewSession({
             sid: session.val().sid,
             mid: session.val().mid,
@@ -55,16 +56,16 @@ class App extends Component {
   }
 
   addNewSession = (params) => {    
-    // BookSession.addNewSession({
-    //     "uid" : this.state.uid,
-    //     "phone" : this.state.phone,
-    //     "name" : this.state.name,
-    //     "location" : params.locCode,
-    //     "device" : params.device,
-    //     "duration" : params.duration
-    // }).then((response)=>{
+    BookSession.addNewSession({
+        "uid" : this.state.uid,
+        "phone" : this.state.phone,
+        "name" : this.state.name,
+        "location" : params.locCode,
+        "device" : params.device,
+        "duration" : params.duration
+    }).then((response)=>{
         this.SessionsHolder.addNewSession({
-          sid : "response.sid",
+          sid : response.sid,
           mid : params.locCode,
           duration : params.duration,
           device: params.device,
@@ -72,10 +73,10 @@ class App extends Component {
           activated: params.activated || false,
           expired: params.expired || false
         });
-    // }).catch((err)=>{
-    //     console.log(err);
-    //     alert(err);
-    // });
+    }).catch((err)=>{
+        console.log(err);
+        alert(err);
+    });
   }
 
   render() {

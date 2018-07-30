@@ -194,6 +194,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             "password" : params.password
         }).then((_res)=>{
             if(_res.success===true){
+                console.log("SUCCESS");
                 res.status(200).json({
                     "state" : "SUCCESS",
                     "mid" : _res.mid,

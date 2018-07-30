@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './GlobalStyles.css';
 import './LoginPage.css';
-import Login from './util/login';
 import Header from './components/Header';
 
 class LoginPage extends Component {
@@ -11,7 +10,6 @@ class LoginPage extends Component {
             inputUserPhone: null,
             inputUserPass: null,
             fieldsValidated:  false,
-            keyExists: false,
             token: null
         }
     }

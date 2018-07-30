@@ -29,7 +29,7 @@ class SessionsHolder extends Component {
         });
     }
 
-    completeSession = (index, sid) => {
+    completeSession = (index) => {
         let _sessions = this.state.sessions.slice();
         delete _sessions[index];
         this.setState({

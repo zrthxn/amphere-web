@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import App from './App';
 import LoginPage from './LoginPage';
-
-const Login = require('./util/merchantLogin');
+import Login from './util/merchantLogin';
 
 class Super extends Component {
     constructor(){
@@ -32,15 +31,10 @@ class Super extends Component {
                         mid: result.mid,
                         phone: result.phone,
                         name: result.name,
-                        sessions: result.sessions,
                         loginValidated: true
                     });
-                } else {
-                    this.setState({loginValidated: false});
                 }
             });
-        } else {
-            this.setState({loginValidated: false});
         }
     }
 
@@ -58,6 +52,8 @@ class Super extends Component {
                         name: result.name,
                         loginValidated: true
                     });
+                } else {
+                    alert("Code or password incorrect");
                 }
             });
         }
@@ -78,8 +74,8 @@ class Super extends Component {
             <App mid={this.state.mid}
                  name={this.state.name}
                  phone={this.state.phone}
-                 logoutWorker={()=>this.logout()} /> :
-            <LoginPage onValidate={this.login.bind(this)}/>
+                 logoutWorker={this.logout} /> :
+            <LoginPage onValidate={this.login}/>
         }
       </div>
     );

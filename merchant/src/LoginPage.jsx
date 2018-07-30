@@ -9,7 +9,8 @@ class LoginPage extends Component {
         this.state = {
             inputCode: null,
             inputPass: null,
-            fieldsValidated: false
+            fieldsValidated: false,
+            token: null
         }
     }
 
@@ -58,13 +59,13 @@ class LoginPage extends Component {
         return (
             <div className="cover">
                 <Header button={false}/>
-                <form className="login-container">
+                <div className="login-container">
                     <p className="page-title">Sign In</p>
                     <input id="codeInput" type="text" className="textbox" placeholder="Merchant Code" onChange={this.setCodeInput}/>
                     <input id="passwordInput" type="password" className="textbox password" placeholder="Password" onChange={this.setPasswordInput}/>
 
-                    <button className="button" onClick={this.validateLogin}>SIGN IN</button>                        
-                </form>
+                    <button className="button" onClick={this.validateLogin.bind(this)}>SIGN IN</button>                        
+                </div>
                 <footer>&copy; Amphere Solutions Inc. 2018</footer>
             </div>
             

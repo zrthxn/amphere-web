@@ -7,53 +7,53 @@ var MerchantFirebaseCreds = MerchantFirebase.firebase.database();
 exports.ValidateLogin = function (credentials) {
 
     // 1. VIA BACKEND ============================================================================================================== I D E A L
-    // const loginRequest = new XMLHttpRequest();
+    const loginRequest = new XMLHttpRequest();
 
-    // return new Promise((resolve,reject) => {
-    //     loginRequest.open('POST', `/merchantLoginWorker?mid=${credentials.code}&password=${credentials.password}`, true);
-    //     loginRequest.send();
-    //     loginRequest.onreadystatechange = e => {
-    //         if (loginRequest.readyState === 4 && loginRequest.status === 200) {
-    //             let loginResponse = JSON.parse(loginRequest.response);
-    //             if(loginResponse.state==="SUCCESS"){
-    //                 resolve({
-    //                     "validated" : true,
-    //                     "mid" : loginResponse.mid,
-    //                     "phone" : loginResponse.phone,
-    //                     "name" : loginResponse.name,
-    //                     "token" : loginResponse.token
-    //                 });
-    //             } else {
-    //                 resolve({
-    //                     "validated" : false
-    //                 });
-    //             }
-    //         }
-    //     }
-    // });
-
-    // 2. LOCAL FIREBASE =====================================================================================================================
-    return new Promise((resolve, reject)=>{
-        MerchantFirebaseCreds.ref().child('merchants').orderByChild('mid').equalTo(credentials.code)
-        .on('child_added', (merchantDetails)=>{
-            if(merchantDetails.val()!==null){
-                var hash = Hasher.generateHash(credentials.password, merchantDetails.val().salt);
-                if(hash===merchantDetails.val().password){
+    return new Promise((resolve,reject) => {
+        loginRequest.open('POST', `/merchantLoginWorker?mid=${credentials.code}&password=${credentials.password}`, true);
+        loginRequest.send();
+        loginRequest.onreadystatechange = e => {
+            if (loginRequest.readyState === 4 && loginRequest.status === 200) {
+                let loginResponse = JSON.parse(loginRequest.response);
+                if(loginResponse.state==="SUCCESS"){
                     resolve({
-                        "validated": true,
-                        "mid" : merchantDetails.val().mid,
-                        "phone" : merchantDetails.val().phone,
-                        "name" : merchantDetails.val().name,
-                        "token" : merchantDetails.val().mid + "/" + hash
+                        "validated" : true,
+                        "mid" : loginResponse.mid,
+                        "phone" : loginResponse.phone,
+                        "name" : loginResponse.name,
+                        "token" : loginResponse.token
                     });
                 } else {
-                    resolve({"validated": false});
+                    resolve({
+                        "validated" : false
+                    });
                 }
-            } else {
-                resolve({"validated": false});
             }
-        });
+        }
     });
+
+    // 2. LOCAL FIREBASE =====================================================================================================================
+    // return new Promise((resolve, reject)=>{
+    //     MerchantFirebaseCreds.ref().child('merchants').orderByChild('mid').equalTo(credentials.code)
+    //     .on('child_added', (merchantDetails)=>{
+    //         if(merchantDetails.val()!==null){
+    //             var hash = Hasher.generateHash(credentials.password, merchantDetails.val().salt);
+    //             if(hash===merchantDetails.val().password){
+    //                 resolve({
+    //                     "validated": true,
+    //                     "mid" : merchantDetails.val().mid,
+    //                     "phone" : merchantDetails.val().phone,
+    //                     "name" : merchantDetails.val().name,
+    //                     "token" : merchantDetails.val().mid + "/" + hash
+    //                 });
+    //             } else {
+    //                 resolve({"validated": false});
+    //             }
+    //         } else {
+    //             resolve({"validated": false});
+    //         }
+    //     });
+    // });
 
     // 3. LOCAL JSON  =====================================================================================================================
     // return new Promise((resolve, reject)=>{

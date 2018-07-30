@@ -51,12 +51,12 @@ exports.ActivateSession = (params) => {
     });
 }
 
-exports.ExpireSession = (params) => {
+exports.ExpireSession = (sid) => {
 
     var expirationRequest = new XMLHttpRequest();
 
     return new Promise((resolve, reject)=>{
-        expirationRequest.open('POST', `/merchantExpireSession?sid=${params.sid}`, true);
+        expirationRequest.open('POST', `/merchantExpireSession?sid=${sid}`, true);
         expirationRequest.send();
         expirationRequest.onreadystatechange = event => {
             if (expirationRequest.readyState === 4 && expirationRequest.status === 200) {
@@ -81,7 +81,7 @@ exports.CancelSession = (params) => {
     var cancellationRequest = new XMLHttpRequest();
 
     return new Promise((resolve, reject)=>{
-        cancellationRequest.open('POST', `/merchantCancelSession?sid=${params.sid}&cause=${encodeURI(params.exp)}`, true);
+        cancellationRequest.open('POST', `/merchantCancelSession?sid=${params.sid}&exp=${encodeURI(params.exp)}`, true);
         cancellationRequest.send();
         cancellationRequest.onreadystatechange = event => {
             if (cancellationRequest.readyState === 4 && cancellationRequest.status === 200) {
@@ -112,13 +112,9 @@ exports.CompleteSession = (params) => {
             if (completionRequest.readyState === 4 && completionRequest.status === 200) {
                 let completionResponse = JSON.parse(completionRequest.response);
                 if(completionResponse.state==="SUCCESS"){
-                    resolve({
-                        "completed" : true
-                    });
+                    resolve(true);
                 } else {
-                    resolve({
-                        "completed" : false
-                    });
+                    resolve(false);
                 }
             }
         }

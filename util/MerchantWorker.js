@@ -18,23 +18,23 @@ const MerchantFirebaseCreds = require('./Database').firebase.database();
 
 exports.MerchantLogin = function (params) {
     return new Promise((resolve, reject)=>{
-        MerchantFirebaseCreds.ref().child('merchants').orderByChild('mid').equalTo(credentials.mid)
+        MerchantFirebaseCreds.ref().child('merchants').orderByChild('mid').equalTo(params.mid)
         .on('child_added', (merchantDetails)=>{
             if(merchantDetails.val()!==null){
-                var hash = Hasher.generateHash(credentials.password, merchantDetails.val().salt);
+                var hash = Hasher.generateHash(params.password, merchantDetails.val().salt);
                 if(hash===merchantDetails.val().password){
                     resolve({
-                        "validated": true,
+                        "success": true,
                         "mid" : merchantDetails.val().mid,
                         "phone" : merchantDetails.val().phone,
                         "name" : merchantDetails.val().name,
                         "token" : merchantDetails.val().mid + "/" + hash
                     });
                 } else {
-                    resolve({"validated": false});
+                    resolve({"success": false});
                 }
             } else {
-                resolve({"validated": false});
+                reject("NO_MERCHANT");
             }
         });
     });

@@ -3,11 +3,10 @@ const http = require('http');
 const querystring = require('querystring');
 
 exports.SendSMSSessionOTP = (otp, phone) => {
-    let sms = `Thank you for booking an Amphere session! Your OTP is ${otp}.`;
-    
+    let sms = `[AMPHERE] Thank you for booking an Amphere session! Your OTP is ${otp}.`;
     var postData = querystring.stringify({
     apikey: SMSConfig.apikey,
-    numbers: "00910" + phone,
+    numbers: "91" + phone,
     sender: SMSConfig.sender,
     message: encodeURI(sms)
     });
@@ -26,18 +25,23 @@ exports.SendSMSSessionOTP = (otp, phone) => {
     return new Promise((resolve,reject)=>{
         var result = '';
         var req = http.request(options, function (res) {
-            res.on('data', function (chunk) {
-              result += chunk;
-            });
-            res.on('end', function () {
-              console.log(result);
-            });
-            res.on('error', function (err) {
-              console.log(err);
-            });
+            res.on('data', chunk => {result += chunk});
+            res.on('end', ()=>{console.log(result)});
+            res.on('error', err => {console.log(err)});
         });
         req.write(postData);
         req.end();
+
+        try {
+            let balance = result.balance;
+            if(balance<25 && balance>10){
+
+            } else if(balance<=10) {
+
+            }
+        } catch(err) {
+            console.log(err);
+        }
         resolve(result);
     });
 }

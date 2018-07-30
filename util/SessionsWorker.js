@@ -80,18 +80,19 @@ exports.BookDeadSession = function (params) {
 
 exports.ActivateSession = function (session) {
     return new Promise((resolve, reject)=> {
-        SessionsData.ref().orderByKey().equalTo('time').on('value', (time)=>{
+        SessionsData.ref().orderByKey().equalTo('time').once('value', (time)=>{
             SessionsData.ref('sessions/session-' + session.sid).orderByKey().equalTo('otp')
             .on('child_added', function(_otp){
                 var otp = _otp.val();
                 if(session.otp === otp){
                     SessionsData.ref('sessions/session-' + session.sid).update({
                         "activated" : true,
+                        "startTime" : time.val().time,
                         "status" : `ACTIVATED : ${getDateTime()}`
                     });
                     resolve({
-                        "success":true,
-                        "time" : time.val()
+                        "success" : true,
+                        "time" : time.val().time
                     });
                 } else {
                     resolve(false);
@@ -121,8 +122,9 @@ exports.CancelSession = function (sid, exp) {
     return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
             "activated" : false,
+            "expired" : true,
             "isDeleted" : true,
-            "status" : `CANCELLED : ${getDateTime()} : "${decodeURI(exp)}"`
+            "status" : `CANCELLED : ${getDateTime()} : ${decodeURI(exp)}`
         });
         resolve({
             "success":true
