@@ -36,5 +36,5 @@ function createLoginToken(params) {
 }
 
 function redirectToApp() {
-    window.location = 'http://account.amphere.in:9000/';
+    window.location = 'http://account.boltbite.com/';
 }
