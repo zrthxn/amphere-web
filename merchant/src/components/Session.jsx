@@ -105,8 +105,23 @@ class Session extends Component {
     
     cancelSession = (reasons) => {
         this.cancelConfirmationDialog(false);
-        if(this.state.timeRemain<=(this.state.duration/2)){
-            alert("Session cannot be cancelled after half the time has elapsed");
+        if(this.state.activated===true){
+            if(this.state.timeRemain <= (this.state.duration/2)){
+                alert("Session cannot be cancelled after half the time has elapsed");
+            } else {
+                this.setState({ activated : false });
+                Timer.ref('time').off('value');
+                SessionUtil.CancelSession({
+                    "sid": this.state.sid,
+                    "exp": reasons
+                }).then((res)=>{
+                    if(res.cancelled===true){
+                        this.props.cancel();
+                    }
+                }).catch((err)=>{
+                    alert(err);
+                });
+            }
         } else {
             Timer.ref('time').off('value');
             SessionUtil.CancelSession({
@@ -145,7 +160,7 @@ class Session extends Component {
         return (
             <div className="session">
                 {
-                    this.state.dead ? <h2 className="title">DEAD SESSION</h2> :<h2 className="title">SESSION</h2>
+                    this.state.dead ? <h2 className="title">DEAD SESSION</h2> : <h2 className="title">SESSION</h2>
                 }
 
                 <div className="user-details">

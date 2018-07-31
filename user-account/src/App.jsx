@@ -33,15 +33,15 @@ class App extends Component {
     UserData.firebase.database().ref().child('sessions').orderByChild('uid').equalTo(this.state.uid)
     .on('child_added', session =>{
       if(session.val().uid===this.state.uid && session.val().isDeleted===false){
-          this.SessionsHolder.addNewSession({
-            sid: session.val().sid,
-            mid: session.val().mid,
-            device: session.val().device,
-            duration: session.val().duration,
-            startTime: session.val().startTime,
-            activated:session.val().activated,
-            expired: session.val().expired
-          });
+        this.SessionsHolder.addNewSession({
+          sid: session.val().sid,
+          mid: session.val().mid,
+          device: session.val().device,
+          duration: session.val().duration,
+          startTime: session.val().startTime,
+          activated:session.val().activated,
+          expired: session.val().expired
+        });
       }
     });
   }

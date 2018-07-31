@@ -79,8 +79,6 @@ class SessionsHolder extends Component {
 
         return (
             <div className="sessions-holder container">
-                {/* <div className="spacer"></div>
-                <p><strong>ACTIVE SESSIONS</strong></p> */}
                 {
                     this.state.sessions.length!==0 ? emptinessValue : <EmptySessions />
                 }

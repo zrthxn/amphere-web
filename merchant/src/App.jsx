@@ -28,7 +28,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-    MerchantDatabase.firebase.database().ref().child('sessions')
+    MerchantDatabase.firebase.database().ref().child('sessions').orderByChild('mid').equalTo(this.state.mid)
     .on('child_added', session =>{
       if(session.val().mid===this.state.mid && session.val().isDeleted===false){
           this.SessionsHolder.addNewSession({
@@ -65,19 +65,19 @@ class App extends Component {
         "device" : params.device,
         "duration" : params.duration
     }).then((response)=>{
-        this.SessionsHolder.addNewSession({
-          sid : response.sid,
-          mid : this.state.mid,
-          userphone:  params.phone,
-          username: "Dead Session",
-          duration : params.duration,
-          device: params.device,
-          startTime: params.startTime || 0,
-          activated: params.activated || false,
-          expired: params.expired || false,
-          otp: "AMPDEAD", 
-          dead: true
-        });
+        // this.SessionsHolder.addNewSession({
+        //   sid : response.sid,
+        //   mid : this.state.mid,
+        //   userphone:  params.phone,
+        //   username: "Unknown",
+        //   duration : params.duration,
+        //   device: params.device,
+        //   startTime: params.startTime || 0,
+        //   activated: params.activated || false,
+        //   expired: params.expired || false,
+        //   otp: "AMPDEAD", 
+        //   dead: true
+        // });
     }).catch((err)=>{
         console.log(err);
         alert(err);

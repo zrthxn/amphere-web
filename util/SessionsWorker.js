@@ -9,7 +9,7 @@ exports.BookSession = function (params) {
     let date = getDateTime();
 
     return new Promise((resolve,reject) => {
-        SessionsData.ref().child('time').on('value', (time)=>{
+        SessionsData.ref().child('time').once('value', (time)=>{
             if(time.val()>=(1440-60)){
                 reject("TIME-RESET");
             } else {
@@ -47,8 +47,8 @@ exports.BookDeadSession = function (params) {
     let date = getDateTime();
 
     return new Promise((resolve,reject) => {
-        SessionsData.ref().child('time').on('value', (time)=>{
-            if(time.val()>=(1440-60)){
+        SessionsData.ref().child('time').once('value', (time)=>{
+            if(time.val()>=(1440-65)){
                 reject("TIME-RESET");
             } else {
                 SessionsData.ref('sessions/session-' + sid).set({
@@ -106,7 +106,7 @@ exports.ExpireSession = function (sid) {
     return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
             "expired" : true,
-            "activated" : false,
+            "activated" : true,
             "status" : `EXPIRED : ${getDateTime()}`
         });
         resolve({

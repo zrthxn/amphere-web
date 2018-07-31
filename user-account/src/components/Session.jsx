@@ -37,6 +37,29 @@ class Session extends Component {
     }
 
     componentDidMount() {
+        SessionFirebase.firebase.database().ref().child('sessions').orderByChild('sid').equalTo(this.state.sid)
+        .once('child_changed', (session, prevChildKey)=>{
+            if(session.val().activated===true){
+                this.setState({
+                    startTime: session.val().startTime,
+                    activated: true
+                });
+                Timer.ref('time').on('value', (timeNow)=>{
+                    let timeElapsed = timeNow.val() - this.state.startTime;
+                    let _timeRemain = this.state.duration - timeElapsed;
+                    if(_timeRemain>0){
+                        this.setState({timeRemain:  _timeRemain});
+                    } else {
+                        this.expire();
+                    }
+                });
+            } else if(session.val().expired===true){
+                this.expire();
+            } else if(session.val().isDeleted===true){
+                this.props.complete();
+            }
+        });
+
         if(this.state.activated===true){
             Timer.ref('time').on('value', (timeNow)=>{
                 let timeElapsed = timeNow.val() - this.state.startTime;
@@ -47,29 +70,6 @@ class Session extends Component {
                     this.expire();
                 }
             });
-        } else {
-            // SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid)
-            // .on('child_added', (session)=>{
-            //     if(session.val().activated===true){
-            //         this.setState({
-            //             startTime: session.val().startTime,
-            //             activated: true
-            //         });
-            //         Timer.ref('time').on('value', (timeNow)=>{
-            //             let timeElapsed = timeNow.val() - this.state.startTime;
-            //             let _timeRemain = this.state.duration - timeElapsed;
-            //             if(_timeRemain>0){
-            //                 this.setState({timeRemain: _timeRemain});
-            //             } else {
-            //                 this.expire();
-            //             }
-            //         });
-            //     } else if(session.val().expired===true){
-            //         this.expire();
-            //     } else if(session.val().isDeleted===true){
-            //         this.props.complete();
-            //     }
-            // });
         }
     }
 
@@ -101,6 +101,8 @@ class Session extends Component {
                     alert(err);
                 });
             }
+        } else if(this.state.expired===true){
+            alert("Session has already expired");
         } else {
             Timer.ref('time').off('value');
             SessionUtil.CancelSession({
@@ -134,7 +136,7 @@ class Session extends Component {
 
                 <div className="session-details-container">
                     <div className="session-number">
-                        <strong>SESSION</strong>
+                        <strong>{this.state.device} SESSION</strong>
                     </div>                    
                     
                     <button className="session-cancel-button" onClick={() => this.cancelConfirmationDialog(true)}>Cancel</button>
