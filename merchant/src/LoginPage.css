@@ -3,7 +3,7 @@ header {
 }
 
 footer {
-    position: fixed;
+    position: absolute;
     width: 100%;
     bottom: 0;
     padding: 1em;
@@ -18,20 +18,26 @@ footer {
     text-align: center;
     z-index: 5000;
     transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-flow: column;
 }
 
 .login-container{
     height: fit-content;
-    margin-top: 30vh;
     max-width: 500px;
-
+    margin: auto;
     font-weight: 300;
     text-align: center;
-    padding: 0 4em;
+    padding: 2em 4em;
+}
+
+.login-container .button {
+    padding: 1em 0.75em;
+    margin: 1em 0 0 0;
 }
 
 .page-title{
-    margin: auto;
+    margin: 0 auto 1rem auto;
     width: fit-content;
     font-weight: 200;
     font-size: 3em;
@@ -39,8 +45,8 @@ footer {
 }
 
 .textbox {
+    margin: 0.5rem 0;
     padding: 0.8em 1em;
-    margin-top: 1rem;
     font-size: 1.25em;
     font-weight: 400;
     background: #fff;
@@ -65,12 +71,8 @@ footer {
     .login-container{
         padding: 2em;
     }
-
-    .button-main {
-        padding: 1em 2em;
-    }
-
     .textbox {
         padding: 0.5em 2em;
+        margin: 0.5rem 0;
     }
 }

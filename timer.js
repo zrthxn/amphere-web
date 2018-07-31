@@ -10,13 +10,8 @@ ConsoleScreen.TimerStartupScreen();
     console.log(now);
     now++;
     
-    if(now>1440){
-        timeManager.child('sessions').orderByChild('expired').equalTo('false')
-        .on('child_added', active => {
-            if(active===null){        
-                now = 0;
-            }
-        });
+    if(now>1440){    
+        now = 0;
     }
     setTimeout(timer, 60000);
 })();

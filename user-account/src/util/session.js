@@ -31,7 +31,7 @@ exports.CancelSession = (params) => {
     var cancellationRequest = new XMLHttpRequest();
 
     return new Promise((resolve, reject)=>{
-        cancellationRequest.open('POST', `/userCancelSession?sid=${params.sid}&cause=${encodeURI(params.exp)}`, true);
+        cancellationRequest.open('POST', `/userCancelSession?sid=${params.sid}&exp=${encodeURI(params.exp)}`, true);
         cancellationRequest.send();
         cancellationRequest.onreadystatechange = event => {
             if (cancellationRequest.readyState === 4 && cancellationRequest.status === 200) {

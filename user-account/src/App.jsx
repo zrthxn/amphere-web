@@ -31,9 +31,8 @@ class App extends Component {
 
   componentDidMount(){
     UserData.firebase.database().ref().child('sessions').orderByChild('uid').equalTo(this.state.uid)
-    .once('child_added', session =>{
+    .on('child_added', session =>{
       if(session.val().uid===this.state.uid && session.val().isDeleted===false){
-        console.log("PREV SESSION");
           this.SessionsHolder.addNewSession({
             sid: session.val().sid,
             mid: session.val().mid,

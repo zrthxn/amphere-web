@@ -31,9 +31,8 @@ class Session extends Component {
 
     componentWillMount() {
         let tableLST = localStorage.getItem('session-'+ this.props.sid + '-table');
-        let tab;
         if(tableLST!==null){
-            tab = tableLST.split('-')[1];
+            tableLST = tableLST.split('-')[1];
         }
         this.setState({
             sid: this.props.sid,
@@ -48,7 +47,7 @@ class Session extends Component {
             expired: this.props.expired,
             otp: this.props.otp,
             dead: this.props.dead,
-            table: tab
+            table: tableLST
         });
     }
 

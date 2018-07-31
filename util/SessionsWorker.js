@@ -30,13 +30,13 @@ exports.BookSession = function (params) {
                     "status" : "BOOKED"
                 });
                 
-                SMSWorker.SendSMSSessionOTP(otp, params.phone).then(()=>{
-                    resolve({
-                        "success": true,
-                        "sid" : sid,
-                        "startDate" : date,
-                    });
-                });
+                // SMSWorker.SendSMSSessionOTP(otp, params.phone).then(()=>{
+                //     resolve({
+                //         "success": true,
+                //         "sid" : sid,
+                //         "startDate" : date,
+                //     });
+                // });
             }
         });
     });

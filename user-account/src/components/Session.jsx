@@ -48,28 +48,28 @@ class Session extends Component {
                 }
             });
         } else {
-            SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid)
-            .on('child_added', (session)=>{
-                if(session.val().activated===true){
-                    this.setState({
-                        startTime: session.val().startTime,
-                        activated: true
-                    });
-                    Timer.ref('time').on('value', (timeNow)=>{
-                        let timeElapsed = timeNow.val() - this.state.startTime;
-                        let _timeRemain = this.state.duration - timeElapsed;
-                        if(_timeRemain>0){
-                            this.setState({timeRemain: _timeRemain});
-                        } else {
-                            this.expire();
-                        }
-                    });
-                } else if(session.val().expired===true){
-                    this.expire();
-                } else if(session.val().isDeleted===true){
-                    this.props.complete();
-                }
-            });
+            // SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid)
+            // .on('child_added', (session)=>{
+            //     if(session.val().activated===true){
+            //         this.setState({
+            //             startTime: session.val().startTime,
+            //             activated: true
+            //         });
+            //         Timer.ref('time').on('value', (timeNow)=>{
+            //             let timeElapsed = timeNow.val() - this.state.startTime;
+            //             let _timeRemain = this.state.duration - timeElapsed;
+            //             if(_timeRemain>0){
+            //                 this.setState({timeRemain: _timeRemain});
+            //             } else {
+            //                 this.expire();
+            //             }
+            //         });
+            //     } else if(session.val().expired===true){
+            //         this.expire();
+            //     } else if(session.val().isDeleted===true){
+            //         this.props.complete();
+            //     }
+            // });
         }
     }
 
@@ -83,17 +83,18 @@ class Session extends Component {
     }
     
     cancelSession = () => {
+        this.cancelConfirmationDialog(false);
         if(this.state.activated===true){
             if(this.state.timeRemain <= (this.state.duration/2)){
                 alert("Session cannot be cancelled after half the time has elapsed");
             } else {
+                this.setState({ activated : false });
                 Timer.ref('time').off('value');
-                // this.props.cancel();
                 SessionUtil.CancelSession({
                     "sid": this.state.sid,
                     "exp": "USER-CANCELLED"
                 }).then((res)=>{
-                    if(res.success===true){
+                    if(res.cancelled===true){
                         this.props.cancel();
                     }
                 }).catch((err)=>{
@@ -101,12 +102,12 @@ class Session extends Component {
                 });
             }
         } else {
-            // this.props.cancel();
+            Timer.ref('time').off('value');
             SessionUtil.CancelSession({
                 "sid": this.state.sid,
                 "exp": "USER-CANCELLED"
             }).then((res)=>{
-                if(res.success===true){
+                if(res.cancelled===true){
                     this.props.cancel();
                 }
             }).catch((err)=>{
