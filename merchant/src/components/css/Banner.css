@@ -1,5 +1,5 @@
 .banner{
-    background: linear-gradient(-45deg,#ff9e00,#ffd700);
+    background: linear-gradient(-45deg,#ff9e00,#ffd800);
     padding: 4em 2em 2em 2em;
     height: fit-content;
 
@@ -16,4 +16,8 @@
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+.banner p {
+    line-height: 1em;
+    margin: 0;
 }

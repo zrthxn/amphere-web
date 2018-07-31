@@ -16,9 +16,7 @@
  */
 
 const Hasher = require('./PasswordHasher');
-const firebaseLogin = require('./Database');
-
-var firebaseLoginCreds = firebaseLogin.firebase.database();
+const firebaseLoginCreds = require('./Database').firebase.database();
 
 exports.Login = function (credentials) {
     return new Promise((resolve, reject)=>{       
@@ -41,26 +39,6 @@ exports.Login = function (credentials) {
                 }
             } else {
                 reject("NO_USER");
-            }
-        });
-    });
-}
-
-exports.TokenLogin = function (token) {
-    return new Promise((resolve, reject)=>{
-        firebaseLoginCreds.ref().child('users').orderByChild('uid').equalTo(token.uid)
-        .on('child_added', (user) => {
-            if(user.val().uid===token.uid && user.val().password===token.hash){
-                resolve({
-                    "success": true,
-                    "uid" : user.val().uid,
-                    "phone" : user.val().phone,
-                    "name" : user.val().name
-                });
-            } else {
-                resolve({
-                    "success": false
-                });
             }
         });
     });

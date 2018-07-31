@@ -29,9 +29,9 @@ class Header extends Component {
                             <div className="sidebar-banner-container">
                                 <p>MY ACCOUNT</p>
                                 <h2>Hey {this.props.name}!</h2>
-                                <p>+91 {this.props.phone}</p>
+                                <p><b>Code:</b> {this.props.code}</p>
+                                <p><b>Phone:</b> {this.props.phone}</p>
                             </div>
-                            
                         </div>
                         : console.log()
                     }

@@ -88,6 +88,7 @@ class App extends Component {
     return (
       <div className="App">
         <Header phone={this.state.phone}
+                code={this.state.mid}
                 name={this.state.name}
                 logoutWorker={this.props.logoutWorker}
                 button={true}/>

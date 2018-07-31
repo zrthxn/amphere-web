@@ -67,19 +67,21 @@ header .button {
 	display: none;
 	transition: all 0.5s ease-in-out;	
 }
-
 /*-----------------BANNER------------------*/
 .sidebar-banner {
 	background: linear-gradient(#ff9e00,#ffd800);
-	height: 12em;
-	padding: 2em;
+	height: fit-content;
+	padding: 5em 2em 2em 2em;
 }
 
 .sidebar-banner-container {
 	position: relative;
-	top: 4em;
 	text-align: left;
 	line-height: 0.75em;
+}
+.sidebar-banner-container h2{
+	font-weight: 600;
+	line-height: 1em;
 }
 
 /*--------------------NAV------------------*/
@@ -163,13 +165,13 @@ header .button {
 	bottom: 0;
     float: left;
     width: 20px;
-	background: #fff;
+	background: #000;
 	transform: rotate(-45deg);
 }
 
 .checkbox:checked ~ .hamburger {
     float: left;
-	background: #fff;
+	background: #000;
 	background: transparent;
 }
 
@@ -177,6 +179,6 @@ header .button {
 	top: 0;
     float: left;
     width: 20px;
-	background: #fff;
+	background: #000;
 	transform: rotate(45deg);
 }

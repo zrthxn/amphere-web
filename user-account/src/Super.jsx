@@ -22,7 +22,7 @@ class Super extends Component {
         let token = localStorage.getItem('AMP_TK');
         if(token!==null){
             token = token.split('/');
-            Login.ValidateByToken({
+            Login.ValidateToken({
                 "uid" : token[0],
                 "hash" : token[1]
             }).then((result)=>{

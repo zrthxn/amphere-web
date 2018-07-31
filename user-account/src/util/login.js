@@ -1,7 +1,7 @@
-exports.ValidateByPhone = function (credentials) {
+const TokenFirebase = require('./Database').firebase.database();
 
+exports.ValidateByPhone = function (credentials) {
     const loginRequest = new XMLHttpRequest();
-    
     return new Promise((resolve,reject)=>{
         loginRequest.open('POST', `/userLoginWorker?phone=${credentials.phone}&password=${credentials.password}`, true);
         loginRequest.send();
@@ -26,29 +26,26 @@ exports.ValidateByPhone = function (credentials) {
     });
 }
 
-exports.ValidateByToken = function (token) {
-
-    const tokenRequest = new XMLHttpRequest();
-
+exports.ValidateToken = function (token) {
     return new Promise((resolve,reject)=>{
-        tokenRequest.open('POST', `/userTokenLoginWorker?uid=${token.uid}&hash=${token.hash}`, true);
-        tokenRequest.send();
-        tokenRequest.onreadystatechange = event => {
-            if (tokenRequest.readyState === 4 && tokenRequest.status === 200) {
-                let tokenResponse = JSON.parse(tokenRequest.response);
-                if(tokenResponse.state==="SUCCESS"){
+        TokenFirebase.ref().child('users').orderByChild('uid').equalTo(token.uid)
+        .on('child_added', (user)=>{
+            if(user.val()!==null){
+                if(token.uid===user.val().uid && token.hash===user.val().password){
                     resolve({
-                        "validated" : true,
-                        "uid" : tokenResponse.uid,
-                        "phone" : tokenResponse.phone,
-                        "name" : tokenResponse.name
+                        "validated": true,
+                        "uid" : user.val().uid,
+                        "phone" : user.val().phone,
+                        "name" : user.val().name
                     });
                 } else {
                     resolve({
-                        "validated" : false
+                        "validated": false
                     });
                 }
+            } else {
+                reject("NO-MERCH");
             }
-        };
+        });
     });
 }

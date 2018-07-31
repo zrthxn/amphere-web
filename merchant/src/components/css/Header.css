@@ -71,21 +71,28 @@ header .button {
 /*-----------------BANNER------------------*/
 .sidebar-banner {
 	background: linear-gradient(#ff9e00,#ffd800);
-	height: 12em;
-	padding: 2em;
+	height: fit-content;
+	padding: 5em 2em 2em 2em;
 }
 
 .sidebar-banner-container {
 	position: relative;
-	top: 4em;
 	text-align: left;
 	line-height: 0.75em;
+}
+.sidebar-banner-container h2{
+	font-weight: 600;
+	line-height: 1em;
+	margin-bottom: 0.75em;
+}
+.sidebar-banner-container p{
+	margin-bottom: 0.45em;
 }
 
 /*--------------------NAV------------------*/
 .sidebar-nav ul {
     padding: 0;
-    margin-top: 5em;
+    margin-top: 2em;
 	margin-left: 2em;
     list-style: none;
     text-align: left;

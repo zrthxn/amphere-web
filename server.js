@@ -102,24 +102,6 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             }
         });
     });
-    account.post('/userTokenLoginWorker', (req, res)=>{
-        let params = getParameters(req);
-        LoginWorker.TokenLogin({
-            "uid" : params.uid,
-            "hash" : params.hash
-        }).then((_res)=>{
-            if(_res.success===true){
-                res.status(200).json({
-                    "state" : "SUCCESS",
-                    "uid" : _res.uid,
-                    "phone" : _res.phone,
-                    "name" : _res.name
-                });
-            } else {
-                res.status(200).json({"state" : "TOKEN-INVALID"});
-            }
-        });
-    });
     account.post('/sessionsWorker', (req, res) => {
         let params = getParameters(req);
         SessionsWorker.BookSession({
@@ -194,7 +176,6 @@ admin.use(express.static(path.join(__dirname, 'admin')));
             "password" : params.password
         }).then((_res)=>{
             if(_res.success===true){
-                console.log("SUCCESS");
                 res.status(200).json({
                     "state" : "SUCCESS",
                     "mid" : _res.mid,
