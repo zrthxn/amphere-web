@@ -1,6 +1,6 @@
 const timeManager = require('./util/Database').firebase.database();
 const ConsoleScreen = require('./util/ConsoleScreen');
-var now = 40;
+var now = 0;
 
 ConsoleScreen.TimerStartupScreen();
 (function timer() {
