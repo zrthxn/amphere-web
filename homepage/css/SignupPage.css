@@ -3,6 +3,7 @@ header {
 }
 
 footer {
+    font-size: 0.75em;
     position: fixed;
     width: 100%;
     bottom: 0;
@@ -16,19 +17,31 @@ p {
 }
 
 .cover {
-    background: linear-gradient(135deg,#a6ff00ab,#fff);
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(180deg,#a6ff00ab,#fff);
     text-align: center;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-flow: column;
 }
 
 .login-container{
     height: fit-content;
-    margin-top: 25vh;
     max-width: 500px;
-
+    margin: auto;
     font-weight: 300;
     text-align: center;
-    padding: 0 4em;
+    padding: 2em 4em;
+}
+.login-container .button {
+    padding: 1em 0.75em;
+    margin: 1em 0 1rem 0;
+    font-weight: 600;
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
 }
 
 .form-title{
@@ -45,11 +58,16 @@ p {
     font-size: 1em;
     font-weight: 400;
     background: #fff;
-}
-
-.textbox::placeholder {
+} .textbox::placeholder {
     color: #b1b1b1;
 }  
+
+.error {
+    border-color: #ff0000;
+    color: #ff0000 !important;
+} .error::placeholder {
+    color: #ff0000 !important;
+}
 
 /*===================   @MEDIA   =======================*/
 

@@ -48,7 +48,7 @@
     <!--=================== SIGN UP FORM ===================-->
     <div class="cover">
         <div class="login-container">
-            <form action="">
+            <div>
                 <p class="form-title">Sign Up</p>
 
                 <input id="phone" type="text" class="textbox" placeholder="Phone" required autocomplete="username"/>
@@ -59,13 +59,13 @@
                 <button id="signup-btn" class="button">SIGN UP</button>
 
                 <p>Already have an account? <a href="http://account.amphere.in:9000">Sign In</a></p>
-            </form>
+            </div>
         </div>
     </div>
 
     <!--=================== FOOTER ===================-->
     <footer>
-        <p>&copy; Amphere Solutions Inc. 2018</p>
+        <p><b>Amphere Solutions</b> &copy; 2018</p>
     </footer>
 
     <script>
@@ -75,9 +75,14 @@
         var confPassword = document.getElementById("conf-password");
         
         document.getElementById("signup-btn").onclick = function () {
-            validityState = validateInputs( phone.value, _name.value, password.value, confPassword.value);
+            validityState = validateInputs(phone.value, _name.value, password.value, confPassword.value);
+            
+            if(validityState===true){
+                $(phone).removeClass('error');
+                $(_name).removeClass('error');
+                $(password).removeClass('error');
+                $(confPassword).removeClass('error');
 
-            if(validityState.validity){
                 const request = new XMLHttpRequest();
                 let url = generateSignupQueryURL({
                     "phone" : phone.value,
@@ -86,22 +91,54 @@
                 });
 
                 request.open('POST', `/signupWorker?${url}`, true);
-                request.send(); 
+                request.send();
 
                 request.onreadystatechange = event => {
                     if (request.readyState === 4 && request.status === 200) {
                         let response = JSON.parse(request.response);
-                        console.log(response);
-                        console.log("SUCCESS");
-                        createLoginToken(response).then(()=> {
-                            redirectToApp();
-                        });
+                        if(response.state==="SUCCESS"){
+                            console.log("SUCCESS");
+                            createLoginToken(response).then(()=> {
+                                window.location = 'http://account.boltbite.com/';
+                            });
+                        } else if(response.state==="PHONE-EXISTS"){
+                            $(phone).addClass('error');
+                            alert("ERROR: An account with this phone number already exists!");
+                        }
                     }
                 };
-            } else {
-                console.log(validityState.error);
+            } else if(validityState==="confimpass"){
+                $(password).addClass('error');
+                $(confPassword).addClass('error');
+            } else if(validityState==="phone"){
+                $(phone).addClass('error');
+            } else if(validityState==="empty"){
+                $(phone).addClass('error');
+                $(_name).addClass('error');
+                $(password).addClass('error');
+                $(confPassword).addClass('error');
             }
             return false;
+        }
+
+        phone.onchange = function () {
+            if(phone.value!=="" && /^\d+$/.test(phone.value) && phone.value.length === 10) $(phone).removeClass('error');
+            else $(phone).addClass('error');
+        }
+
+        _name.onchange = function () {
+            if(_name.value!=="") $(_name).removeClass('error');
+            else $(_name).addClass('error');
+        }
+
+        confPassword.onchange = function () {
+            if(confPassword.value===password.value || confPassword.value==="") {
+                $(password).removeClass('error');
+                $(confPassword).removeClass('error');
+            } else {
+                $(password).addClass('error');
+                $(confPassword).addClass('error');
+            }
         }
     </script>
 

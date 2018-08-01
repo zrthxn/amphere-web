@@ -68,6 +68,13 @@ h3{
   letter-spacing: initial;
 }
 
+.error {
+  border-color: #ff000080;
+  color: #ff000080 !important;
+} .error::placeholder {
+  color: #ff000080 !important;
+}
+
 /* LIGHTBOX ================================================== LIGHTBOX */
 
 .lightbox {

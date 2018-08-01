@@ -74,7 +74,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
                 });
                 console.log(`\nNEW USER ADDED => \n\t- name: ${params.name} \n\t- phone: ${params.phone}`);
             } else {
-                res.status(500).json({"state" : "FAILED"});
+                res.status(200).json({"state" : _res.error});
             }
         });
     });

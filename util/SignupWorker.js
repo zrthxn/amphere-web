@@ -26,24 +26,29 @@ exports.CreateNewUser = function (params) {
     let uid = generateUserId();
 
     return new Promise((resolve,reject) => {
-        usersData.ref('users/user-' + uid)
-        .set({
-            "uid" : uid,
-            "phone" : phone,
-            "name" : resolveName(params.name),
-            "salt" : salt,
-            "password" : Hasher.generateHash(params.password, salt),
-            "addedOn" : getDateTime(),
-            "isDeleted" : false,
-            "login" : true
-        }, error => {
-            if(error){
-                //reject(error);
-            } else {
+
+        usersData.ref().orderByChild('phone').equalTo(phone).once('child_added', (searchres)=>{
+            if(searchres.val()===null){
+                usersData.ref('users/user-' + uid)
+                .set({
+                    "uid" : uid,
+                    "phone" : phone,
+                    "name" : resolveName(params.name),
+                    "salt" : salt,
+                    "password" : Hasher.generateHash(params.password, salt),
+                    "addedOn" : getDateTime(),
+                    "isDeleted" : false,
+                    "login" : true
+                });
                 resolve({
                     "success" : true,
                     "uid" : uid,
                     "salt" : salt
+                });
+            } else {
+                resolve({
+                    "success" : false,
+                    "error" : "PHONE-EXISTS"
                 });
             }
         }); 

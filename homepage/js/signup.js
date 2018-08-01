@@ -1,31 +1,20 @@
 function generateSignupQueryURL(query) {
-    //FORMAT PHONE NUMBER
-    let resPhone = query.phone;
-
-    let resName = "";
-    let _name = query.name.split(' ');
-    for(var i=0 ; i<_name.length ; i++){
-        resName = resName + ((i===0)?"":"+") + _name[i];
-    }
-
-    let result = {
-        "phone" : resPhone,
-        "name" : resName,
-        "password" : query.password,
-    };
-
     return (
-        `phone=${result.phone}&` +
-        `name=${result.name}&` +
-        `password=${result.password}&` +
+        `phone=${query.phone}&` +
+        `name=${encodeURI(query.name)}&` +
+        `password=${encodeURI(query.password)}&` +
         `verify=true`
     );
 }
 
 function validateInputs(phone, name, password, confPassword) {
-    return ({
-        "validity" : true
-    })
+    if(phone!=="" && name!=="" && password!=="" && confPassword!==""){
+        if(/^\d+$/.test(phone) && phone.length === 10) {
+            if(password===confPassword) {
+                return true;
+            } else return ("confimpass");
+        } else return ("phone");
+    } else return ("empty");
 }
 
 function createLoginToken(params) {
@@ -33,8 +22,4 @@ function createLoginToken(params) {
         document.cookie =  `AMP_TK=${params.uid}; domain=amphere.in`;
         resolve();
     });
-}
-
-function redirectToApp() {
-    window.location = 'http://account.boltbite.com/';
 }

@@ -66,7 +66,6 @@ class LoginPage extends Component {
 
                     <button className="button" onClick={this.validateLogin.bind(this)}>SIGN IN</button>                        
                 </div>
-                <footer>&copy; Amphere Solutions Inc. 2018</footer>
             </div>
             
         );

@@ -51,7 +51,6 @@ class LoginPage extends Component {
                 }
             });
         } else {
-            // TEMPORWARI
             alert("Phone or Password empty");
         }
     }
@@ -69,9 +68,7 @@ class LoginPage extends Component {
                     <button className="button" onClick={this.validateLogin.bind(this)}>SIGN IN</button>
 
                     <p>Don't have an account? <a href="https://boltbite.com/signup">Sign Up</a></p>
-                        
                 </div>
-                <footer>&copy; Amphere Solutions Inc. 2018</footer>
             </div>
             
         );

@@ -30,13 +30,13 @@ exports.BookSession = function (params) {
                     "status" : "BOOKED"
                 });
                 
-                // SMSWorker.SendSMSSessionOTP(otp, params.phone).then(()=>{
-                //     resolve({
-                //         "success": true,
-                //         "sid" : sid,
-                //         "startDate" : date,
-                //     });
-                // });
+                SMSWorker.SendSMSSessionOTP(otp, params.phone).then(()=>{
+                    resolve({
+                        "success": true,
+                        "sid" : sid,
+                        "startDate" : date,
+                    });
+                });
             }
         });
     });
@@ -81,23 +81,27 @@ exports.BookDeadSession = function (params) {
 exports.ActivateSession = function (session) {
     return new Promise((resolve, reject)=> {
         SessionsData.ref().orderByKey().equalTo('time').once('value', (time)=>{
-            SessionsData.ref('sessions/session-' + session.sid).orderByKey().equalTo('otp')
-            .on('child_added', function(_otp){
-                var otp = _otp.val();
-                if(session.otp === otp){
-                    SessionsData.ref('sessions/session-' + session.sid).update({
-                        "activated" : true,
-                        "startTime" : time.val().time,
-                        "status" : `ACTIVATED : ${getDateTime()}`
-                    });
-                    resolve({
-                        "success" : true,
-                        "time" : time.val().time
-                    });
-                } else {
-                    resolve(false);
-                }
-            });
+            if(time.val()>=(1440-65)){
+                reject("TIME-RESET");
+            } else {
+                SessionsData.ref('sessions/session-' + session.sid).orderByKey().equalTo('otp')
+                .on('child_added', function(_otp){
+                    var otp = _otp.val();
+                    if(session.otp === otp){
+                        SessionsData.ref('sessions/session-' + session.sid).update({
+                            "activated" : true,
+                            "startTime" : time.val().time,
+                            "status" : `ACTIVATED : ${getDateTime()}`
+                        });
+                        resolve({
+                            "success" : true,
+                            "time" : time.val().time
+                        });
+                    } else {
+                        resolve(false);
+                    }
+                });
+            }
         });
     });
 }

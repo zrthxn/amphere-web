@@ -55,6 +55,8 @@ class Super extends Component {
                 } else {
                     alert("Code or password incorrect");
                 }
+            }).catch((err)=>{
+                alert("ERROR: Signin error occurred :: " + (err===undefined? "" : err));
             });
         }
     }

@@ -20,7 +20,7 @@ const firebaseLoginCreds = require('./Database').firebase.database();
 
 exports.Login = function (credentials) {
     return new Promise((resolve, reject)=>{       
-        firebaseLoginCreds.ref().child('users').orderByChild('phone').equalTo(credentials.phone)
+        firebaseLoginCreds.ref().child('users').orderByChild('phone').equalTo(credentials.phone).limitToFirst(1)
         .on('child_added', (user) => {
             if(user.val()!==null){
                 var hash = Hasher.generateHash(credentials.password, user.val().salt);

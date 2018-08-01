@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SessionCancelLightbox from './SessionCancelLightbox';
 import SessionUtil from '../util/session';
+import $ from 'jquery';
 
 import './css/Session.css';
 
@@ -62,6 +63,17 @@ class Session extends Component {
                     this.expire();
                 }
             });
+        }
+    }
+
+    setOTP = (otp_f) => {
+        if(otp_f.target.value!=="" && /^\d+$/.test(otp_f.target.value) && otp_f.target.value.length === 4){
+            $(otp_f.target).removeClass('error');
+            this.setState({_otp: otp_f.target.value.trim()});
+        } else if(otp_f.target.value==="") {
+            $(otp_f.target).removeClass('error');
+        } else {
+            $(otp_f.target).addClass('error');
         }
     }
 
@@ -175,7 +187,7 @@ class Session extends Component {
                                 type="text"
                                 className="textbox-small otp" 
                                 placeholder="Enter OTP"
-                                onChange={(otp_f)=>{this.setState({_otp: otp_f.target.value.trim()})}}/>
+                                onChange={this.setOTP}/>
                         )                        
                     }
                 </div>
@@ -210,18 +222,18 @@ class Session extends Component {
                     this.state.activated ?
                     ( 
                         this.state.expired ?
-                            <button className="button session-expired-button"
+                            <button className="session-expired-button"
                                     onClick={this.paymentComplete}
                                     onPointerEnter={(btn)=>btn.target.innerHTML="BILL PAID"}
                                     onPointerLeave={(btn)=>btn.target.innerHTML="EXPIRED"}>EXPIRED</button>
                             :         
-                            <button className="button session-activated-button"
+                            <button className="session-activated-button"
                                     onClick={() => this.cancelConfirmationDialog(true)}
                                     onPointerEnter={(btn)=>btn.target.innerHTML="CANCEL"}
                                     onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button> 
                                     
                     ) : (
-                            <button className="button session-start-button" onClick={() => this.activate()}>START</button>
+                            <button className="session-start-button" onClick={() => this.activate()}>START</button>
                     )
                 }
 

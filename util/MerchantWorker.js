@@ -18,7 +18,7 @@ const MerchantFirebaseCreds = require('./Database').firebase.database();
 
 exports.MerchantLogin = function (params) {
     return new Promise((resolve, reject)=>{
-        MerchantFirebaseCreds.ref().child('merchants').orderByChild('mid').equalTo(params.mid)
+        MerchantFirebaseCreds.ref().child('merchants').orderByChild('mid').equalTo(params.mid).limitToFirst(1)
         .on('child_added', (merchantDetails)=>{
             if(merchantDetails.val()!==null){
                 var hash = Hasher.generateHash(params.password, merchantDetails.val().salt);

@@ -5,7 +5,11 @@ exports.ValidateLogin = function (credentials) {
     const loginRequest = new XMLHttpRequest();
     return new Promise((resolve,reject) => {
         loginRequest.open('POST', `/merchantLoginWorker?mid=${credentials.code}&password=${credentials.password}`, true);
-        loginRequest.send();
+        try{
+            loginRequest.send();
+        } catch(err){
+            reject(err);
+        }
         loginRequest.onreadystatechange = e => {
             if (loginRequest.readyState === 4 && loginRequest.status === 200) {
                 let loginResponse = JSON.parse(loginRequest.response);
@@ -22,6 +26,8 @@ exports.ValidateLogin = function (credentials) {
                         "validated" : false
                     });
                 }
+            } else if(loginRequest.status!==200) {
+                reject();
             }
         }
     });

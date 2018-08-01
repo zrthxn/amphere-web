@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './css/BookingLightbox.css';
 import '../GlobalStyles.css';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
+import $ from 'jquery';
 
 class BookingLightbox extends Component {
     constructor(){
@@ -49,12 +50,14 @@ class BookingLightbox extends Component {
     }
 
     addPhone = (_phone) => {
-        if(_phone.target.value!==""){
+        if(_phone.target.value!=="" && /^\d+$/.test(_phone.target.value) && _phone.target.value.length === 10){
+            $(_phone.target).removeClass('error');
             this.setState({
                 phoneValid: true,
                 phone: _phone.target.value
             });
         } else {
+            $(_phone.target).addClass('error');
             this.setState({
                 phoneValid: false,
                 phone: null
@@ -74,23 +77,12 @@ class BookingLightbox extends Component {
                         <div className="location">
 
                             <div className="location-code">
-                                <input id="location-code" 
+                                <input id="phone" 
                                         required="true"
                                         className="textbox" 
                                         placeholder="Enter Phone"
                                         onChange={this.addPhone}/>
                             </div>
-                            {
-                                (this.state.locCodeValid) ? <div className="checkmark"></div> : (
-                                    (this.state.locCodeValid===null) ?  console.log() : (
-                                        (this.state.locCodeValid==="CHECKING") ? <div className="spinner"></div> : (
-                                            (this.state.locCodeValid===false) ? <div className="crossmark"></div> : (
-                                                console.log("INTERNAL ERROR")
-                                            )
-                                        )
-                                    )
-                                )
-                            }
                         </div>
 
                         <div className="toggle-bars">
