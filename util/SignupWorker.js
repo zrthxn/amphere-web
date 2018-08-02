@@ -26,8 +26,7 @@ exports.CreateNewUser = function (params) {
     let uid = generateUserId();
 
     return new Promise((resolve,reject) => {
-
-        usersData.ref().orderByChild('phone').equalTo(phone).once('child_added', (searchres)=>{
+        usersData.ref().child('users').orderByChild('phone').equalTo(phone).once('child_added', (searchres)=>{
             if(searchres.val()===null){
                 usersData.ref('users/user-' + uid)
                 .set({
