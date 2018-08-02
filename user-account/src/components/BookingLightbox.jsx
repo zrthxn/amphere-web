@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './css/BookingLightbox.css';
 import '../GlobalStyles.css';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
+import $ from 'jquery';
 
 import LocationValidation from '../util/LocationValidation';
 import validatePromoCode from '../util/PromoValidation';
@@ -55,23 +56,31 @@ class BookingLightbox extends Component {
     }
 
     locCodeValidator = (_code) => {
-        LocationValidation.validateLocationCode(_code.target.value).then((result)=>{
-            if(result.valid===true){
-                this.setState({
-                    locCode: result.code,
-                    locCodeValid: true
-                });
-            } else if(result.valid===null) {
-                this.setState({
-                    location: null,
-                    locCodeValid: null
-                });
-            } else if(result.valid===false) {
-                this.setState({
-                    locCodeValid: false
-                });
-            }
-        });
+        _code.persist();
+        if(_code.target.value===""){
+            $(_code.target).removeClass('error');
+            this.setState({
+                location: null,
+                locCodeValid: null
+            });
+        } else {
+            LocationValidation.validateLocationCode(_code.target.value)
+            .then((result)=>{
+                if(result.valid===true){
+                    $(_code.target).removeClass('error');
+                    this.setState({
+                        locCode: result.code,
+                        locCodeValid: true
+                    });
+                } else if(result.valid===false) {
+                    $(_code.target).addClass('error');
+                    this.setState({
+                        location: null,
+                        locCodeValid: false
+                    });
+                }
+            });
+        }
     }
 
     promoValidator = (_code) => {
@@ -98,21 +107,15 @@ class BookingLightbox extends Component {
         return (
             <div className="lightbox-shadow">
                 <div className="lightbox">
+                <button className="cross-button" onClick={this.closeLightbox.bind(this)}></button>
                     <div className="session-settings-holder">
-                        
-                        <button className="cross-button" onClick={this.closeLightbox}></button>
                         <h2 className="lightbox-title">NEW SESSION</h2>
-
+                        
                         <div className="location">
-
                             <div className="location-code">
-                                <input id="location-code" 
-                                        required="true"
-                                        className="textbox" 
-                                        placeholder="Enter Location Code"
-                                        onChange={this.locCodeValidator}/>
+                                <input id="location-code" required className="textbox" placeholder="Enter Location Code" onChange={(event)=>{this.locCodeValidator(event)}}/>
                             </div>
-                            {
+                            {/* {
                                 (this.state.locCodeValid) ? <div className="checkmark"></div> : (
                                     (this.state.locCodeValid===null) ?  console.log() : (
                                         (this.state.locCodeValid==="CHECKING") ? <div className="spinner"></div> : (
@@ -122,7 +125,7 @@ class BookingLightbox extends Component {
                                         )
                                     )
                                 )
-                            }
+                            } */}
                         </div>
 
                         <div className="toggle-bars">
@@ -137,7 +140,7 @@ class BookingLightbox extends Component {
                                 <ToggleButtonGroup onChange={this.setDevice} type="radio" name="options" defaultValue={2} className="toggle-group">
                                     <ToggleButton className="toggle-btn" value={1}>iOS</ToggleButton>
                                     <ToggleButton className="toggle-btn" value={2}>microUSB</ToggleButton>
-                                    <ToggleButton className="toggle-btn" value={3}>USB-C</ToggleButton>
+                                    <ToggleButton className="toggle-btn" value={3} disabled>USB-C</ToggleButton>
                                 </ToggleButtonGroup>
                             </ButtonToolbar>
                         </div>

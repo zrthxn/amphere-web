@@ -16,6 +16,7 @@
 
 const Hasher = require('./PasswordHasher');
 const firebaseSignup = require('./Database');
+const SpreadsheetWorker = require('./SpreadsheetWorker');
 
 exports.CreateNewUser = function (params) {
 
@@ -38,6 +39,15 @@ exports.CreateNewUser = function (params) {
                     "isDeleted" : false,
                     "login" : true
                 }).then(()=>{
+                    SpreadsheetWorker.WriteToSpreadsheet({
+                        "sheet" : "Users",
+                        "values" : [
+                            `${getDateTime()}`,
+                            `${uid}`,
+                            `${resolveName(params.name)}`,
+                            `${params.phone}`
+                        ]
+                    });
                     resolve({
                         "success" : true,
                         "uid" : uid,

@@ -69,19 +69,16 @@ class BookingLightbox extends Component {
         return (
             <div className="lightbox-shadow">
                 <div className="lightbox">
+                
+                <button className="cross-button" onClick={this.closeLightbox.bind(this)}></button>
                     <div className="session-settings-holder">
                         
-                        <button className="cross-button" onClick={this.closeLightbox}></button>
                         <h2 className="lightbox-title">NEW SESSION</h2>
 
                         <div className="location">
 
                             <div className="location-code">
-                                <input id="phone" 
-                                        required="true"
-                                        className="textbox" 
-                                        placeholder="Enter Phone"
-                                        onChange={this.addPhone}/>
+                                <input id="phone" required className="textbox" placeholder="Enter Phone" onChange={this.addPhone}/>
                             </div>
                         </div>
 
@@ -97,7 +94,7 @@ class BookingLightbox extends Component {
                                 <ToggleButtonGroup onChange={this.setDevice} type="radio" name="options" defaultValue={2} className="toggle-group">
                                     <ToggleButton className="toggle-btn" value={1}>iOS</ToggleButton>
                                     <ToggleButton className="toggle-btn" value={2}>microUSB</ToggleButton>
-                                    <ToggleButton className="toggle-btn" value={3}>USB-C</ToggleButton>
+                                    <ToggleButton className="toggle-btn" value={3} disabled>USB-C</ToggleButton>
                                 </ToggleButtonGroup>
                             </ButtonToolbar>
                         </div>

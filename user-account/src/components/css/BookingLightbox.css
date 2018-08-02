@@ -7,7 +7,7 @@
 .session-settings-holder{
     display: grid;
     grid-template-columns: 1fr 3fr 3fr 1fr;
-    grid-template-rows: 1fr 2fr fit-content 3fr 2fr 2fr 2fr;
+    grid-template-rows: 2fr fit-content 3fr 2fr 2fr 2fr;
     grid-gap: 1em;
 
     width: 100%;
@@ -20,6 +20,12 @@
     animation-name: options;
     animation-duration: 0.5s;
     animation-timing-function: ease-in-out;
+}
+@media (max-width: 360px){
+    .session-settings-holder{
+        grid-template-columns: 0.25fr 3fr 3fr 0.25fr;
+        justify-content: center;
+    }
 }
 
 @keyframes options {
@@ -83,7 +89,6 @@
 .toggle-bars {
     width: 100%;
     height: fit-content;
-    margin-right: 12.5%;
     grid-column: 2/4;
     grid-row: 4/5;
 
@@ -94,6 +99,7 @@
 }
 
 .toggle-group {
+    margin: auto;
     width: 100%;
     text-align: center;
 }
@@ -115,8 +121,7 @@
     height: fit-content;
     grid-column: 1/2;
     grid-row: 1/2;
-}
-.duration-bar .toggle-btn {
+} .duration-bar .toggle-btn {
     width: 50%;
 }
 
@@ -124,9 +129,13 @@
     height: fit-content;
     grid-column: 1/2;
     grid-row: 2/3;
-}
-.device-bar .toggle-btn {
+} .device-bar .toggle-btn {
     width: 33%;
+} 
+@media (max-width: 320px){
+    .device-bar .toggle-btn {
+        font-size: 0.75em;
+    }
 }
 
 
@@ -144,6 +153,14 @@
     font-weight: 400;
     text-align: center;
 }
+
+.error {
+    border-color: #ff000080;
+    color: #ff000080 !important;
+} .error::placeholder {
+    color: #ff000080 !important;
+}
+  
 
 .session-settings {
     text-align: left;
@@ -193,7 +210,7 @@
     grid-column: 3/4;
     grid-row: 3/4;
     float: right;
-    margin-top: -3.65rem;
+    margin-top: -4rem;
     margin-right: 2.5rem;
 }
 
@@ -211,11 +228,8 @@
 }
 
 .cross-button {
-    margin: 0.65em 0 0 0;
-    justify-self: center;
-    align-self: end;
-    grid-column: 4/5;
-    grid-row: 1/2;
+    float: right;
+    margin: 1em 1em 0 0;
 }
 
 /*MEDIA QUERY=================================================================*/
@@ -242,7 +256,6 @@
         grid-gap: 0.5em;
     }
     .cross-button {
-        margin: 0.65em 0.65em 0 0;
         padding: 0.5em;
     } .cross-button:before , .cross-button:after{
         width: 1.5em;

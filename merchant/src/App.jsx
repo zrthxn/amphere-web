@@ -17,6 +17,7 @@ class App extends Component {
           phone: null,
           name : null
       };
+      this.notif = new Audio("http://soundbible.com/grab.php?id=1599&type=mp3");
   }
 
   componentWillMount() {
@@ -30,20 +31,21 @@ class App extends Component {
   componentDidMount(){
     MerchantDatabase.firebase.database().ref().child('sessions').orderByChild('mid').equalTo(this.state.mid)
     .on('child_added', session =>{
-      if(session.val().mid===this.state.mid && session.val().isDeleted===false){
-          this.SessionsHolder.addNewSession({
-            sid: session.val().sid,
-            uid: session.val().uid,
-            username: session.val().name,
-            userphone: session.val().phone,
-            device: session.val().device,
-            duration: session.val().duration,
-            startTime: session.val().startTime,
-            activated:session.val().activated,
-            expired: session.val().expired,
-            otp: session.val().otp,
-            dead: session.val().dead
-          });
+      if(session.val().mid===this.state.mid && session.val().isDeleted===false){        
+        this.notif.play().then().catch((err)=>{console.log(err)});
+        this.SessionsHolder.addNewSession({
+          sid: session.val().sid,
+          uid: session.val().uid,
+          username: session.val().name,
+          userphone: session.val().phone,
+          device: session.val().device,
+          duration: session.val().duration,
+          startTime: session.val().startTime,
+          activated:session.val().activated,
+          expired: session.val().expired,
+          otp: session.val().otp,
+          dead: session.val().dead
+        });
       }
     });
   }
