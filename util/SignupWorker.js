@@ -32,7 +32,7 @@ exports.CreateNewUser = function (params) {
                 usersData.ref('users/user-' + uid).set({
                     "uid" : uid,
                     "phone" : params.phone,
-                    "name" : resolveName(params.name),
+                    "name" : decodeURI(params.name),
                     "salt" : salt,
                     "password" : hash,
                     "addedOn" : getDateTime(),
@@ -44,7 +44,7 @@ exports.CreateNewUser = function (params) {
                         "values" : [
                             `${getDateTime()}`,
                             `${uid}`,
-                            `${resolveName(params.name)}`,
+                            `${decodeURI(params.name)}`,
                             `${params.phone}`
                         ]
                     });
@@ -122,16 +122,4 @@ function generateSalt(length) {
         salt = salt + Math.floor(Math.random()*16).toString(16);
     }
     return salt;
-}
-
-function resolveName(name) {
-    _name = name.split('+');
-    var result = "";
-
-    for(var i=0 ; i<_name.length ; i++){
-        result = result + ((result==="") ? "" : " ") + _name[i];
-    }
-
-    result.trim();
-    return result;
 }
