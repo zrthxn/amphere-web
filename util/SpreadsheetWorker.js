@@ -3,8 +3,8 @@ const {google} = require('googleapis');
 
 const ssConfig = require('../config.json');
 
-const CREDENTIALS_PATH = '../gss-credentials.json';
-const TOKEN_PATH = '../gss-token.json';
+const CREDENTIALS_PATH = './gss-credentials.json';
+const TOKEN_PATH = './gss-token.json';
 
 exports.WriteToSpreadsheet = function (payload) {
   fs.readFile(CREDENTIALS_PATH, (err, content) => {

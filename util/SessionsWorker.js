@@ -128,7 +128,7 @@ exports.CancelSession = function (sid, exp) {
             "isDeleted" : true,
             "status" : `CANCELLED : ${getDateTime()} : ${decodeURI(exp)}`
         });
-        SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('value', (snapshot)=>{
+        SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('child_added', (snapshot)=>{
             SpreadsheetWorker.WriteToSpreadsheet({
                 "sheet" : "Sessions",
                 "values" : [
@@ -159,7 +159,7 @@ exports.CompleteSession = function (sid) {
             "isDeleted" : true,
             "status" : `COMPLETED : ${getDateTime()}`
         });
-        SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('value', (snapshot)=>{
+        SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('child_added', (snapshot)=>{
             SpreadsheetWorker.WriteToSpreadsheet({
                 "sheet" : "Sessions",
                 "values" : [

@@ -63,15 +63,15 @@ class App extends Component {
         "device" : params.device,
         "duration" : params.duration
     }).then((response)=>{
-        this.SessionsHolder.addNewSession({
-          sid : response.sid,
-          mid : params.locCode,
-          duration : params.duration,
-          device: params.device,
-          startTime: params.startTime || 0,
-          activated: params.activated || false,
-          expired: params.expired || false
-        });
+        // this.SessionsHolder.addNewSession({
+        //   sid : response.sid,
+        //   mid : params.locCode,
+        //   duration : params.duration,
+        //   device: params.device,
+        //   startTime: params.startTime || 0,
+        //   activated: params.activated || false,
+        //   expired: params.expired || false
+        // });
     }).catch((err)=>{
         console.log(err);
         alert(err);
