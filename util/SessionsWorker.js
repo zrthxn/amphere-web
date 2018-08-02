@@ -1,5 +1,6 @@
 const firebaseSessions = require('./Database');
 const SMSWorker = require('./SMSWorker');
+const SpreadsheetWorker = require('./SpreadsheetWorker');
 
 var SessionsData = firebaseSessions.firebase.database();
 
@@ -120,15 +121,30 @@ exports.ExpireSession = function (sid) {
 }
 
 exports.CancelSession = function (sid, exp) {
-
-    // ADD TO SPREADSHEET HERE
-
     return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
             "activated" : false,
             "expired" : true,
             "isDeleted" : true,
             "status" : `CANCELLED : ${getDateTime()} : ${decodeURI(exp)}`
+        });
+        SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('value', (snapshot)=>{
+            SpreadsheetWorker.WriteToSpreadsheet({
+                "sheet" : "Sessions",
+                "values" : [
+                    `${getDateTime()}`,
+                    `${snapshot.val().sid}`,
+                    `CANCELLED`,
+                    `${snapshot.val().mid}`,
+                    `${snapshot.val().name}`,
+                    `${snapshot.val().phone}`,
+                    `${snapshot.val().addedOn}`,
+                    `${snapshot.val().duration}`,
+                    `${snapshot.val().device}`,
+                    `${snapshot.val().otp}`,
+                    `${decodeURI(exp)}`
+                ]
+            });
         });
         resolve({
             "success":true
@@ -137,14 +153,29 @@ exports.CancelSession = function (sid, exp) {
 }
 
 exports.CompleteSession = function (sid) {
-
-    // ADD TO SPREADSHEET HERE
-
     return new Promise((resolve, reject)=> {
         SessionsData.ref('sessions/session-' + sid).update({
             "activated" : false,
             "isDeleted" : true,
             "status" : `COMPLETED : ${getDateTime()}`
+        });
+        SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('value', (snapshot)=>{
+            SpreadsheetWorker.WriteToSpreadsheet({
+                "sheet" : "Sessions",
+                "values" : [
+                    `${getDateTime()}`,
+                    `${snapshot.val().sid}`,
+                    `COMPLETED`,
+                    `${snapshot.val().mid}`,
+                    `${snapshot.val().name}`,
+                    `${snapshot.val().phone}`,
+                    `${snapshot.val().addedOn}`,
+                    `${snapshot.val().duration}`,
+                    `${snapshot.val().device}`,
+                    `${snapshot.val().otp}`,
+                    `PAID`
+                ]
+            });
         });
         resolve({
             "success":true
