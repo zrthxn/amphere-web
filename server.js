@@ -68,9 +68,7 @@ admin.use(express.static(path.join(__dirname, 'admin')));
                 res.status(200).json({
                     "state" : "SUCCESS",
                     "uid" : _res.uid,
-                    "phone" : params.phone,
-                    "name" : params.name,
-                    "salt" : _res.salt
+                    "hash" : params.hash
                 });
                 console.log(`\nNEW USER ADDED => \n\t- name: ${params.name} \n\t- phone: ${params.phone}`);
             } else {

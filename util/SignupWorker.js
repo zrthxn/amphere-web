@@ -21,28 +21,28 @@ exports.CreateNewUser = function (params) {
 
     var usersData = firebaseSignup.firebase.database();
 
-    let phone = params.phone;
     let salt = generateSalt(12);
     let uid = generateUserId();
+    let hash = Hasher.generateHash(params.password, salt);
 
     return new Promise((resolve,reject) => {
-        usersData.ref().child('users').orderByChild('phone').equalTo(phone).once('child_added', (searchres)=>{
-            if(searchres.val()===null){
-                usersData.ref('users/user-' + uid)
-                .set({
+        usersData.ref().child('users').orderByChild('phone').equalTo(params.phone).once('value', (searchres)=>{
+            if(searchres.val()!==null){
+                usersData.ref('users/user-' + uid).set({
                     "uid" : uid,
-                    "phone" : phone,
+                    "phone" : params.phone,
                     "name" : resolveName(params.name),
                     "salt" : salt,
-                    "password" : Hasher.generateHash(params.password, salt),
+                    "password" : hash,
                     "addedOn" : getDateTime(),
                     "isDeleted" : false,
                     "login" : true
-                });
-                resolve({
-                    "success" : true,
-                    "uid" : uid,
-                    "salt" : salt
+                }).then(()=>{
+                    resolve({
+                        "success" : true,
+                        "uid" : uid,
+                        "hash" : hash
+                    });
                 });
             } else {
                 resolve({
@@ -50,7 +50,7 @@ exports.CreateNewUser = function (params) {
                     "error" : "PHONE-EXISTS"
                 });
             }
-        }); 
+        });
     });
 }
 
