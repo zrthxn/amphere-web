@@ -53,6 +53,23 @@ class Session extends Component {
     }
 
     componentDidMount() {
+        // SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).child('status')
+        // .once('value', (session)=>{
+        //     console.log('CHILD EVENT');            
+        //     console.log(session.val());
+        //     let event = session.val().split(' : ')[0];
+        //     if(event!==null && event!==""){
+        //         if(event==="ACTIVATED"){
+        //             this.setState({_otp: this.state.otp});
+        //             this.activate();
+        //         } else if(event==="EXPIRED"){
+        //             this.expire();
+        //         } else if(event==="COMPLETED"){
+        //             this.cancelSession();
+        //         }
+        //     }
+        // });
+
         if(this.state.activated===true){
             Timer.ref('time').on('value', (timeNow)=>{
                 let timeElapsed = timeNow.val() - this.state.startTime;
@@ -78,30 +95,35 @@ class Session extends Component {
     }
 
     activate = () => {
-        if(this.state._otp === this.state.otp){
-            localStorage.setItem('session-'+ this.state.sid + '-table', 'table-' + this.state.table);
-            SessionUtil.ActivateSession({
-                "sid": this.state.sid,
-                "otp": this.state._otp
-            }).then((res)=>{
-                if(res.activated===true){
-                    this.setState({
-                        activated : true,
-                        startTime: res.time
-                    });
-                    Timer.ref('time').on('value', (timeNow)=>{
-                        let timeElapsed = timeNow.val() - this.state.startTime;
-                        let _timeRemain = this.state.duration - timeElapsed;
-                        if(_timeRemain>0){
-                            this.setState({timeRemain: _timeRemain});
-                        } else {
-                            this.expire();
-                        }
-                    });
-                }
-            });
+        if(this.state.table!==null){
+            if(this.state._otp === this.state.otp){
+                localStorage.setItem('session-'+ this.state.sid + '-table', 'table-' + this.state.table);
+                SessionUtil.ActivateSession({
+                    "sid": this.state.sid,
+                    "otp": this.state._otp,
+                    "table": this.state.table
+                }).then((res)=>{
+                    if(res.activated===true){
+                        this.setState({
+                            activated : true,
+                            startTime: res.time
+                        });
+                        Timer.ref('time').on('value', (timeNow)=>{
+                            let timeElapsed = timeNow.val() - this.state.startTime;
+                            let _timeRemain = this.state.duration - timeElapsed;
+                            if(_timeRemain>0){
+                                this.setState({timeRemain: _timeRemain});
+                            } else {
+                                this.expire();
+                            }
+                        });
+                    }
+                });
+            } else {
+               alert("Incorrect OTP! Please try again.");
+            }
         } else {
-           alert("Incorrect OTP! Please try again.");
+            alert("Please enter a table number");
         }
     }
 
@@ -162,6 +184,14 @@ class Session extends Component {
         });
     }
 
+    setTable = (table) => {
+        if(table.target.value!==""){
+            this.setState({table: table.target.value.trim()});
+        } else {
+            this.setState({table: null});
+        }
+    }
+
     cancelConfirmationDialog = (state) => {
         this.setState({
             cancelLightboxOpen: state
@@ -214,7 +244,7 @@ class Session extends Component {
                             <input type="text" className="textbox user-table-lock" placeholder={"Table " + this.state.table} disabled/>
                         </div>
                     ) :
-                    <input type="text" className="textbox user-table-field" placeholder="Table No." onChange={(table)=>{this.setState({table: table.target.value.trim()})}}/>
+                    <input type="text" className="textbox user-table-field" placeholder="Table No." onChange={this.setTable.bind(this)}/>
                 }
                 </div>
 

@@ -56,6 +56,9 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     homepage.get('/contact', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'homepage', 'contact.html'));
     });
+    homepage.get('/partner', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'homepage', 'onboarding.html'));
+    });
     homepage.post('/signupWorker', (req, res) => {
         let params = getParameters(req);
         SignupWorker.CreateNewUser({
@@ -246,17 +249,17 @@ admin.use(express.static(path.join(__dirname, 'admin')));
 
     //==========================================================================//
 
-// amphere.use(vhost('amphere.in', homepage));
-// amphere.use(vhost('www.amphere.in', homepage));
-// amphere.use(vhost('account.amphere.in', account));
-// amphere.use(vhost('merchant.amphere.in', merchant));
-// amphere.use(vhost('admin.amphere.in', admin));
+amphere.use(vhost('amphere.in', homepage));
+amphere.use(vhost('www.amphere.in', homepage));
+amphere.use(vhost('account.amphere.in', account));
+amphere.use(vhost('merchant.amphere.in', merchant));
+amphere.use(vhost('admin.amphere.in', admin));
 
-amphere.use(vhost('boltbite.com', homepage));
-amphere.use(vhost('www.boltbite.com', homepage));
-amphere.use(vhost('account.boltbite.com', account));
-amphere.use(vhost('merchant.boltbite.com', merchant));
-amphere.use(vhost('admin.boltbite.com', admin));
+// amphere.use(vhost('boltbite.com', homepage));
+// amphere.use(vhost('www.boltbite.com', homepage));
+// amphere.use(vhost('account.boltbite.com', account));
+// amphere.use(vhost('merchant.boltbite.com', merchant));
+// amphere.use(vhost('admin.boltbite.com', admin));
 
 //------------------------------------------------------------------------------------------------------//
 // S E R V E R =============================== L E G A C Y ================================ S E R V E R //

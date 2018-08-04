@@ -1,23 +1,6 @@
 .hero {
-    position: relative;
-    background-image: url('../assets/wave.svg');
-    background-repeat: no-repeat;
-    background-position: bottom;
-    background-size: 100vw;
-    height: 100vh;
-    padding: 5em 2em;
-    margin: 0;
-
-    text-align: center;
-}
-.hero::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
+    text-align: center; 
+    height: 75vh;
     background: linear-gradient(135deg,#ffd800,#ff7300);
 }
 
@@ -42,12 +25,45 @@ section {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
 }
 
+/* INSTRUCTIONAL ============================= INSTRUCTIONAL */
+
+.instructional {
+    width: 100%;
+    height: fit-content;
+    padding: 4em;
+    background-color: #1c1c1c;
+}
+.instructional-container {
+    max-width: 1000px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.instructional-step {
+    margin: 0 4em 0 4em;
+    text-align: center;
+}
+.instructional-step .step-title {
+    font-weight: 200;
+    color: #ff7300;
+}
+.instructional-step p {
+    color: #fff;
+    font-size: 1em;
+    font-weight: 300;
+    line-height: 1.75em;
+}
+
 
 /*MEDIA QUERIES ============================= MEDIA QUERIES*/
-/*--------------------------------------------------------*/
 
 @media (min-width: 600px) {
     .page-slogan {
         font-size: 5em;
+    }
+    .instructional-container {
+        flex-direction: row;
     }
 }
