@@ -7,16 +7,18 @@
 
 .page-slogan {
     font-weight: 600;
+    /*Remove before responsive*/
+    font-size: 5em;
 }
 
 /* HERO ACTION CONTAINER MOBILE ================================== HERO ACTION CONTAINER MOBILE */
-/* This contains ONLY buttons on the HERO <GRID> */
 .hero-action-container {
     display: grid;
     grid-template-columns: auto;
     justify-content: space-evenly;
 }
-.hero-action-container .button {
+.hero .button {
+    font-weight: 600;
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
@@ -34,7 +36,9 @@
     max-width: 1000px;
     margin: auto;
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
+    /*Remove before responsive*/
+    flex-direction: row;
     justify-content: center;
 }
 
@@ -56,11 +60,11 @@
 
 /*MEDIA QUERIES ============================= MEDIA QUERIES*/
 
-@media (min-width: 600px) {
+/* @media (min-width: 600px) {
     .page-slogan {
         font-size: 5em;
     }
     .instructional-container {
         flex-direction: row;
     }
-}
+} */
