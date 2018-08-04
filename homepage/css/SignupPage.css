@@ -1,15 +1,10 @@
 header {
     background: transparent;
-}
-
-footer {
-    font-size: 0.75em;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    padding: 1em;
-    text-align: center;
-    line-height: 0.5em;
+    display: flex;
+} header .logo-text {
+    margin: auto;
+    padding: 2em;
+    max-height: 6.5em;
 }
 
 p {

@@ -1,0 +1,40 @@
+.about {
+    padding: 4em;
+}
+
+.about-container {
+    width: fit-content;
+    max-width: 1000px;
+    margin: auto;
+    text-align: center;
+}
+.about-container .title {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.about-container a {
+    text-decoration: none;
+    width: fit-content;
+    padding: 1em 4em;
+    margin: 4em;
+}
+
+.start {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    margin: 2em 0 4em 0;
+    text-align: justify;
+}
+.start .start-item {
+    margin-right: 4em;
+} .start .start-item:last-of-type {
+    margin-right: 0;
+}
+
+.need {    
+    text-align: justify;
+}

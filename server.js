@@ -56,8 +56,49 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     homepage.get('/contact', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'homepage', 'contact.html'));
     });
+    homepage.get('/team', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'homepage', 'team.html'));
+    });
+    homepage.get('/join', (req, res) => {
+        let params = getParameters(req);
+        switch(params.q){
+            case 'info' :
+                res.sendFile(path.resolve(__dirname, 'homepage', 'careers.html'));
+                break;
+        }
+    });
+    homepage.get('/support', (req, res) => {
+        let params = getParameters(req);
+        switch(params.q){
+            case 'faq' :
+            case 'forgotpassword' :
+            default: 
+                res.sendFile(path.resolve(__dirname, 'homepage', 'support.html'));
+                break;
+        }
+    });
+    homepage.get('/terms', (req, res) => {
+        let params = getParameters(req);
+        switch(params.q){
+            case 'damage':
+            case 'refunds':
+            default: 
+                res.sendFile(path.resolve(__dirname, 'homepage', 'userterms.html'));
+                break;
+        }
+    });
     homepage.get('/partner', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'homepage', 'onboarding.html'));
+        let params = getParameters(req);
+        switch(params.q){
+            case 'onboard' :
+                res.sendFile(path.resolve(__dirname, 'homepage', 'onboarding.html'));
+                break;
+        }
+    });
+    homepage.post('/onboarding', (req, res) => {
+        let params = getParameters(req);
+        // TODO
+        res.status(200).json({"state" : "SUCCESS"});
     });
     homepage.post('/signupWorker', (req, res) => {
         let params = getParameters(req);

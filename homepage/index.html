@@ -28,22 +28,18 @@
 <body>
     <!--===============//// HEADER AND SIDEBAR NAV MENU ////===============-->
     <header>
-        <img class="logo-text" src="assets/amphere-text.svg">
-
-        <input id="sidebar-toggle" type="checkbox" class="checkbox" />
-        <div class="sidebar-shadow"></div>
-        <div class="sidebar">
-            <nav class="sidebar-nav">
+        <div class="header-container">            
+            <img class="header-logo" src="assets/amphere-text.svg">
+            <nav class="header-nav">
                 <ul>
-                    <li><a>HOME</a></li>
-                    <li><a>CONTACT</a></li>
-                    <li><a>ABOUT</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/signup">Sign Up</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><button class="button btn-small btn-noborder" id="entry-button">My Account</button></li>
                 </ul>
             </nav>
         </div>
-        <label for="sidebar-toggle" class="hamburger"></label>
-        <!--Use only one button inside header-->
-        <button class="button btn-small btn-noborder" id="entry-button">My Account</button>
     </header>
 
     <!--===============//// CONTENT ////===============-->
@@ -81,7 +77,7 @@
                     <p class="step-info">Use the restaurant code<br>to book a new session</p>
                 </div>
                 <div class="instructional-step">
-                    <h2 class="step-title">Enjoy It</h2>
+                    <h2 class="step-title">Enjoy</h2>
                     <p class="step-info">Enjoy hassle free charging<br>without any more issues</p>
                 </div>
             </div>
@@ -98,18 +94,18 @@
         <div class="footer-nav">
             <div class="footer-nav-container">
                 <ul class="quick-nav">
-                    <li><a href="/about">About Us</a></li>
-                    <li><a href="/team">Team</a></li>
-                    <li><a href="/join/info">Careers</a></li>
+                    <li><a href="/about?">About Us</a></li>
+                    <li><a href="/team?">Team</a></li>
+                    <li><a href="/join?q=info">Careers</a></li>
                 </ul>
                 <ul class="contact">
-                    <li><a href="/support">Help & Support</a></li>
-                    <li><a href="/partner">Partner with Us</a></li>
+                    <li><a href="/support?">Help & Support</a></li>
+                    <li><a href="/partner?q=onboard">Partner with Us</a></li>
                 </ul>
                 <ul class="legal">
-                    <li><a href="/terms">Terms and Conditions</a></li>
-                    <li><a href="/terms/damage">Damage Policy</a></li>
-                    <li><a href="/terms/refunds">Cancellation and Refunds</a></li>
+                    <li><a href="/terms?">Terms and Conditions</a></li>
+                    <li><a href="/terms?q=damage">Damage Policy</a></li>
+                    <li><a href="/terms?q=refunds">Cancellation and Refunds</a></li>
                 </ul>
                 <img src="assets/logo-full-white.svg" alt="logo" class="logo">
             </div>

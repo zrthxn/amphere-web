@@ -33,6 +33,20 @@ p {
   font-size: 0.85em;
 }
 
+/* CONTAINERS ============================================== CONTAINERS */
+
+.hero {
+  text-align: center; 
+  padding: 10em 2em 5em 2em;
+  background: linear-gradient(#ffd800,#ff9e00);
+}
+
+.container {
+  margin: auto;
+  width: fit-content;
+  max-width: 1000px;
+}
+
 /* TEXTBOXES ============================================== TEXTBOXES */
 
 .textbox {

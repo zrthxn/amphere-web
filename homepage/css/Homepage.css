@@ -1,11 +1,8 @@
 .hero {
     text-align: center; 
     height: 75vh;
+    padding: 10em 2em;
     background: linear-gradient(135deg,#ffd800,#ff7300);
-}
-
-section {
-    padding: 2em 0;
 }
 
 .page-slogan {
@@ -47,7 +44,7 @@ section {
 }
 .instructional-step .step-title {
     font-weight: 200;
-    color: #ff7300;
+    color: #ffd800;
 }
 .instructional-step p {
     color: #fff;

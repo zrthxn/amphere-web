@@ -5,13 +5,131 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#1c1c1c">
-    
+
     <title>About | Amphere Inc.</title>
     
-    <link rel="stylesheet" type="text/css" href="css/GlobalStyles.css">
-    <link rel="stylesheet" type="text/css" href="css/Header.css">
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="css/GlobalStyles.css" />
+    <link rel="stylesheet" type="text/css" href="css/Header.css" />
+    <link rel="stylesheet" type="text/css" href="css/Footer.css">    
+    <link rel="stylesheet" type="text/css" href="css/About.css">
     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(window).on("scroll", function() {
+            if($(window).scrollTop() > 50) {
+                $("header").addClass("active");
+            } else {
+               $("header").removeClass("active");
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <!--===============//// HEADER AND SIDEBAR NAV MENU ////===============-->
+    <header>
+        <div class="header-container">            
+            <img class="header-logo" src="assets/amphere-text.svg">
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/signup">Sign Up</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><button class="button btn-small btn-noborder" id="entry-button">My Account</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!--===============//// CONTENT ////===============-->
+    <section>
+        <div class="hero">
+            <h1 class="page-title">ABOUT US</h1>
+        </div>
+    </section>
+
+    <section>
+        <div class="about">
+            <div class="about-container">
+                
+                <div class="start">
+                    <div class="start-item">
+                        <h2 class="title">VISION</h2>
+                        <p>To create an environment where charging will be a handy amenity regardless of space and time, with 
+                        people not having to worry about their low battery levels.</p>
+                    </div>
+                    <div class="start-item">
+                        <h2 class="title">HOW?</h2>
+                        <p>We want to achieve this by providing portable and easy to handle charging facilities at restaurants and
+                        cafés across the city. This will be attained by using ready to plug-in power banks for both Android
+                        and iPhone users.</p>
+                    </div>
+                </div>
+
+                <div class="need">
+                    <h2 class="title">THE NEED</h2>
+
+                    <p>In today’s time, people are connected to their phones at every level, so much so that mobiles have
+                       become indispensable. From work to pleasure, from calling family to networking with the world,
+                       people use their phones for every other thing. No matter where one is, the sign of a low battery is
+                       always stressful. But these low battery foes are going to be a thing of past soon.
+                       People will find the solution at their doorstep. With no provision of a public charging facility in the
+                       city, Amphere partners with cafes which are willing to offer a unique experience to their customers,
+                       bringing greater satisfaction. This will very likely create a greater goodwill of the restaurant as it will
+                       be catering to the needs of the tech savvy youth.</p>
+
+                    <p>Amphere will not just provide a service but a better experience at your restaurant. A happy customer
+                       likely to come back again and spread a good word in the market.
+                       Surveys have shown that people are likely to spend around 30% more time in the restaurant and order
+                       more if they have a charging facility to avail. This means one in every four consumers looks for
+                       restaurants that can promise readily available charging facility.</p>
+
+                    <p>A provision like this builds a likeability and eventually a sense of trust within the consumer for the
+                       café. They keep returning to the place as they expect similar enjoyable and comfortable experiences.
+                       With our service, we will target the broader needs of your consumer base and ensure that a pleasant
+                       experience is built not simply in terms of food but also the technological facilities.</p>
+                </div>
+                <div class="spacer"></div>
+                <div class="spacer"></div>
+                <a href="/partner?q=onboard" class="button">Partner with Us</a>
+            </div>
+        </div>    
+    </section>
+    
+    <!--===============//// FOOTER ////===============-->
+    <footer>
+        <div class="footer-nav">
+            <div class="footer-nav-container">
+                <ul class="quick-nav">
+                    <li><a href="/about?">About Us</a></li>
+                    <li><a href="/team?">Team</a></li>
+                    <li><a href="/join?q=info">Careers</a></li>
+                </ul>
+                <ul class="contact">
+                    <li><a href="/support?">Help & Support</a></li>
+                    <li><a href="/partner?q=onboard">Partner with Us</a></li>
+                </ul>
+                <ul class="legal">
+                    <li><a href="/terms?">Terms and Conditions</a></li>
+                    <li><a href="/terms?q=damage">Damage Policy</a></li>
+                    <li><a href="/terms?q=refunds">Cancellation and Refunds</a></li>
+                </ul>
+                <img src="assets/logo-full-white.svg" alt="logo" class="logo">
+            </div>
+        </div>
+        <div class="footer-banner">
+            <p class="footer-site-title">Amphere Solutions</p>
+            <div class="footer-social">
+                <ul class="footer-social-container">
+                    <li><a href="http://facebook.com"><img src="assets/facebook.svg" alt="facebook" class="footer-social-link"></a></li>
+                    <li><a href="http://instagram.com"><img src="assets/insta.svg" alt="instagram" class="footer-social-link"></a></li>
+                    <li><a href="http://twitter.com"><img src="assets/twitter.svg" alt="twitter"  class="footer-social-link"></a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
 </body>
+
 </html>

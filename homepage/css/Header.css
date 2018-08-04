@@ -1,40 +1,65 @@
 header {
     position: fixed;
-    margin: 0;
-    background: linear-gradient(#ffffffab,#ffffff00);
-    text-align: center;
-    height: fit-content;
-    width: 100%;
     z-index: 1000;
-    transition: all 0.2s linear;
+	transition: all 0.2s linear;
+	width: 100%;
 } header.active {
     background: #fff;
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-}
-
-.logo-text {
-	max-width: 50%;
-    margin: 1em 1em;
-	max-height: 3em;
-    transition: all 0.2s ease-in-out;
-} header.active .logo-text{
-    max-height: 2.5em;
-}
-
-header .button {
-	position: absolute;
-	color: #000;
-	top: 1.85em;
-	right: 1em;
-	padding: 0.5em 0.75em;
-	border-radius: 0.75em;
-	margin: 0;
-	transition: all 0.2s ease-in-out;
 } header.active .button {
-	border: 1px solid #000;
+	background-color: #ffd800;	
+	border: none !important;
+} header.active .header-container {
+	margin: 0.25em auto 0.25em auto;	
+	transition: all 0.2s linear;
+} 
+
+.header-container {
+	margin: 2.5em auto 1em auto;
+	max-width: 1000px;
+	font-size: 1em;
+	font-weight: 300;
+	transition: all 0.2s linear;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
 }
+
+.header-container .header-logo {
+	max-height: 3em;
+	align-self: center;
+	justify-self: left;
+}
+
+.header-container .button {
+	color: #000;
+	font-weight: 600;
+	border: 1px solid #000 !important;
+	border-radius: 10px;
+	padding: 1.5em;
+}
+
+.header-container .header-nav {
+	align-self: center;
+	justify-self: right;
+}
+.header-nav ul {
+	list-style: none;
+	display: flex;
+	padding: 0;
+}
+.header-nav li {
+	margin-left: 2em;
+	align-self: center;
+}
+.header-nav a {
+	text-decoration: none;
+	color: #000;
+}
+
 
 /* SIDEBAR NAVIGATION MENU ================================ SIDEBAR NAVIGATION MENU */
 
