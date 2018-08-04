@@ -97,8 +97,15 @@ admin.use(express.static(path.join(__dirname, 'admin')));
     });
     homepage.post('/onboarding', (req, res) => {
         let params = getParameters(req);
-        // TODO
-        res.status(200).json({"state" : "SUCCESS"});
+        MerchantWorker.MerchantOnboard({
+            "rname" : params.rname,
+            "name" : params.name,
+            "phone" : params.phone,
+            "email" : params.email,
+            "address" : params.address
+        }).then((_res)=>{
+            if(_res) res.status(200).json({"state" : "SUCCESS"});
+        });
     });
     homepage.post('/signupWorker', (req, res) => {
         let params = getParameters(req);

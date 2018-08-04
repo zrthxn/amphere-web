@@ -40,6 +40,7 @@ exports.CreateNewUser = function (params) {
                     "login" : true
                 }).then(()=>{
                     SpreadsheetWorker.WriteToSpreadsheet({
+                        "ssId" : ssConfig.spreadsheets.main,
                         "sheet" : "Users",
                         "values" : [
                             `${getDateTime()}`,

@@ -15,6 +15,8 @@
 
 const Hasher = require('./PasswordHasher');
 const MerchantFirebaseCreds = require('./Database').firebase.database();
+const SpreadsheetWorker = require('./SpreadsheetWorker');
+const ssConfig = require('../config.json');
 
 exports.MerchantLogin = function (params) {
     return new Promise((resolve, reject)=>{
@@ -38,4 +40,35 @@ exports.MerchantLogin = function (params) {
             }
         });
     });
+}
+
+exports.MerchantOnboard = function (params) {
+    return new Promise((resolve, reject)=>{
+        SpreadsheetWorker.WriteToSpreadsheet({
+            "ssId" : ssConfig.spreadsheets.onboarding,
+            "sheet" : "Merchants",
+            "values" : [
+                `${getDateTime()}`,
+                `${decodeURI(params.rname)}`,
+                `${decodeURI(params.name)}`,
+                `${decodeURI(params.phone)}`,
+                `${decodeURI(params.email)}`,
+                `${decodeURI(params.address)}`
+            ]
+        });
+        resolve(true);
+    });
+}
+
+function getDateTime() {
+    var date = new Date();
+
+    var hour = (date.getHours() < 10 ? "0" : "") + date.getHours();
+    var min  = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+    var sec  = (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
+    var year = date.getFullYear();
+    var month = ((date.getMonth() + 1) < 10 ? "0" : "") + (date.getMonth() + 1);
+    var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();   
+
+    return (`${hour}:${min}:${sec} ${day}/${month}/${year}`);
 }

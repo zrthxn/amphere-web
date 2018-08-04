@@ -1,6 +1,7 @@
 const firebaseSessions = require('./Database');
 const SMSWorker = require('./SMSWorker');
 const SpreadsheetWorker = require('./SpreadsheetWorker');
+const ssConfig = require('../config.json');
 
 var SessionsData = firebaseSessions.firebase.database();
 
@@ -130,6 +131,7 @@ exports.CancelSession = function (sid, exp) {
         });
         SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('child_added', (snapshot)=>{
             SpreadsheetWorker.WriteToSpreadsheet({
+                "ssId" : ssConfig.spreadsheets.main,
                 "sheet" : "Sessions",
                 "values" : [
                     `${getDateTime()}`,
@@ -161,6 +163,7 @@ exports.CompleteSession = function (sid) {
         });
         SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('child_added', (snapshot)=>{
             SpreadsheetWorker.WriteToSpreadsheet({
+                "ssId" : ssConfig.spreadsheets.main,
                 "sheet" : "Sessions",
                 "values" : [
                     `${getDateTime()}`,

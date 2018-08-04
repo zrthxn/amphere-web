@@ -1,8 +1,6 @@
 const fs = require('fs');
 const {google} = require('googleapis');
 
-const ssConfig = require('../config.json');
-
 const CREDENTIALS_PATH = './gss-credentials.json';
 const TOKEN_PATH = './gss-token.json';
 
@@ -22,7 +20,7 @@ exports.WriteToSpreadsheet = function (payload) {
 
 function PayloadDelivery (oAuth2Client, payload) {
   google.sheets({version: 'v4', oAuth2Client}).spreadsheets.values.append({
-    spreadsheetId: ssConfig.ssId,
+    spreadsheetId: payload.ssId,
     
     range: payload.sheet,
     valueInputOption: 'RAW',
