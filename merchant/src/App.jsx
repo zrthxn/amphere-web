@@ -44,7 +44,8 @@ class App extends Component {
           activated:session.val().activated,
           expired: session.val().expired,
           otp: session.val().otp,
-          dead: session.val().dead
+          dead: session.val().dead,
+          table: session.val().table
         });
       }
     });

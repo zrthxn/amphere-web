@@ -212,8 +212,9 @@
 }
 
 .cross-button {
-    float: right;
-    margin: 1em 1em 0 0;
+    position: relative;
+    align-self: flex-end;
+    margin: 1em;
 }
 
 /*MEDIA QUERY=================================================================*/

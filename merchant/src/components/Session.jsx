@@ -6,6 +6,7 @@ import $ from 'jquery';
 import './css/Session.css';
 
 import SessionFirebase from '../util/Database';
+var SessionUpdates = SessionFirebase.firebase.database();
 var Timer = SessionFirebase.firebase.database();
 
 class Session extends Component {
@@ -23,7 +24,7 @@ class Session extends Component {
             otp: null,
             dead: false,
             _otp: "AMPDEAD",
-            startTime: 0,
+            startTime: null,
             timeRemain: 0,
             cancelLightboxOpen: false,
             table: null
@@ -31,10 +32,9 @@ class Session extends Component {
     }
 
     componentWillMount() {
-        let tableLST = localStorage.getItem('session-'+ this.props.sid + '-table');
-        if(tableLST!==null){
-            tableLST = tableLST.split('-')[1];
-        }
+        let table_set = localStorage.getItem('session-'+ this.props.sid + '-table');
+        if(table_set!==null) table_set = table_set.split('-')[1];
+        else table_set = this.props.table;
         this.setState({
             sid: this.props.sid,
             uid: this.props.uid,
@@ -48,27 +48,32 @@ class Session extends Component {
             expired: this.props.expired,
             otp: this.props.otp,
             dead: this.props.dead,
-            table: tableLST
+            table: table_set
         });
     }
 
     componentDidMount() {
-        // SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).child('status')
-        // .once('value', (session)=>{
-        //     console.log('CHILD EVENT');            
-        //     console.log(session.val());
-        //     let event = session.val().split(' : ')[0];
-        //     if(event!==null && event!==""){
-        //         if(event==="ACTIVATED"){
-        //             this.setState({_otp: this.state.otp});
-        //             this.activate();
-        //         } else if(event==="EXPIRED"){
-        //             this.expire();
-        //         } else if(event==="COMPLETED"){
-        //             this.cancelSession();
-        //         }
-        //     }
-        // });
+        SessionUpdates.ref('sessions/session-' + this.state.sid).on('value', (session)=>{
+            let event;
+            if(session.val()!==null) event = session.child('status').val().split(' : ')[0];
+            if(event!==""){
+                if(event==="ACTIVATED"){
+                    this.setState({
+                        activated : true,
+                        startTime: session.child('startTime').val(), 
+                        table: session.child('table').val()
+                    });
+                } else if(event==="EXPIRED"){
+                    this.setState({ timeRemain: 0, expired: true });
+                } else if(event==="COMPLETED"){
+                    SessionUpdates.ref().off();
+                    this.props.complete();
+                } else if(event==="CANCELLED"){
+                    SessionUpdates.ref().off();
+                    this.props.cancel();
+                }
+            }
+        });
 
         if(this.state.activated===true){
             Timer.ref('time').on('value', (timeNow)=>{
@@ -204,6 +209,8 @@ class Session extends Component {
                 {
                     this.state.dead ? <h2 className="title">DEAD SESSION</h2> : <h2 className="title">SESSION</h2>
                 }
+
+                <button className="cross-button" onClick={() => this.cancelConfirmationDialog(true)}/>
 
                 <div className="user-details">
                     <p className="user-phone">{this.state.userphone}</p>

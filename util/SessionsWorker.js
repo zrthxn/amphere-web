@@ -29,7 +29,8 @@ exports.BookSession = function (params) {
                     "activated" : false,
                     "expired" : false,
                     "isDeleted" : false,
-                    "status" : "BOOKED"
+                    "status" : `BOOKED : ${getDateTime()}`,
+                    "table" : null
                 });
                 
                 SMSWorker.SendSMSSessionOTP(otp, params.phone).then(()=>{
@@ -68,7 +69,8 @@ exports.BookDeadSession = function (params) {
                     "activated" : false,
                     "expired" : false,
                     "isDeleted" : false,
-                    "status" : "BOOKED"
+                    "status" : "BOOKED",
+                    "table" : null
                 });
                 resolve({
                     "success": true,
@@ -93,7 +95,8 @@ exports.ActivateSession = function (session) {
                         SessionsData.ref('sessions/session-' + session.sid).update({
                             "activated" : true,
                             "startTime" : time.val().time,
-                            "status" : `ACTIVATED : ${getDateTime()}`
+                            "status" : `ACTIVATED : ${getDateTime()}`,
+                            "table" : session.table
                         });
                         resolve({
                             "success" : true,

@@ -223,8 +223,8 @@ h3{
 .cross-button:before , .cross-button:after{
   position: absolute; 
   content: ' ';
-  top:2em;
-  right: 1em;
+  top: 1em;
+  right: 0;
   height: 2px;
   width: 2em;
   background-color: #ff4e4e;
