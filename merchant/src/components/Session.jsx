@@ -63,6 +63,15 @@ class Session extends Component {
                         startTime: session.child('startTime').val(), 
                         table: session.child('table').val()
                     });
+                    Timer.ref('time').on('value', (timeNow)=>{
+                        let timeElapsed = timeNow.val() - this.state.startTime;
+                        let _timeRemain = this.state.duration - timeElapsed;
+                        if(_timeRemain>0){
+                            this.setState({timeRemain: _timeRemain});
+                        } else {
+                            this.expire();
+                        }
+                    });
                 } else if(event==="EXPIRED"){
                     this.setState({ timeRemain: 0, expired: true });
                 } else if(event==="COMPLETED"){
