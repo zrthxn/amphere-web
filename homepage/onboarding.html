@@ -76,6 +76,7 @@
                 <input id="phone" type="text" class="textbox" placeholder="Phone Number">
                 <input id="email" type="text" class="textbox" placeholder="Email">
                 <input id="address" type="text" class="textbox" placeholder="Address">
+                <input id="comments" type="text" class="textbox" placeholder="Comments">
                 <br>
                 <button id="submit" class="button">SUBMIT</button>
             </div>
@@ -90,8 +91,8 @@
             <div class="footer-nav-container">
                 <ul class="quick-nav">
                     <li><a href="/about?">About Us</a></li>
-                    <li><a href="/team?">Team</a></li>
-                    <li><a href="/join?q=info">Careers</a></li>
+                    <!-- <li><a href="/team?">Team</a></li>
+                    <li><a href="/join?q=info">Careers</a></li> -->
                 </ul>
                 <ul class="contact">
                     <li><a href="/support?">Help & Support</a></li>
@@ -123,6 +124,7 @@
         var phone = document.getElementById("phone");
         var email = document.getElementById("email");
         var address = document.getElementById("address");
+        var comments = document.getElementById("comments");
         
         document.getElementById("submit").onclick = function () {
             validityState = validateInputs(r_name.value, _name.value, phone.value, email.value, address.value);
@@ -140,7 +142,8 @@
                     "_name": _name.value,
                     "phone": phone.value,
                     "email": email.value,
-                    "address": address.value
+                    "address": address.value,
+                    "comments": comments.value
                 });
 
                 request.open('POST', `/onboarding?${url}`, true);

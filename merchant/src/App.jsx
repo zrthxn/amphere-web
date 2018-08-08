@@ -29,9 +29,65 @@ class App extends Component {
   }
 
   componentDidMount(){
+    //let payload = [];
+
     MerchantDatabase.firebase.database().ref().child('sessions').orderByChild('mid').equalTo(this.state.mid)
     .on('child_added', session =>{
-      if(session.val().mid===this.state.mid && session.val().isDeleted===false){        
+      if(session.val().mid===this.state.mid && session.val().isDeleted===false){
+        // payload.push({
+        //   sid: session.val().sid,
+        //   uid: session.val().uid,
+        //   username: session.val().name,
+        //   userphone: session.val().phone,
+        //   device: session.val().device,
+        //   duration: session.val().duration,
+        //   startTime: session.val().startTime,
+        //   activated:session.val().activated,
+        //   expired: session.val().expired,
+        //   otp: session.val().otp,
+        //   dead: session.val().dead,
+        //   table: session.val().table
+        // });      
+
+        // payload = this.sortSessions(payload.slice());
+        // console.log("PAYLOAD :: ", payload);
+        // payload.forEach((session)=>{
+        //     this.notif.play().then().catch((err)=>{console.log(err)});
+        //     this.SessionsHolder.addNewSession({
+        //       sid: session.sid,
+        //       uid: session.uid,
+        //       username: session.name,
+        //       userphone: session.phone,
+        //       device: session.device,
+        //       duration: session.duration,
+        //       startTime: session.startTime,
+        //       activated:session.activated,
+        //       expired: session.expired,
+        //       otp: session.otp,
+        //       dead: session.dead,
+        //       table: session.table
+        //     });
+        // });
+
+        // for(let i=0; i<payload.length; i++){
+        //     this.notif.play().then().catch((err)=>{console.log(err)});
+        //     let session = payload[i].slice();
+        //     this.SessionsHolder.addNewSession({
+        //       sid: session.sid,
+        //       uid: session.uid,
+        //       username: session.name,
+        //       userphone: session.phone,
+        //       device: session.device,
+        //       duration: session.duration,
+        //       startTime: session.startTime,
+        //       activated:session.activated,
+        //       expired: session.expired,
+        //       otp: session.otp,
+        //       dead: session.dead,
+        //       table: session.table
+        //     });
+        // }
+          
         this.notif.play().then().catch((err)=>{console.log(err)});
         this.SessionsHolder.addNewSession({
           sid: session.val().sid,
@@ -49,6 +105,19 @@ class App extends Component {
         });
       }
     });
+  }
+
+  sortSessions = (unsorted) => {
+    console.log("Sorting");
+    let expired = [], active = [], others = [];
+    unsorted.forEach((element)=>{
+      if(element!==null){
+        if(element.expired===true) expired.push(element);
+        else if(element.active===true) active.push(element);
+        else others.push(element);
+      }
+    });
+    return expired.concat(active, others);
   }
 
   lightboxOpener = () => {this.setState({lightboxOpen: true})}

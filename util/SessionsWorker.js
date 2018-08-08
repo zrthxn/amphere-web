@@ -96,7 +96,7 @@ exports.ActivateSession = function (session) {
                             "activated" : true,
                             "startTime" : time.val().time,
                             "status" : `ACTIVATED : ${getDateTime()}`,
-                            "table" : session.table
+                            "table" : decodeURI(session.table)
                         });
                         resolve({
                             "success" : true,

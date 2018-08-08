@@ -106,7 +106,8 @@ homepage.post('/onboarding', (req, res) => {
         "name" : params.name,
         "phone" : params.phone,
         "email" : params.email,
-        "address" : params.address
+        "address" : params.address,
+        "comments" : params.comments
     }).then((_res)=>{
         if(_res) res.status(200).json({"state" : "SUCCESS"});
     });
@@ -131,7 +132,6 @@ homepage.post('/signupWorker', (req, res) => {
         }
     });
 });
-//-------------------------------------------------------------------//
 //===================================================================//
 
 
@@ -198,7 +198,6 @@ account.post('/userCancelSession', (req, res)=> {
         }
     });
 });
-//-------------------------------------------------------------------//
 //===================================================================//
 
 
@@ -306,7 +305,6 @@ merchant.post('/merchantCompleteSession', (req, res)=> {
         }
     });
 });
-//-------------------------------------------------------------------//
 //===================================================================//
 
 
@@ -316,23 +314,21 @@ merchant.post('/merchantCompleteSession', (req, res)=> {
 admin.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'admin', 'index.html'));
 });
-
-//-------------------------------------------------------------------//
+admin.get('/adminLoginWorker', (req, res) => {
+    let params = getParameters(req);
+    
+});
 //===================================================================//
 
-//==========================================================================//
+
+//===================================================================//
+//------------------------- VIRTUAL HOST ----------------------------//
 
 amphere.use(vhost('amphere.in', homepage));
 amphere.use(vhost('www.amphere.in', homepage));
 amphere.use(vhost('account.amphere.in', account));
 amphere.use(vhost('merchant.amphere.in', merchant));
 amphere.use(vhost('admin.amphere.in', admin));
-
-// amphere.use(vhost('boltbite.com', homepage));
-// amphere.use(vhost('www.boltbite.com', homepage));
-// amphere.use(vhost('account.boltbite.com', account));
-// amphere.use(vhost('merchant.boltbite.com', merchant));
-// amphere.use(vhost('admin.boltbite.com', admin));
 
 //------------------------------------------------------------------------------------------------------//
 // S E R V E R =============================== L E G A C Y ================================ S E R V E R //

@@ -31,7 +31,7 @@ exports.ActivateSession = (params) => {
     var activationRequest = new XMLHttpRequest();
 
     return new Promise((resolve, reject)=>{
-        activationRequest.open('POST', `/merchantActivateSession?sid=${params.sid}&otp=${params.otp}&table=${params.table}`, true);
+        activationRequest.open('POST', `/merchantActivateSession?sid=${params.sid}&otp=${params.otp}&table=${encodeURI(params.table)}`, true);
         activationRequest.send();
         activationRequest.onreadystatechange = event => {
             if (activationRequest.readyState === 4 && activationRequest.status === 200) {

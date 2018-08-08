@@ -53,7 +53,8 @@ exports.MerchantOnboard = function (params) {
                 `${decodeURI(params.name)}`,
                 `${decodeURI(params.phone)}`,
                 `${decodeURI(params.email)}`,
-                `${decodeURI(params.address)}`
+                `${decodeURI(params.address)}`,
+                `${decodeURI(params.comments)}`
             ]
         });
         resolve(true);

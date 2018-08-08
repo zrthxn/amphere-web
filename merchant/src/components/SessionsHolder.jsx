@@ -8,7 +8,8 @@ class SessionsHolder extends Component {
         super();
         this.state = {
             sessions: [],
-            _thisSession: {}
+            _thisSession: {},
+            sorted: false
         };
     }
 
@@ -17,8 +18,10 @@ class SessionsHolder extends Component {
         _sessions.push(newSession);
         this.setState({
             sessions: _sessions,
-            _thisSession: newSession
+            _thisSession: newSession,
+            sorted: false
         });
+        this.sortSessions();
     }
 
     cancelSession = (index) => {
@@ -55,25 +58,46 @@ class SessionsHolder extends Component {
         return flag;
     }
 
+    sortSessions = () => {
+        let unsorted = this.state.sessions.slice();
+        let expired = [], active = [], others = [];
+        unsorted.forEach((element)=>{
+            if(element!==null){
+                if(element.expired===true) expired.push(element);
+                else if(element.active===true) active.push(element);
+                else others.push(element);
+            }
+        });
+        this.setState({
+            sessions: expired.concat(active, others),
+            sorted: true
+        })
+    }
+
     render() {
         let _addNewSession = this.state.sessions.map((sess, index)=>{
-            return (
-                <Session sid={this.state.sessions[index].sid}
-                         uid={this.state.sessions[index].uid}
-                         username={this.state.sessions[index].username}
-                         userphone={this.state.sessions[index].userphone}
-                         device={this.state.sessions[index].device}
-                         duration={this.state.sessions[index].duration}
-                         startTime={this.state.sessions[index].startTime}
-                         activated={this.state.sessions[index].activated}
-                         expired={this.state.sessions[index].expired}
-                         otp={this.state.sessions[index].otp}
-                         dead={this.state.sessions[index].dead}
-                         table={this.state.sessions[index].table}
-                         key={index}
-                         complete = {()=>{this.completeSession(index, this.state.sessions[index].sid)}}
-                         cancel = {() => this.cancelSession(index)}/>
-            );
+            if(this.state.sessions[index]!==null){
+                return (
+                    <Session 
+                        sid={this.state.sessions[index].sid}
+                        uid={this.state.sessions[index].uid}
+                        username={this.state.sessions[index].username}
+                        userphone={this.state.sessions[index].userphone}
+                        device={this.state.sessions[index].device}
+                        duration={this.state.sessions[index].duration}
+                        startTime={this.state.sessions[index].startTime}
+                        activated={this.state.sessions[index].activated}
+                        expired={this.state.sessions[index].expired}
+                        otp={this.state.sessions[index].otp}
+                        dead={this.state.sessions[index].dead}
+                        table={this.state.sessions[index].table}
+                        key={index}
+                        complete = {()=>{this.completeSession(index)}}
+                        cancel = {() => this.cancelSession(index)}
+                        sorts={()=> this.sortSessions()}
+                    />
+                );
+            }
         })
 
         return (
@@ -81,7 +105,7 @@ class SessionsHolder extends Component {
             {
                 this.state.sessions.length!==0 ? (
                     !this.emptinessChecker() ? (
-                        _addNewSession 
+                        this.state.sorted ? _addNewSession : console.log()
                     ) : <EmptySessions />
                 ) : <EmptySessions />
             }

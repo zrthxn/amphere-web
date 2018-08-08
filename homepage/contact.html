@@ -52,9 +52,15 @@
     <section>
         <div class="contact-details">
             <div class="contact-details-container">
-                <h1>Get in touch with us!</h1>
+                <h1>We're all ears!</h1>
 
-                <div class="contacts">
+                <p>At Amphere, we appreciate and eagerly wait to hear from our consumers. <br>
+                Feedback, suggestions or even an account of your experience with our service is welcome. 
+                Please tell us how you liked it, how Amphere saved the day or how we can improve our service for you. 
+                You can also tell us if you want the service at your favourite restaurant.
+                </p>
+
+                <!-- <div class="contacts">
                     <div class="contact-person">
                         <h3 class="name">Ibad Rather</h3>
                         <p>+91 8285474175</p>
@@ -65,12 +71,26 @@
                         <p>+91 9811879909</p>
                         <p><b>hello.puneet@amphere.in</b></p>
                     </div>
+                </div> -->
+
+                <div class="container">
+                    <input id="_name" type="text" class="textbox" placeholder="Your Name">
+                    <input id="email" type="text" class="textbox" placeholder="Email">
+                    <input id="message" type="text" class="textbox" placeholder="Feedback">
+                    <br>
+                    <button id="submit" class="button">SUBMIT</button>
                 </div>
                 
-                <h2>Or write to us at <b>hello@amphere.in</b></h2>
+                <h2>Or write to us at <b><a href="mailto:hello@amphere.in">hello@amphere.in</a></b></h2>
             </div>
         </div>
     </section>
+
+    <style>
+        .container input {
+            margin-bottom: 1em;
+        }    
+    </style>
     
     <!--===============//// FOOTER ////===============-->
     <footer>
@@ -78,8 +98,8 @@
             <div class="footer-nav-container">
                 <ul class="quick-nav">
                     <li><a href="/about?">About Us</a></li>
-                    <li><a href="/team?">Team</a></li>
-                    <li><a href="/join?q=info">Careers</a></li>
+                    <!-- <li><a href="/team?">Team</a></li>
+                    <li><a href="/join?q=info">Careers</a></li> -->
                 </ul>
                 <ul class="contact">
                     <li><a href="/support?">Help & Support</a></li>
@@ -104,6 +124,10 @@
             </div>
         </div>
     </footer>
+
+    <script>
+
+    </script>
 
 </body>
 

@@ -10,6 +10,12 @@ class SessionCancelLightbox extends Component {
         }
     }
 
+    componentDidMount() {
+        if(this.props.activation===true){
+            
+        }
+    }
+
     setReasons = (field) => {
         let set = null;
         if(field.target.value!==""){

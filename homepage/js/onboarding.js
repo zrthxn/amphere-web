@@ -4,6 +4,7 @@ function generateSignupQueryURL(query) {
         `name=${encodeURI(query._name)}&` +
         `phone=${encodeURI(query.phone)}&` +
         `email=${encodeURI(query.email)}&` +
+        `comments=${encodeURI(query.comments)}&` +
         `address=${encodeURI(query.address)}`
     );
 }
