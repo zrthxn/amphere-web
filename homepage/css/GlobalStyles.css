@@ -141,12 +141,8 @@ p {
 }
 
 @keyframes lightbox-shadow {
-  from{
-      opacity: 0;
-  }
-  to{
-      opacity: 1;
-  }
+  from{opacity: 0}
+  to{opacity: 1}
 }
 
 /* BUTTONS =============================================== BUTTONS */
@@ -156,7 +152,7 @@ p {
   padding: 1em;
   padding-left: auto;
   padding-right: auto;
-  width: 12em;
+  width: 100%;
   color: #000;
   font-weight: 400;
   font-size: 1em;

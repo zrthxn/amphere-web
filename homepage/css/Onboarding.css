@@ -1,26 +1,37 @@
-.onboard-form-container {
+.onboard {
+    padding: 2em;
+    margin: auto;
+    max-width: 1000px;
 }
+
+.onboard-form-container {
+    width: 100%;
+    margin: 4em 0 2em 0;
+} 
 
 .onboard-form {
-    width: fit-content;
-    margin: auto;
     display: flex;
     flex-direction: column;
-    align-content: center;
-    justify-content: center;
+    margin-top: 4em; 
 }
-
+.onboard-form::before {
+    content: 'GET IN TOUCH';
+    font-weight: 600;
+    font-size: 1.5em;
+    color: #838383;
+    text-align: center;
+    margin-bottom: 1.5em;
+}
 .onboard-form .textbox {
-    width: 30em;
-    margin-bottom: 1em;
+    margin: auto;
+    margin-bottom: 1em; 
+    text-align: center;
 }
-
 .onboard-form .button {
     margin: auto;
-}
-
-.onboard-completion {
-    padding: 4em;
+    width: 75%;
+    max-width: 12em;
+    margin-bottom: 1em; 
 }
 
 .error {

@@ -1,10 +1,16 @@
 header {
+    position: fixed;
+    z-index: 5000;
+    width: 100%;
     background: transparent;
     display: flex;
 } header .logo-text {
     margin: auto;
     padding: 2em;
     max-height: 6.5em;
+    width: 100%;
+    align-self: center;
+    justify-self: center;
 }
 
 p {
@@ -15,12 +21,14 @@ p {
     position: fixed;
     height: 100vh;
     width: 100vw;
-    background: linear-gradient(180deg,#a6ff00ab,#fff);
+    background: linear-gradient(#ffd800, #00ff73ab);
     text-align: center;
     transition: all 0.2s ease-in-out;
     display: flex;
     flex-flow: column;
 }
+
+/*===================  SIGNUP FORM   ====================*/
 
 .login-container{
     height: fit-content;
@@ -31,6 +39,7 @@ p {
     padding: 2em 4em;
 }
 .login-container .button {
+    width: 75%;
     padding: 1em 0.75em;
     margin: 1em 0 1rem 0;
     font-weight: 600;
@@ -64,7 +73,7 @@ p {
     color: #ff0000 !important;
 }
 
-/*===================   @MEDIA   =======================*/
+/*===================   @MEDIA   ====================*/
 
 @media (min-width: 500px) {
     .login-container {
@@ -81,6 +90,6 @@ p {
     }
 
     .textbox {
-        padding: 0.5em 2em;
+        padding: 0.75em 2em;
     }
 }

@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="./css/Contact.css">
+
+{{> header }}
+
+{{#if completion}}
+    <!--===============//// CONTENT B ////===============-->
+    <section>
+        <div class="hero">
+            <h1 class="page-title">CONTACT US</h1>
+            <h2>Thank you</h2>
+        </div>
+    </section>
+
+    <section>
+        <div class="contact-details">
+            <div class="contact-details-container">
+                <h1>Thanks for getting in touch</h1>
+
+                <p>Our team will soon be in touch with you. If you want to contact us personally, you may write to <b><a href="mailto:hello@amphere.in">hello@amphere.in</a></b></p>
+            </div>
+        </div>
+    </section>
+{{else}}
+    <!--===============//// CONTENT A ////===============-->
+    <section>
+        <div class="hero">
+            <h1 class="page-title">CONTACT US</h1>
+        </div>
+    </section>
+
+    <section>
+        <div class="contact-details">
+            <div class="contact-details-container">
+                <h1>We're all ears!</h1>
+
+                <p>At Amphere, we appreciate and eagerly wait to hear from our consumers. <br>
+                Feedback, suggestions or even an account of your experience with our service is welcome. 
+                Please tell us how you liked it, how Amphere saved the day or how we can improve our service for you. 
+                You can also tell us if you want the service at your favourite restaurant.
+                </p>
+
+                <div class="contact-form-container">
+                    <input id="_name" type="text" class="textbox" placeholder="Your Name">
+                    <input id="email" type="text" class="textbox" placeholder="Email">
+                    <input id="message" type="text" class="textbox" placeholder="Feedback">
+                    <br>
+                    <button id="submit" class="button">SUBMIT</button>
+                </div>
+                
+                <h2>Or write to us at <b><a href="mailto:hello@amphere.in">hello@amphere.in</a></b></h2>
+            </div>
+        </div>
+    </section>
+
+{{/if}}
+
+{{> footer }}

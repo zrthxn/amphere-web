@@ -6,13 +6,24 @@
     font-size: 0.85em;
 }
 
+.footer .container {
+    display: flex;
+    flex-direction: column;
+}
+.footer .container h2 {
+    margin: auto;
+    margin-top: 2em;
+}
+
 .footer-grid-container {
     width: 100%;
+    max-width: 600px;
+    margin: auto;
     text-align: left;
 
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 1fr 1fr 6fr;
+    grid-template-columns: 3fr 4fr 6fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-row-gap: 0.25em;
     grid-column-gap: 0.25em;
@@ -22,6 +33,8 @@
     text-align: right;
 }
 
-.footer p {
+.footer a {
     margin: 0;
+    color: #fff;
+    text-decoration: none;
 }

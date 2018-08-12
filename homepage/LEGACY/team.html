@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <meta name="theme-color" content="#1c1c1c">
+
+    <title>Our Team | Amphere Inc.</title>
+    
+    <link rel="stylesheet" type="text/css" href="css/GlobalStyles.css" />
+    <link rel="stylesheet" type="text/css" href="css/Header.css" />
+    <link rel="stylesheet" type="text/css" href="css/Footer.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(window).on("scroll", function() {
+            if($(window).scrollTop() > 50) {
+                $("header").addClass("active");
+            } else {
+               $("header").removeClass("active");
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <!--===============//// HEADER AND SIDEBAR NAV MENU ////===============-->
+    <header>
+        <div class="header-container">            
+            <img class="header-logo" src="assets/amphere-text.svg">
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/signup">Sign Up</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><button class="button btn-small btn-noborder" id="entry-button">My Account</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!--===============//// CONTENT ////===============-->
+    <section>
+        <div class="hero">
+            <h1 class="page-title">OUR TEAM</h1>
+        </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <section>
+        <div class="container">
+            <h1>Coming Soon</h1>
+        </div>
+    </section>
+    
+    <div class="spacer"></div>
+
+    <!--===============//// FOOTER ////===============-->
+    <footer>
+        <div class="footer-nav">
+            <div class="footer-nav-container">
+                <ul class="quick-nav">
+                    <li><a href="/about?">About Us</a></li>
+                    <!-- <li><a href="/team?">Team</a></li>
+                    <li><a href="/join?q=info">Careers</a></li> -->
+                </ul>
+                <ul class="contact">
+                    <li><a href="/support?">Help & Support</a></li>
+                    <li><a href="/partner?q=onboard">Partner with Us</a></li>
+                </ul>
+                <ul class="legal">
+                    <li><a href="/terms?">Terms and Conditions</a></li>
+                    <li><a href="/terms?q=damage">Damage Policy</a></li>
+                    <li><a href="/terms?q=refunds">Cancellation and Refunds</a></li>
+                </ul>
+                <img src="assets/logo-full-white.svg" alt="logo" class="logo">
+            </div>
+        </div>
+        <div class="footer-banner">
+            <p class="footer-site-title">Amphere Solutions</p>
+            <div class="footer-social">
+                <ul class="footer-social-container">
+                    <li><a href="http://facebook.com"><img src="assets/facebook.svg" alt="facebook" class="footer-social-link"></a></li>
+                    <li><a href="http://instagram.com"><img src="assets/insta.svg" alt="instagram" class="footer-social-link"></a></li>
+                    <li><a href="http://twitter.com"><img src="assets/twitter.svg" alt="twitter"  class="footer-social-link"></a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

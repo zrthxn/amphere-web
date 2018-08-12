@@ -8,7 +8,6 @@ class SessionsHolder extends Component {
         super();
         this.state = {
             sessions: [],
-            _thisSession: {},
             sorted: false
         };
     }
@@ -16,34 +15,38 @@ class SessionsHolder extends Component {
     addNewSession = (newSession) => {
         let _sessions = this.state.sessions.slice();
         _sessions.push(newSession);
+        // this.DeliverSessions(_sessions);
         this.setState({
             sessions: _sessions,
-            _thisSession: newSession,
-            sorted: false
+            sorted: true
         });
-        this.sortSessions();
     }
 
     cancelSession = (index) => {
         let _sessions = this.state.sessions.slice();
         delete _sessions[index];
+        // _sessions.splice(index, 1);
+        // this.DeliverSessions(_sessions);
         this.setState({
-            sessions: _sessions
+            sessions: _sessions,
+            sorted: true
         });
     }
 
     completeSession = (index) => {
         let _sessions = this.state.sessions.slice();
         delete _sessions[index];
+        // _sessions.splice(index, 1);
+        // this.DeliverSessions(_sessions);
         this.setState({
-            sessions: _sessions
+            sessions: _sessions,
+            sorted: true
         });
     }
 
     isEmpty = (obj) => {
         for(var key in obj) {
-            if(obj.hasOwnProperty(key))
-                return false;
+            if(obj.hasOwnProperty(key)) return false;
         }
         return true;
     }
@@ -58,20 +61,29 @@ class SessionsHolder extends Component {
         return flag;
     }
 
-    sortSessions = () => {
-        let unsorted = this.state.sessions.slice();
+    DeliverSessions = (sessions) => {
+        let unsorted = sessions.slice();
         let expired = [], active = [], others = [];
-        unsorted.forEach((element)=>{
-            if(element!==null){
-                if(element.expired===true) expired.push(element);
-                else if(element.active===true) active.push(element);
-                else others.push(element);
+
+        for(let i=0; i<unsorted.length; i++) {
+            if(unsorted[i]!==null && unsorted[i]!==undefined){
+                if(unsorted[i].expired===true) expired.push(unsorted[i]);
+                else if(unsorted[i].activated===true) active.push(unsorted[i]);
+                else others.push(unsorted[i]);
             }
-        });
+        }
+
+        // unsorted.forEach((element)=>{
+        //     if(element!==null){
+        //         if(element.expired===true) expired.push(element);
+        //         else if(element.active===true) active.push(element);
+        //         else others.push(element);
+        //     }
+        // });
         this.setState({
             sessions: expired.concat(active, others),
             sorted: true
-        })
+        });
     }
 
     render() {
@@ -94,7 +106,6 @@ class SessionsHolder extends Component {
                         key={index}
                         complete = {()=>{this.completeSession(index)}}
                         cancel = {() => this.cancelSession(index)}
-                        sorts={()=> this.sortSessions()}
                     />
                 );
             }

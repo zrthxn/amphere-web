@@ -58,7 +58,7 @@ class Session extends Component {
 
     componentDidMount() {
         if(this.state.activated===true && this.state.expired===false){
-            this.TimerToggle(true);
+            this.TimerStart();
         } else {
             SessionUpdates.ref('sessions/session-' + this.state.sid).on('value', (session)=>{
                 let event;
@@ -70,10 +70,9 @@ class Session extends Component {
                             startTime: session.child('startTime').val(), 
                             table: session.child('table').val()
                         });
-                        this.TimerToggle(true);
+                        this.TimerStart();
                     } else if(event==="EXPIRED"){
-                        this.props.sorts();
-                        this.TimerToggle(false);
+                        Timer.ref('time').off('value');
                         this.setState({ timeRemain: 0, expired: true });
                     } else if(event==="COMPLETED"){
                         SessionUpdates.ref().off();
@@ -81,6 +80,9 @@ class Session extends Component {
                     } else if(event==="CANCELLED"){
                         SessionUpdates.ref().off();
                         this.props.cancel();
+                    } else if(event==="COLLECTED"){
+                        SessionUpdates.ref().off();
+                        this.setState({ collected: true });
                     }
                 }
             });
@@ -91,9 +93,11 @@ class Session extends Component {
         if(otp_f.target.value!=="" && /^\d+$/.test(otp_f.target.value) && otp_f.target.value.length === 4){
             $(otp_f.target).removeClass('error');
             this.setState({_otp: otp_f.target.value.trim()});
+        } else if(otp_f.target.value==="") {
+            $(otp_f.target).removeClass('error');
+        } else {
+            $(otp_f.target).addClass('error');
         }
-        else if(otp_f.target.value==="") $(otp_f.target).removeClass('error');
-        else $(otp_f.target).addClass('error');
     }
 
     activate = () => {
@@ -110,7 +114,7 @@ class Session extends Component {
                             activated : true,
                             startTime: res.time
                         });
-                        
+                        this.TimerStart();
                     }
                 });
             } else {
@@ -122,7 +126,7 @@ class Session extends Component {
     }
 
     expire = () => {
-        this.props.sorts();
+        Timer.ref('time').off('value');
         SessionUtil.ExpireSession(this.state.sid).then(()=>{    
             this.setState({
                 timeRemain: 0,
@@ -138,7 +142,8 @@ class Session extends Component {
                 alert("Session cannot be cancelled after more than 5 minutes of activation");
             } else {
                 this.setState({ activated : false });
-                this.TimerToggle(false);
+                Timer.ref('time').off('value');
+                Timer.ref('time').off('value');
                 SessionUtil.CancelSession({
                     "sid": this.state.sid,
                     "exp": reasons
@@ -151,7 +156,8 @@ class Session extends Component {
                 });
             }
         } else {
-            this.TimerToggle(false);
+            this.TimerStart(false);
+            Timer.ref('time').off('value');
             SessionUtil.CancelSession({
                 "sid": this.state.sid,
                 "exp": reasons
@@ -188,21 +194,31 @@ class Session extends Component {
         } else this.setState({table: null});
     }
 
-    cancelConfirmationDialog = (state) => this.setState({cancelLightboxOpen: state})
-    paymentConfirmationDialog = (state) => this.setState({paymentLightboxOpen: state})
-
-    TimerToggle = (state) => {
-        if(state) {
-            Timer.ref('time').on('value', (timeNow)=>{
-                let timeElapsed = timeNow.val() - this.state.startTime;
-                let _timeRemain = this.state.duration - timeElapsed;
-                if(_timeRemain>0){
-                    this.setState({timeRemain: _timeRemain});
-                } else {
-                    this.expire();
-                }
+    setCollected = () => {
+        let stat;
+        SessionFirebase.firebase.database().ref().child('sessions').equalTo(this.state.sid).once('value', (session)=>{
+            if(session.val()!==null) stat = session.child('status').val().split(' : ')[1];
+            SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({ 
+                "status" : 'COLLECTED' + ' : ' + stat,
+                "collected" : true 
             });
-        } else Timer.ref().off();
+        });
+        this.setState({ collected: true });
+    }
+
+    cancelConfirmationDialog = (state) => this.setState({cancelLightboxOpen: state})
+    //paymentConfirmationDialog = (state) => this.setState({paymentLightboxOpen: state})
+
+    TimerStart = () => {
+        Timer.ref('time').on('value', (timeNow)=>{
+            let timeElapsed = timeNow.val() - this.state.startTime;
+            let _timeRemain = this.state.duration - timeElapsed;
+            if(_timeRemain>0){
+                this.setState({timeRemain: _timeRemain});
+            } else {
+                this.expire();
+            }
+        });
     }
 
     render() {
@@ -217,7 +233,7 @@ class Session extends Component {
 
                             {
                                 !this.state.collected ? 
-                                <button className="button" onClick={()=>this.setState({collected: true})}>EQUIPMENT COLLECTED</button> 
+                                <button className="button" onClick={() => this.setCollected()}>EQUIPMENT COLLECTED</button> 
                                 : 
                                 <h2><b>Amount :</b> Rs {this.state.amount}</h2>
                             }

@@ -1,13 +1,14 @@
 const http = require('http');
 const file = require('fs');
 const path = require('path');
+const handle = require('express-handlebars');
+const express = require('express');
+const vhost = require('vhost');   
 
 const ServerConfig = require('./config.json');
 const ServerState = ServerConfig.ServerState;
-const PORT = process.env.PORT || ServerConfig.PORT;
+const PORT = process.env.PORT || ServerConfig.PORT
 
-const express = require('express');
-const vhost = require('vhost');     // VHOST FOR MULTIPLE SUBDOMAINS
 const amphere = express();          
 const homepage = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
 const account = express();          // EXPRESS FOR MULTIPLE SUBDOMAINS
@@ -31,6 +32,17 @@ amphere.listen(PORT, () => {
     });
 });
 
+homepage.set('views', path.join(__dirname, 'homepage'));
+homepage.set('view engine', 'hbs');
+homepage.engine('hbs', handle({
+    defaultLayout: 'main', 
+    extname: 'hbs', 
+    layoutsDir: __dirname + '/homepage/layouts',
+    partialsDir  : [
+        __dirname + '/homepage/partials',
+    ]
+}));
+
 homepage.use(express.static(path.join(__dirname, 'homepage')));
 account.use(express.static(path.join(__dirname, 'user-account/build')));
 merchant.use(express.static(path.join(__dirname, 'merchant/build')));
@@ -45,60 +57,78 @@ admin.use(express.static(path.join(__dirname, 'admin')));
 //===================================================================//
 //---------------------------- HOMEPAGE -----------------------------//
 
-homepage.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'homepage', 'index.html'));
+homepage.get('/', (req,res)=> {
+    res.render('index', { title: 'Home | Amphere Solutions' });
 });
-homepage.get('/signup', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'homepage', 'signup.html'));
+homepage.get('/signup', (req,res)=> {
+    res.render('signup', { title: 'Sign Up | Amphere Solutions' });
 });
-homepage.get('/about', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'homepage', 'about.html'));
+homepage.get('/about', (req,res)=> {
+    res.render('about', { title: 'About Us | Amphere Solutions' });
+});
+homepage.get('/contact', (req,res)=> {
+    let params = getParameters(req);
+    switch(params.q) {
+        case 'completion':
+            res.render('contact', { 
+                title: 'About Us | Amphere Solutions',
+                completion: true
+            });
+            break;
+        default: 
+            res.render('contact', { title: 'About Us | Amphere Solutions' });
+            break;
+    }
+});
+homepage.get('/partner', (req,res)=> {
+    let params = getParameters(req);
+    switch(params.q) {
+        case 'onboard':
+            res.render('onboarding', { 
+                title: 'Partner | Amphere Solutions',
+                onboarding: true
+            });
+            break;
+        case 'completion':
+            res.render('onboarding', { title: 'Partner | Amphere Solutions' });
+            break;
+        default:
+            res.render('onboarding', { title: 'Partner | Amphere Solutions' });
+            break;
+    }
 });
 homepage.get('/faq', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'homepage', 'faq.html'));
-});
-homepage.get('/contact', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'homepage', 'contact.html'));
+    res.sendFile(path.resolve(__dirname, 'homepage', 'LEGACY', 'faq.html'));
 });
 homepage.get('/team', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'homepage', 'team.html'));
+    res.sendFile(path.resolve(__dirname, 'homepage', 'LEGACY', 'team.html'));
 });
 homepage.get('/join', (req, res) => {
     let params = getParameters(req);
     switch(params.q){
         case 'info' :
-            res.sendFile(path.resolve(__dirname, 'homepage', 'careers.html'));
+            res.sendFile(path.resolve(__dirname, 'homepage', 'LEGACY', 'careers.html'));
             break;
     }
 });
 homepage.get('/support', (req, res) => {
     let params = getParameters(req);
     switch(params.q){
-        case 'faq' :
-        case 'forgotpassword' :
         default: 
-            res.sendFile(path.resolve(__dirname, 'homepage', 'support.html'));
+            res.sendFile(path.resolve(__dirname, 'homepage', 'LEGACY', 'support.html'));
             break;
     }
 });
-homepage.get('/terms', (req, res) => {
-    let params = getParameters(req);
-    switch(params.q){
-        case 'damage':
-        case 'refunds':
-        default: 
-            res.sendFile(path.resolve(__dirname, 'homepage', 'userterms.html'));
-            break;
-    }
-});
-homepage.get('/partner', (req, res) => {
-    let params = getParameters(req);
-    switch(params.q){
-        case 'onboard' :
-            res.sendFile(path.resolve(__dirname, 'homepage', 'onboarding.html'));
-            break;
-    }
-});
+// homepage.get('/terms', (req, res) => {
+//     let params = getParameters(req);
+//     switch(params.q){
+//         case 'damage':
+//         case 'refunds':
+//         default: 
+//             res.sendFile(path.resolve(__dirname, 'homepage', 'userterms.html'));
+//             break;
+//     }
+// });
 homepage.post('/onboarding', (req, res) => {
     let params = getParameters(req);
     MerchantWorker.MerchantOnboard({
