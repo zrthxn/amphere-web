@@ -17,17 +17,10 @@ class Banner extends Component {
                             <br/>
                             <p>The sessions you have booked will appear here.</p>
                             <p>Give your OTP to start a session.</p>
-
-                            {/* <p>MY ACCOUNT</p>
-                            <h2>Hey {this.props.name}!</h2>
-                            <div className="spacer-small"></div>
-
-                            <p>LAST SESSION : 12/12/2018</p>
-                            <p><strong>CURRENT SUBTOTAL : &#x20b9; 120</strong></p> */}
                             
                             <button id="book-session" className="button btn-white" onClick={this.openLightbox}>BOOK SESSION</button>
                         </div>
-                </div>              
+                </div>      
             </div>
         );
     }

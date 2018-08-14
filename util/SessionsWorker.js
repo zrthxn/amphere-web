@@ -134,7 +134,7 @@ exports.CancelSession = function (sid, exp) {
         });
         SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('child_added', (snapshot)=>{
             SpreadsheetWorker.WriteToSpreadsheet({
-                "ssId" : ssConfig.spreadsheets.main,
+                "ssId" : ssConfig.spreadsheets.records,
                 "sheet" : "Sessions",
                 "values" : [
                     `${getDateTime()}`,
@@ -147,7 +147,7 @@ exports.CancelSession = function (sid, exp) {
                     `${snapshot.val().duration}`,
                     `${snapshot.val().device}`,
                     `${snapshot.val().otp}`,
-                    `${decodeURI(exp)}`
+                    `${decodeURI(exp)}`,
                     `TTC :: N/A`
                 ]
             });
@@ -175,7 +175,7 @@ exports.CompleteSession = function (sid) {
             ttc.push(date.getMinutes()>time[1] ? date.getMinutes() - time[1] :  time[1] - date.getMinutes());
 
             SpreadsheetWorker.WriteToSpreadsheet({
-                "ssId" : ssConfig.spreadsheets.main,
+                "ssId" : ssConfig.spreadsheets.records,
                 "sheet" : "Sessions",
                 "values" : [
                     `${getDateTime()}`,

@@ -1,49 +1,32 @@
-<link rel="stylesheet" href="./css/Homepage.css">
+<link rel="stylesheet" type="text/css" href="./css/LoginPage.css" />
 
-{{> header }}
+<!--=================== SIGN UP FORM ===================-->
+<div class="cover">
+    <div class="login-container">
+        <div>
+            <p class="form-title">Sign In</p>
 
-    <!--===============//// CONTENT ////===============-->
-    <section class="hero">
-        {{!-- HERO --}}
-        <div class="hero-container">
-            {{!-- PAGE SLOGAN --}}
-            <h1>SAY GOODBYE TO LOW BATTERY</h1>
+            <input id="password" type="password" class="textbox password" placeholder="Password" required autocomplete="new-password"/>
 
-            <p>Amphere makes it easy for you to enjoy without worrying about your phone</p>
-
-            <div class="spacer"></div>
-
-            <div class="hero-action-container">
-                <button class="button" id="signup-button">CREATE ACCOUNT</button>
-                <button class="button btn-white" id="session-button">BOOK SESSION</button>
-            </div>
+            <button id="signup-btn" class="button">SIGN IN</button>
         </div>
-    </section>
-
-    <section>
-        <!--HOW TO USE-->
-        <div class="instructional">
-            <div class="instructional-container">
-                <div class="instructional-step">
-                    <h2 class="step-title">Sign Up</h2>
-                    <p class="step-info">Sign up with our website<br>Create a free account</p>
-                </div>
-                <div class="instructional-step">
-                    <h2 class="step-title">Book a Session</h2>
-                    <p class="step-info">Use the restaurant code<br>to book a new session</p>
-                </div>
-                <div class="instructional-step">
-                    <h2 class="step-title">Enjoy</h2>
-                    <p class="step-info">Enjoy hassle free charging<br>without any more issues</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--=============//// END CONTENT ////=============-->
-
-{{> footer }}
+    </div>
+</div>
 
 <script>
-    document.getElementById("session-button").onclick = () => window.location = "http://account.amphere.in";
-    document.getElementById("signup-button").onclick = () => window.location = "/signup";
+    var password = document.getElementById("password");
+    
+    document.getElementById("signup-btn").onclick = function () {
+            //const request = new XMLHttpRequest();
+            //let url = `/login?q=verify&vfypwd=${btoa(password.value)}`;
+            
+            window.location = `/login?q=verify&vfypwd=${btoa(password.value)}`;
+
+            //const request = new XMLHttpRequest();
+            //let url = `vfypwd=${btoa(password.value)}`;
+
+            //request.open('GET', `/login?q=verify&${url}`, true);
+            //request.send();
+            return false;
+    }
 </script>

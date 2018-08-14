@@ -1,0 +1,113 @@
+
+<div class="merchant-form">
+    <div class="merchant-form-container">
+        <h1>Merchant Addition</h1>
+        <p>Add merchants here</p>
+
+        <input id="name" type="text" placeholder="Name"><br>
+        <input id="phone" type="text" placeholder="Phone"><br>
+        <input id="mid" type="text" placeholder="Merchant Code"><br>
+        <input id="password" type="text" placeholder="Password">
+
+        <br>
+
+        <button id="submit">SUBMIT</button>
+
+        <div id="status-block">
+            <p id="status">Add a merchant</p>
+            <button id="ok" hidden="true">OK</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    var name = document.getElementById("name");
+    var phone = document.getElementById("phone");
+    var mid = document.getElementById("mid");
+    var password = document.getElementById("password");
+
+    document.getElementById("submit").onclick = () => {
+
+        if(name.value!=="" && phone.value!=="" && password.value!=="" && mid.value!=="") {
+            const request = new XMLHttpRequest();
+            let url = `name=${encodeURI(name.value)}&` +
+            `phone=${encodeURI(phone.value)}&` +
+            `mid=${encodeURI(mid.value)}&` +
+            `password=${encodeURI(password.value)}`;
+
+            request.open('POST', `/addMerchant?${url}`, true);
+            request.send();
+
+            request.onreadystatechange = e => {
+                if(request.readyState===4 && request.status===200) {
+                    let response = JSON.parse(request.response);
+                    if (response.state==="SUCCESS") {
+                        document.getElementById("status").innerHTML = "[SUCCESS] Added New Merchant.";
+                        document.getElementById("ok").hidden = false;
+                        document.getElementById("ok").onclick = () => {
+                            clearAll();
+                            document.getElementById("status").innerHTML = "Add a merchant";
+                            document.getElementById("ok").hidden = true;
+                        }
+                    } else {
+                        document.getElementById("status").innerHTML = "[FAILED] :: " + response.error;
+                        document.getElementById("ok").hidden = false;
+                        document.getElementById("ok").onclick = () => {
+                            clearAll();
+                            document.getElementById("status").innerHTML = "Add a merchant";
+                            document.getElementById("ok").hidden = true;
+                        }
+                    }
+                }
+            }
+        } else {
+            document.getElementById("status").innerHTML = "[EMPTY]";
+            document.getElementById("ok").hidden = false;
+            document.getElementById("ok").onclick = () => {
+                clearAll();
+                document.getElementById("status").innerHTML = "Add a merchant";
+                document.getElementById("ok").hidden = true;
+            }
+        }        
+        return false;
+    }
+
+    clearAll = () => {
+        name.value="";
+        phone.value="";
+        password.value="";
+        mid.value="";
+    }
+
+</script>
+
+<style>
+    .merchant-form {
+        padding: 2em;
+        max-width: 500px;
+    }
+    .merchant-form-container {
+        display: flex;
+        flex-direction: column;
+    }
+    input {
+        padding: 1em;
+        border-radius: 10px;
+        border: 1px solid #000;
+    }
+    button {
+        padding: 1em;
+        margin: 1em;
+    }
+    #ok {
+        padding: 0.5em;
+        width: fit-content;
+    }
+    #status-block {
+        display: flex;
+        margin: 1em;
+        flex-direction: row;
+    }
+</style>
+

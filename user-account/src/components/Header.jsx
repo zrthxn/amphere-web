@@ -34,9 +34,9 @@ class Header extends Component {
                     </div>
                     <nav className="sidebar-nav">
                         <ul>
-                            <li><a>HOME</a></li>
-                            <li><a>CONTACT</a></li>
-                            <li><a>ABOUT</a></li>
+                            <li><a href="http://amphere.in">HOME</a></li>
+                            <li><a href="http://amphere.in/contact">CONTACT</a></li>
+                            <li><a href="http://amphere.in/about">ABOUT</a></li>
                         </ul>
                     </nav>
                 </div>

@@ -17,6 +17,7 @@
 const Hasher = require('./PasswordHasher');
 const firebaseSignup = require('./Database');
 const SpreadsheetWorker = require('./SpreadsheetWorker');
+const ssConfig = require('../config.json');
 
 exports.CreateNewUser = function (params) {
 

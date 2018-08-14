@@ -1,4 +1,93 @@
 .sessions-holder {
+    display: flex;
+    flex-direction: column;
     padding: 2em 2em;
     z-index: 1000;
+}
+
+.caution {
+    margin: 2em -2em -2em -2em;
+    background: #ebebeb;    
+    height: fit-content;
+}
+
+.caution-holder {
+    margin: 2em;
+    margin-bottom: 1em;
+}
+
+.caution .heading {
+    color: #6e6e6e80;
+    font-size: 1em;
+    font-weight: 600;
+    line-height: 1.25em;
+    text-align: left;
+}
+.caution ul {
+    padding: 0.75em;
+}
+.caution li {
+    color: #6e6e6e80;
+    font-size: 0.75em;
+    font-weight: 400;
+    line-height: 1em;
+    text-align: left;
+}
+
+/*----------------- collapse -----------------*/
+.collapse {
+    height: 100%;
+    /* display: flex; */
+    display: none;
+    align-items: center;
+}
+
+.collapse span::before,
+.collapse span::after {
+    display: block;
+    background: #000;
+    height: 2px;
+    width: 10px;
+    border-radius: 2px;
+    position: relative;
+	z-index: 5000;
+    transition: all 0.5s ease-in-out;
+}
+
+.collapse span::before,
+.collapse span::after {
+    content: '';
+}
+
+.collapse span::before {
+    bottom: 0;
+    left: 4px;
+	transform: rotate(-30deg);
+}
+.collapse span::after {
+    top: -2px;
+    right: 4px;
+	transform: rotate(30deg);
+}
+
+.checkbox:checked ~ .collapse span::before {
+	bottom: 0;
+	transform: rotate(30deg);
+}
+.checkbox:checked ~ .collapse span {
+	background: transparent;
+}
+.checkbox:checked ~ .collapse span::after {
+	top: -2px;
+	transform: rotate(-30deg);
+}
+
+/* ========================================== */
+
+.checkbox:checked ~ .caution {
+    background: #fbcdab;    
+}
+.checkbox:checked ~ .caution-holder {
+    margin: 0;
+    margin-bottom: 1em;
 }

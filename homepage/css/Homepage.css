@@ -15,9 +15,17 @@
 .page-slogan h1 {
     font-size: 2em;
     text-align: center;
+    animation: 0.5s slide-in ease-in-out;
 } .page-slogan p {
     text-align: center;
-    font-size: 0.85em;
+    font-size: 0.85em;    
+}  @keyframes slide-in {
+    from { 
+        transform: translateY(10px);
+        opacity: 0; 
+    } to {
+        opacity: 1; 
+    }
 }
 
 /* GRAPHIC ================================== */
@@ -27,6 +35,10 @@
     margin: auto;
     max-width: auto;
     max-height: 35vh;
+    animation: 0.5s slide ease-in;
+} @keyframes slide {
+    from { opacity: 0 } 
+    to { opacity: 1 }
 }
 
 /* HERO ACTION CONTAINER ================================== */
@@ -117,7 +129,7 @@
     /*============== HERO ==============*/
     .hero {
         height: 75vh;
-        padding: 10em 2em;
+        padding: 10em 2em 2em 2em;
     }
     
     .hero-container {
@@ -141,9 +153,8 @@
     } .page-slogan p {
         text-align: left;
         font-weight: 400;
-        font-size: 1em;
+        font-size: 1em;    
     }
-    
     /* GRAPHIC ================================== */
     
     .graphic {

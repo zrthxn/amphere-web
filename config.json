@@ -4,8 +4,9 @@
     "data_mode" : "TESTING",
     "other_data" : "data",
     "spreadsheets" : {
-        "main" : "1BzIv7vu_GJ1kyBVajo29S2_d5KvbYiHQyowhd3FOgwI",
-        "onboarding" : "11AuCs9gFL6C9EtonF_nZ-zznchi4cvjSeZNhdyejq4c"
+        "records" : "1BzIv7vu_GJ1kyBVajo29S2_d5KvbYiHQyowhd3FOgwI",
+        "onboarding" : "11AuCs9gFL6C9EtonF_nZ-zznchi4cvjSeZNhdyejq4c",
+        "contact" : "1AXBDYJA_dyrfRAyIEw2QJcUULJRpO1cUB-bbTTrFljw"
     },
     "textlocal" : {
         "apikey" : "PQQTr4E5Vrc-0zfw2hYyWUTR9h3ak9Z7BivkfjUplT",

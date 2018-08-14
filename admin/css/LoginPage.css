@@ -1,0 +1,95 @@
+header {
+    position: fixed;
+    z-index: 5000;
+    width: 100%;
+    background: transparent;
+    display: flex;
+} header .logo-text {
+    margin: auto;
+    padding: 2em;
+    max-height: 6.5em;
+    width: 100%;
+    align-self: center;
+    justify-self: center;
+}
+
+p {
+    margin: 0;
+}
+
+.cover {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(#ffd800, #000);
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-flow: column;
+}
+
+/*===================  SIGNUP FORM   ====================*/
+
+.login-container{
+    height: fit-content;
+    max-width: 500px;
+    margin: auto;
+    font-weight: 300;
+    text-align: center;
+    padding: 2em 4em;
+}
+.login-container .button {
+    width: 75%;
+    padding: 1em 0.75em;
+    margin: 1em 0 1rem 0;
+    font-weight: 600;
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.form-title{
+    margin: auto;
+    width: fit-content;
+    font-weight: 200;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+.textbox {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 400;
+    background: #fff;
+} .textbox::placeholder {
+    color: #b1b1b1;
+}  
+
+.error {
+    border-color: #ff0000;
+    color: #ff0000 !important;
+} .error::placeholder {
+    color: #ff0000 !important;
+}
+
+/*===================   @MEDIA   ====================*/
+
+@media (min-width: 500px) {
+    .login-container {
+        position: relative;
+        width: 500px;
+        left: 50%;
+        margin-left: -250px;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-container{
+        padding: 2em;
+    }
+
+    .textbox {
+        padding: 0.75em 2em;
+    }
+}

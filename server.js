@@ -8,6 +8,8 @@ const vhost = require('vhost');
 const ServerConfig = require('./config.json');
 const ServerState = ServerConfig.ServerState;
 const PORT = process.env.PORT || ServerConfig.PORT
+const SpreadsheetWorker = require('./util/SpreadsheetWorker');
+const ssConfig = require('./config.json');
 
 const amphere = express();          
 const homepage = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
@@ -20,6 +22,8 @@ const SessionsWorker = require('./util/SessionsWorker');
 const LoginWorker = require('./util/LoginWorker');
 const MerchantWorker = require('./util/MerchantWorker');
 const ConsoleScreen = require('./util/ConsoleScreen');
+const Hasher = require('./util/PasswordHasher');
+const Admin = require('./util/Admin');
 
 //------------------------------------------------------------------------------------------------------//
 // S E R V E R ============================== E X P R E S S =============================== S E R V E R //
@@ -75,6 +79,25 @@ homepage.get('/contact', (req,res)=> {
                 completion: true
             });
             break;
+        default: 
+            res.render('contact', { title: 'About Us | Amphere Solutions' });
+            break;
+    }
+});
+homepage.post('/contact', (req,res)=> {
+    let params = getParameters(req);
+    switch(params.q) {
+        case 'form':
+            SpreadsheetWorker.WriteToSpreadsheet({
+                "ssId" : ssConfig.spreadsheets.contact,
+                "sheet" : "Contact",
+                "values" : [
+                    `${decodeURI(params.name)}`,
+                    `${decodeURI(params.email)}`,
+                    `${decodeURI(params.message)}`
+                ]
+            });
+            res.status(200);
         default: 
             res.render('contact', { title: 'About Us | Amphere Solutions' });
             break;
@@ -343,13 +366,59 @@ merchant.post('/merchantCompleteSession', (req, res)=> {
 
 //===================================================================//
 //----------------------------- ADMIN -------------------------------//
-admin.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'admin', 'index.html'));
+
+admin.set('views', path.join(__dirname, 'admin'));
+admin.set('view engine', 'hbs');
+admin.engine('hbs', handle({
+    defaultLayout: 'main', 
+    extname: 'hbs', 
+    layoutsDir: __dirname + '/admin/layouts',
+    partialsDir  : [
+        __dirname + '/admin/partials',
+    ]
+}));
+
+admin.get('/QXJwaXRHdWpqYXJAMTIz', (req, res) => {
+    res.render('merchant', { title: 'Admin | Amphere Solutions' });
 });
-admin.get('/adminLoginWorker', (req, res) => {
+admin.post( '/addMerchant', (req, res)=>{
     let params = getParameters(req);
-    
-});
+    if(params.phone!==null && params.mid!==null && params.password!==null) {    
+        Admin.AddMerchant({
+            "name": decodeURI(params.name),
+            "phone": decodeURI(params.phone),
+            "mid": decodeURI(params.mid),
+            "password": decodeURI(params.password)
+        }).then((_res)=>{
+            res.status(200).json({"state" : "SUCCESS"});
+        });
+    } else {
+        res.status(200).json({"state" : "FAILED"});
+    }
+} );
+// admin.get('/login', (req, res) => {
+//     let params = getParameters(req);
+//     switch (params.q) {
+//         case 'verify' :
+//             const atob = require('atob');
+//             const pass = require('./admin.json').hash;
+//             const salt = require('./admin.json').salt;
+
+//             const hash = Hasher.generateHash(atob(params.vfypwd), salt);
+//             if ( pass === hash){
+//                 res.render('merchant', { title: 'Merchant Admin | Amphere Solutions' });
+//             } else {
+//                 res.status(400);
+//             }
+//             break;
+//         default: 
+//             res.render('index', { title: 'Admin | Amphere Solutions' });
+//             break;
+//     }
+// });
+// admin.get('/merch', (req, res) => {
+//     res.render('merchant', { title: 'Merchant Admin | Amphere Solutions' });
+// });
 //===================================================================//
 
 
@@ -471,4 +540,12 @@ function getObjects(obj, key, val) {
         }
     }
     return objects;
+}
+
+function generateAdminKey(length) {
+    var key = "";
+    for(var i=0 ; i<length ; i++){
+        key = key + Math.floor(Math.random()*16).toString(16);
+    }
+    return key;
 }

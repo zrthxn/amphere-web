@@ -22,7 +22,7 @@ header {
 /* MOBILE MENU ==================================== MOBILE MENU */
 
 .header-container {
-	margin: auto;
+	margin: 0 auto;
 	max-width: 1000px;
 	font-size: 1em;
 	font-weight: 300;
@@ -159,13 +159,17 @@ header {
 /* DESKTOP MENU ==================================== DESKTOP MENU */
 
 @media screen and (min-width: 800px) {
+    header {
+        padding: 1em;
+    } header.active {
+        padding: 0.5em;
+    }
     .header-container{
-        margin: 1em auto 0.5em auto;
+        margin: 0 auto;
         grid-template-columns: 1fr 5fr 1fr;
         grid-template-areas: "logo nav button";
     }
     header.active .header-container {
-        margin: 0.5em auto 0.5em auto;
         transition: all 0.25s linear;
     }
 

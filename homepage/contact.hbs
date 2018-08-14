@@ -7,7 +7,6 @@
     <section>
         <div class="hero">
             <h1 class="page-title">CONTACT US</h1>
-            <h2>Thank you</h2>
         </div>
     </section>
 
@@ -55,3 +54,23 @@
 {{/if}}
 
 {{> footer }}
+
+<script>
+    var _name = document.getElementById("_name");
+    var email = document.getElementById("email");
+    var message = document.getElementById("message");
+    
+    document.getElementById("submit").onclick = function () {
+        const request = new XMLHttpRequest();
+        let url = `name=${encodeURI(_name.value)}&` + `email=${encodeURI(email.value)}&` + `message=${encodeURI(message.value)}`;
+        request.open('POST', `/contact?q=form&${url}`, true);
+        request.send();
+        request.onreadystatechange = event => {
+            if (request.readyState === 4 && request.status === 200) {
+                console.log("SUCCESS");
+                window.location = '/contact?q=completion';
+            }
+        }
+        return false;
+    }
+</script>
