@@ -8,7 +8,10 @@ header {
     margin: auto;
     padding: 2em;
     max-height: 6.5em;
-    width: 100%;
+    align-self: center;
+    justify-self: center;
+} header a {
+    margin: auto;
     align-self: center;
     justify-self: center;
 }

@@ -13,7 +13,8 @@ class Banner extends Component {
                 <div className="banner">
                     <div className="spacer"></div>
                     <div>
-                        <h2><strong>MY SESSIONS</strong></h2>
+                        <h1><strong>MY SESSIONS</strong></h1>
+                        <h2>Manage your sessions here</h2>
                         <br/>
                         <p>The sessions booked with your <b>Merchant Code</b> will appear here.</p>
                         <p>Use the OTP sent to the customer to start a session.</p>

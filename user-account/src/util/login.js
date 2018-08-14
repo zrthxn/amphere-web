@@ -14,16 +14,14 @@ exports.ValidateByPhone = function (credentials) {
                 let loginResponse = JSON.parse(loginRequest.response);
                 if(loginResponse.state==="SUCCESS"){
                     resolve({
-                        "validated" : true,
-                        "uid" : loginResponse.uid,
-                        "phone" : loginResponse.phone,
-                        "name" : loginResponse.name,
-                        "token" : loginResponse.token
+                        validated: true,
+                        uid: loginResponse.uid,
+                        phone: loginResponse.phone,
+                        name: loginResponse.name,
+                        token: loginResponse.token
                     });
                 } else {
-                    resolve({
-                        "validated" : false
-                    });
+                    resolve({ validated: false, status: loginResponse.state });
                 }
             } else if(loginRequest.status!==200) {
                 reject();

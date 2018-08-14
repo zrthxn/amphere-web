@@ -18,8 +18,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 2em 0 4em 0;
+    margin: 1em 0 1em 0;
     text-align: justify;
+}
+
+.vision {
+    text-align: center;
 }
 
 .need {    
@@ -33,6 +37,7 @@
     padding: 4em;
     text-align: center;
     background-color: #1c1c1c;
+    color: #fff;
 }
 .instructional-container {
     max-width: 1000px;
@@ -51,7 +56,6 @@
     color: #ffd800;
 }
 .instructional-step p {
-    color: #fff;
     font-size: 1em;
     font-weight: 300;
     line-height: 1.75em;
@@ -61,6 +65,10 @@
     width: 100%;
     padding: 1em 2em;
     margin: auto;
+}
+.link {
+    color: #ffd800;
+    padding: 0 !important;
 }
 
 /* ============================= @MEDIA ============================= */
@@ -83,8 +91,13 @@
     }
     
     .instructional-step {
-        margin: 0 4em 0 4em;
+        margin: 0 2em 0 2em;
+        width: 25%;
         text-align: center;
+    } .instructional-step:first-of-type {
+        margin-left: 0;
+    } .instructional-step:last-of-type {
+        margin-right: 0;
     }
     .instructional-step .step-title {
         font-weight: 200;

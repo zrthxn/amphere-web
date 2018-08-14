@@ -148,6 +148,7 @@ exports.CancelSession = function (sid, exp) {
                     `${snapshot.val().device}`,
                     `${snapshot.val().otp}`,
                     `${decodeURI(exp)}`
+                    `TTC :: N/A`
                 ]
             });
         });
@@ -165,6 +166,14 @@ exports.CompleteSession = function (sid) {
             "status" : `COMPLETED : ${getDateTime()}`
         });
         SessionsData.ref().child('sessions').orderByChild('sid').equalTo(sid).once('child_added', (snapshot)=>{
+            let time = [], ttc = [];
+            let date = new Date();
+
+            for(let i=0; i<2; i++) time.push(parseInt(((snapshot.val().status.split(' : ')[1]).split(' ')[0]).split(':')[i], 10));
+
+            ttc.push(date.getHours()>time[0] ? date.getHours() - time[0] : time[0] - date.getHours());
+            ttc.push(date.getMinutes()>time[1] ? date.getMinutes() - time[1] :  time[1] - date.getMinutes());
+
             SpreadsheetWorker.WriteToSpreadsheet({
                 "ssId" : ssConfig.spreadsheets.main,
                 "sheet" : "Sessions",
@@ -179,7 +188,8 @@ exports.CompleteSession = function (sid) {
                     `${snapshot.val().duration}`,
                     `${snapshot.val().device}`,
                     `${snapshot.val().otp}`,
-                    `PAID`
+                    `PAID`,
+                    `TTC :: ${ttc[0]} Hours, ${ttc[1]} Minutes`
                 ]
             });
         });

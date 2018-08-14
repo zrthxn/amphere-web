@@ -1,0 +1,108 @@
+.hero {
+    text-align: center; 
+    height: 100vh;
+    padding: 10em 2em;
+    background: linear-gradient(135deg,#ffd800,#ff7300);
+}
+
+.page-slogan {
+    font-weight: 600;
+    font-size: 5em;
+} @media screen and (max-width: 800) {
+    .page-slogan {
+        font-size: 2em;
+    }
+}
+
+/* HERO ACTION CONTAINER MOBILE ================================== */
+
+.hero-action-container .button {
+    margin: 0;
+    padding: 1em 3em;
+    font-size: 0.8em;
+    font-weight: 600;
+    
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+.hero-action-container {
+    display: grid;
+    width: auto;
+    grid-template-columns: auto;
+    grid-gap: 1em;
+    justify-content: space-evenly;
+}
+
+/* INSTRUCTIONAL ============================= INSTRUCTIONAL */
+
+.instructional {
+    width: 100%;
+    height: fit-content;
+    padding: 4em;
+    background-color: #1c1c1c;
+}
+.instructional-container {
+    max-width: 1000px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.instructional-step {
+    margin-bottom: 2em;
+    text-align: center;
+}
+.instructional-step .step-title {
+    font-weight: 200;
+    color: #ffd800;
+}
+.instructional-step p {
+    color: #fff;
+    font-size: 1em;
+    font-weight: 300;
+    line-height: 1.75em;
+}
+
+
+/* ============================= @MEDIA ============================= */
+
+@media screen and (min-width: 800px) {
+    /*============== HERO ==============*/
+    .hero {
+        height: 75vh;
+    }
+
+    /*============== INSTRUCTIONAL ==============*/
+
+    .instructional {
+        width: 100%;
+        height: fit-content;
+        padding: 4em;
+        background-color: #1c1c1c;
+    }
+    .instructional-container {
+        max-width: 1000px;
+        margin: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .instructional-step {
+        margin: 0 4em 0 4em;
+        text-align: center;
+    }
+    .instructional-step .step-title {
+        font-weight: 200;
+        color: #ffd800;
+    }
+    .instructional-step p {
+        color: #fff;
+        font-size: 1em;
+        font-weight: 300;
+        line-height: 1.75em;
+    }
+}
+

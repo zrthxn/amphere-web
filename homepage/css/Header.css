@@ -16,28 +16,27 @@ header {
     -moz-box-shadow: none;
     box-shadow: none;
 } header.active .header-container {
-	margin: 0.25em auto 0.25em auto;	
-	transition: all 0.2s linear;
+	transition: all 0.25s linear;
 }
 
 /* MOBILE MENU ==================================== MOBILE MENU */
 
 .header-container {
-	margin: 1em auto 1em auto;
+	margin: auto;
 	max-width: 1000px;
 	font-size: 1em;
 	font-weight: 300;
-    transition: all 0.2s linear;
+    transition: all 0.25s linear;
     
     display: grid;
-    grid-template-columns: 1fr 3fr 2fr;
+    grid-template-columns: 2fr 3fr 2fr;
     grid-template-rows: 1fr;
     grid-template-areas: "hamburger logo button";
     align-content: center;
 }
 
 .header-container .header-logo {
-	max-height: 2.5em;
+	max-height: 2em;
 	align-self: center;
     justify-self: center;
     grid-area: logo;
@@ -46,11 +45,11 @@ header {
 .header-container .button {
 	color: #000;
     font-weight: 600;
-    font-size: 0.65em;
+    font-size: 0.5em;
 	background: #fff;
 	border: none !important;
-	border-radius: 10px;
-	padding: 1.25em;
+	border-radius: 5px;
+	padding: 1em;
 	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
@@ -124,7 +123,7 @@ header {
 .hamburger span::after {
     display: block;
     background: #000;
-    height: 2px;
+    height: 3px;
     width: 25px;
     border-radius: 2px;
     position: relative;
@@ -161,9 +160,13 @@ header {
 
 @media screen and (min-width: 800px) {
     .header-container{
-        margin: 2.5em auto 1em auto;
+        margin: 1em auto 0.5em auto;
         grid-template-columns: 1fr 5fr 1fr;
         grid-template-areas: "logo nav button";
+    }
+    header.active .header-container {
+        margin: 0.5em auto 0.5em auto;
+        transition: all 0.25s linear;
     }
 
     .header-container .header-logo {        
@@ -175,12 +178,15 @@ header {
         align-self: center;
         justify-self: right;
         grid-area: button;
+        font-size: 0.75em;
+        padding: 1em;
     }
     .header-container .header-nav {    
         display: block;    
         align-self: center;
         justify-self: right;
         grid-area: nav;
+        margin-right: 1em;
     }
     
     .hamburger {

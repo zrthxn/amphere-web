@@ -37,8 +37,12 @@ p {
 
 .hero {
   text-align: center; 
-  padding: 10em 2em 5em 2em;
+  padding: 5em 2em 2em 2em;
   background: linear-gradient(#ffd800,#ff9e00);
+} @media screen and (min-width: 800px) {
+  .hero {
+    padding: 10em 2em 2em 2em;
+  }
 }
 
 .container {

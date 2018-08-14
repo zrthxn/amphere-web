@@ -189,6 +189,8 @@ account.post('/userLoginWorker', (req, res)=> {
         } else {
             res.status(200).json({"state" : "PASSWORD-INCORRECT"});
         }
+    }).catch((err)=>{
+        res.status(200).json({"state" : "NO-USER"});
     });
 });
 account.post('/sessionsWorker', (req, res) => {

@@ -1,8 +1,19 @@
 .lightbox {
-    height: 30em;
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    width: 75%;
+    height: fit-content !important;
     max-width: 500px;
-    top: 15vh; 
-    padding: 0;
+    top: 15vh;
+    left: 50%;
+    margin-left: -37.5%;
+    text-align: center;    
+    animation-name: pop-lightbox;
+}
+@keyframes pop-lightbox {
+    from{ opacity: 0 }
+    to{ opacity: 1 }
 }
 
 .session-settings-holder{
@@ -81,19 +92,6 @@
 
 /*==========================================================================*/
 
-.toggle-bars {
-    width: 100%;
-    height: fit-content;
-    margin-right: 12.5%;
-    grid-column: 2/4;
-    grid-row: 4/5;
-
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
-    grid-gap: 1em;
-}
-
 .toggle-group {
     width: 100%;
     text-align: center;
@@ -112,24 +110,13 @@
     background: linear-gradient(90deg, #ffd900,#ff7300);
 }
 
-.duration-bar {
+.reasons-bar {
     height: fit-content;
-    grid-column: 1/2;
-    grid-row: 1/2;
+    margin-bottom: 1em;
 }
-.duration-bar .toggle-btn {
+.reasons-bar .toggle-btn {
     width: 50%;
 }
-
-.device-bar {
-    height: fit-content;
-    grid-column: 1/2;
-    grid-row: 2/3;
-}
-.device-bar .toggle-btn {
-    width: 33%;
-}
-
 
 /*==========================================================================*/
 

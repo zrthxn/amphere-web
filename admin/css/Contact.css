@@ -1,0 +1,47 @@
+.contact-details {
+    padding: 2em;
+}
+
+.contact-details a {
+    color: #ff9e00;
+}
+
+.contact-details-container {
+    width: fit-content;
+    max-width: 1000px;
+    margin: auto;
+    text-align: justify;
+}
+.contact-details-container h1 {
+    text-align: center; 
+}
+.contact-details-container h2 {
+    text-align: center; 
+}
+
+/* ================= CONTACT FORM ================= */
+
+.contact-form-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 4em; 
+}
+.contact-form-container::before {
+    content: 'GET IN TOUCH';
+    font-weight: 600;
+    font-size: 1.5em;
+    color: #838383;
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+.contact-form-container .textbox {
+    margin: auto;
+    margin-bottom: 1em; 
+    text-align: center;
+}
+.contact-form-container .button {
+    margin: auto;
+    width: 75%;
+    max-width: 12em;
+    margin-bottom: 1em; 
+}

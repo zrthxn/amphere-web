@@ -1,0 +1,167 @@
+footer {
+    padding: 4em 2em;
+    background: #010101;
+    color: #eee;
+} footer a {
+    color: #eee;
+    text-decoration: none;
+} footer ul {
+    list-style: none;
+} 
+
+/* ===================== FOOTER NAVIGATION MENUS ===================== */
+
+.footer-nav {
+    max-width: 1000px;
+    margin: auto;
+    margin-bottom: 2em;
+} .footer-nav::after {
+    position: relative;
+    content: '';
+    left: 50%;
+    margin-left: -25%;
+    margin-top: 2rem;
+    width: 50%;
+    height: 1px;
+    background-color: #ffffff40;
+}
+
+.footer-nav-container {
+    font-size: 0.75em;    
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+    "links contact" 
+    "legal .";
+    justify-content: center;
+}
+
+.footer-nav-container ul {
+    margin: 0;
+    padding: 0;
+} .footer-nav-container ul::before {
+    color: #b4b4b4;
+    font-weight: 500;
+    opacity: 0.75;
+} .footer-nav-container ul:last-of-type {
+    margin-right: 0;
+}
+
+.footer-nav-container li {
+    margin-bottom: 1em;
+    font-weight: 300;
+} .footer-nav-container li:first-child {
+    margin-top: 2em;
+}
+
+.quick-nav {
+    grid-area: links;
+} .quick-nav::before {
+    content: 'LINKS';
+}
+.contact {
+    grid-area: contact;
+} .contact::before {
+    content: 'CONTACT';
+}
+.legal {
+    grid-area: legal;
+} .legal::before {
+    content: 'LEGAL';
+}
+
+.footer-nav-container .logo {
+    height: 75%;
+    align-self: flex-start;
+    justify-self: right;
+    grid-area: logo;
+}
+
+/* ===================== FOOTER BANNER ===================== */
+
+.footer-banner {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 3fr 1fr 1fr;
+    grid-template-areas: "logo" "site-title" "social";
+    justify-items: center;
+
+    max-width: 1000px;
+    margin: auto;
+    height: fit-content;
+    text-align: center;
+}
+
+.footer-banner .logo {
+    height: 100%;
+    align-self: flex-start;
+    grid-area: logo;
+}
+
+.footer-site-title {
+    width: fit-content;
+    align-self: center;
+    font-size: 1.25em;
+    font-weight: 200;
+    margin: 0;
+    grid-area: site-title;
+}
+
+.footer-social-container {
+    display: flex;
+    align-self: center;
+    padding: 0;
+    grid-area: social;
+}
+.footer-social-link {
+    height: 1.5em;
+    margin-left: 1em; 
+}
+
+/* ===================== MEDIA QUERIES ===================== */
+
+@media screen and (min-width: 600px) {
+    .footer-nav-container {
+        font-size: 1.125em;    
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "links contact legal logo";
+        justify-content: center;
+    }
+
+    .footer-banner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "site-title social";
+    
+        max-width: 1000px;
+        margin: auto;
+        height: fit-content;
+        text-align: center;
+    }
+    
+    .footer-banner .footer-site-title {
+        width: fit-content;
+        align-self: center;
+        justify-self: left;
+        font-size: 1.25em;
+        font-weight: 200;
+        margin: 0;
+        grid-area: site-title;
+    }
+    
+    .footer-banner .footer-social {
+        display: flex;
+        align-self: center;
+        justify-self: right;
+        grid-area: social;
+    }
+    .footer-banner .footer-social-link {
+        height: 1.5em;
+        margin-left: 1em; 
+    }
+    
+}

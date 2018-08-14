@@ -27,6 +27,7 @@ class Session extends Component {
             startTime: null,
             timeRemain: null,
             cancelLightboxOpen: false,
+            preCancelLightboxOpen: false,
             table: null,
             collected: false,
             amount: 10
@@ -58,7 +59,7 @@ class Session extends Component {
 
     componentDidMount() {
         if(this.state.activated===true && this.state.expired===false){
-            this.TimerStart();
+            Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
         } else {
             SessionUpdates.ref('sessions/session-' + this.state.sid).on('value', (session)=>{
                 let event;
@@ -70,7 +71,7 @@ class Session extends Component {
                             startTime: session.child('startTime').val(), 
                             table: session.child('table').val()
                         });
-                        this.TimerStart();
+                        Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
                     } else if(event==="EXPIRED"){
                         Timer.ref('time').off('value');
                         this.setState({ timeRemain: 0, expired: true });
@@ -82,7 +83,7 @@ class Session extends Component {
                         this.props.cancel();
                     } else if(event==="COLLECTED"){
                         SessionUpdates.ref().off();
-                        this.setState({ collected: true });
+                        this.setState({ timeRemain: 0, expired: true, collected: true });
                     }
                 }
             });
@@ -114,7 +115,7 @@ class Session extends Component {
                             activated : true,
                             startTime: res.time
                         });
-                        this.TimerStart();
+                        Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
                     }
                 });
             } else {
@@ -143,28 +144,22 @@ class Session extends Component {
             } else {
                 this.setState({ activated : false });
                 Timer.ref('time').off('value');
-                Timer.ref('time').off('value');
                 SessionUtil.CancelSession({
                     "sid": this.state.sid,
                     "exp": reasons
                 }).then((res)=>{
-                    if(res.cancelled===true){
-                        this.props.cancel();
-                    }
+                    if(res.cancelled===true) this.props.cancel(); 
                 }).catch((err)=>{
                     alert(err);
                 });
             }
         } else {
-            this.TimerStart(false);
             Timer.ref('time').off('value');
             SessionUtil.CancelSession({
                 "sid": this.state.sid,
                 "exp": reasons
             }).then((res)=>{
-                if(res.cancelled===true){
-                    this.props.cancel();
-                }
+                if(res.cancelled===true) this.props.cancel();
             }).catch((err)=>{
                 alert(err);
             });
@@ -172,19 +167,20 @@ class Session extends Component {
     }
 
     paymentComplete = () => {
-        if(this.state.collected===true){
-            localStorage.removeItem('session-'+ this.props.sid + '-table');
-            SessionUtil.CompleteSession({
-                "sid": this.state.sid
-            }).then((res)=>{
-                if(res===true){
-                    this.props.complete();
-                }
-            }).catch((err)=>{
-                alert(err);
-            });
-        } else {
-            alert("Please collect the equipment first!");
+        let conf = window.confirm("Please confirm if the payment and the equipment have been collected successfully.");
+        if(conf) {
+            if(this.state.collected===true){
+                localStorage.removeItem('session-'+ this.props.sid + '-table');
+                SessionUtil.CompleteSession({
+                    "sid": this.state.sid
+                }).then((res)=>{
+                    if(res===true) this.props.complete();
+                }).catch((err)=>{
+                    alert(err);
+                });
+            } else {
+                alert("Please collect the equipment first!");
+            }
         }
     }
 
@@ -195,30 +191,31 @@ class Session extends Component {
     }
 
     setCollected = () => {
-        let stat;
-        SessionFirebase.firebase.database().ref().child('sessions').equalTo(this.state.sid).once('value', (session)=>{
-            if(session.val()!==null) stat = session.child('status').val().split(' : ')[1];
-            SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({ 
-                "status" : 'COLLECTED' + ' : ' + stat,
-                "collected" : true 
+        let conf = window.confirm("Please confirm if the equipment has been collected fom the user.");
+        if(conf) {
+            SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).child('status')
+            .once('value', (statuss)=>{
+                let stat = statuss.val().split(' : ')[1];
+                SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({ 
+                    "status" : "COLLECTED" + " : " + stat,
+                    "collected" : true 
+                });
             });
-        });
-        this.setState({ collected: true });
+            this.setState({ collected: true });
+        }
     }
 
     cancelConfirmationDialog = (state) => this.setState({cancelLightboxOpen: state})
-    //paymentConfirmationDialog = (state) => this.setState({paymentLightboxOpen: state})
-
-    TimerStart = () => {
-        Timer.ref('time').on('value', (timeNow)=>{
-            let timeElapsed = timeNow.val() - this.state.startTime;
-            let _timeRemain = this.state.duration - timeElapsed;
-            if(_timeRemain>0){
-                this.setState({timeRemain: _timeRemain});
-            } else {
-                this.expire();
-            }
-        });
+    preCancelConfirmationDialog = (state) => this.setState({preCancelLightboxOpen: state})
+    
+    TimingFunction = (time) => {
+        let timeElapsed = time - this.state.startTime;
+        let _timeRemain = this.state.duration - timeElapsed;
+        if(_timeRemain>0){
+            this.setState({timeRemain: _timeRemain});
+        } else {
+            this.expire();
+        }
     }
 
     render() {
@@ -247,7 +244,7 @@ class Session extends Component {
                 }
 
                 {
-                    this.state.activated ? console.log() : <button className="cross-button" onClick={() => this.cancelConfirmationDialog(true)}/>
+                    this.state.activated ? console.log() : <button className="cross-button" onClick={() => this.preCancelConfirmationDialog(true)}/>
                 }
 
                 <div className="user-details">
@@ -312,9 +309,15 @@ class Session extends Component {
                 }
 
                 {
-                    this.state.cancelLightboxOpen ? 
-                    <SessionCancelLightbox confirm={(R)=>this.cancelSession(R)} decline={() => this.cancelConfirmationDialog(false)} activation={this.state.activated}/> 
-                    : console.log()
+                    this.state.cancelLightboxOpen ? (
+                        <SessionCancelLightbox confirm={(R)=>this.cancelSession(R)} decline={() => this.cancelConfirmationDialog(false)} type={1}/>
+                    ) : console.log()
+                }
+
+                {
+                    this.state.preCancelLightboxOpen ? (
+                        <SessionCancelLightbox confirm={(R)=>this.cancelSession(R)} decline={() => this.preCancelConfirmationDialog(false)} type={2}/>
+                    ) : console.log()
                 }
             </div>
         );

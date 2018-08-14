@@ -1,0 +1,321 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,900');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif; 
+  margin: 0;
+}
+
+/* TYPOGRAPHY ================================================== TYPOGRAPHY */
+
+h1 {
+  line-height: 1em;
+  font-weight: 900;
+  font-size: 2em;
+}
+
+h2 {
+  line-height: 1em;
+  font-weight: 500;
+  font-size: 1.5em;
+}
+
+h3{
+  line-height: 1em;
+  font-weight: 400;
+  font-size: 1em;
+}
+
+p {
+  font-size: 0.85em;
+}
+
+/* CONTAINERS ============================================== CONTAINERS */
+
+.hero {
+  text-align: center; 
+  padding: 10em 2em 5em 2em;
+  background: linear-gradient(#ffd800,#ff9e00);
+}
+
+.container {
+  margin: auto;
+  width: fit-content;
+  max-width: 1000px;
+}
+
+/* TEXTBOXES ============================================== TEXTBOXES */
+
+.textbox {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #858585;
+  max-width: 530px;
+  padding: 1em 1em;
+  border-radius: 50px;
+  font-weight: 400;
+}
+
+.textbox-small {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #858585;
+  max-width: 530px;
+  border-radius: 50px;
+  padding: 0.75em 1em;
+  font-weight: 400;
+}
+
+.password {
+  font: large Verdana,sans-serif;
+  letter-spacing: 0px;
+}
+
+.password::placeholder {
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: initial;
+}
+
+/* LIGHTBOX ================================================== LIGHTBOX */
+
+.lightbox {
+  position: fixed;
+  background-color: #FFF;
+  border-radius: 20px;
+  width: 75%;
+  height: 75%;
+
+  top: 12.5%;
+  left: 50%;
+  margin-left: -37.5%;
+
+  animation-name: pop-lightbox;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes pop-lightbox {
+  from{
+      width: 0%;
+      height: 0%;
+      left: 50%;
+      margin-left: 0;
+      top: 50%;
+      opacity: 0;
+  }
+  to{
+      width: 75%;
+      height: 75%;
+      margin-left: -37.5%;
+      left: 50%;
+      top: 12.5%;
+      opacity: 1;
+  }
+}
+
+.lightbox-shadow {
+  position: absolute;
+  background-color: #00000080;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  animation-name: lightbox-shadow;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+}
+
+/* COVER ================================================== COVER */
+
+.cover {
+  position: fixed;
+  background-color: #fff;
+  width: 100%;
+  height: 100vh;
+  animation-name: lightbox-shadow;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes lightbox-shadow {
+  from{opacity: 0}
+  to{opacity: 1}
+}
+
+/* BUTTONS =============================================== BUTTONS */
+
+.button {
+  margin: 2em 1em;
+  padding: 1em;
+  padding-left: auto;
+  padding-right: auto;
+  width: 100%;
+  color: #000;
+  font-weight: 400;
+  font-size: 1em;
+  background: #ffd800;
+  border: none;
+  border-radius: 2em;
+} .button:active {
+  background: linear-gradient(#ffd800,#ffe13d);
+}
+
+/*--------------BUTTON MODIFIERS-----------*/
+.btn-mini {
+  margin: 0.5em 0.25em;
+  width: 8em;
+  font-size: 0.5em; 
+}
+
+.btn-small {
+  margin: 1em 0.5em;
+  width: 12em;
+  font-size: 0.75em; 
+}
+
+.btn-large {
+  margin: 2em 1em;
+  width: 20em;
+  font-size: 1.5em; 
+}
+
+.btn-white {
+  color: #000;
+  background:#fff;
+  border: none;
+} .btn-white:active {
+  background:#eeeeee;
+}
+
+.btn-thin {
+  color: #000;
+  border: 1px solid #000;
+  background: transparent;
+} .btn-thin:active {
+  background: transparent;
+}
+
+.btn-thin-white {
+  color: #fff;
+  border: 1px solid #fff;
+  background: transparent;
+} .btn-thin-white:active {
+  background: transparent;
+}
+
+.btn-noborder {
+  color: #fff;
+  width: fit-content;
+  background: transparent;
+  border: none;
+} .btn-noborder:active {
+  background: transparent;
+}
+
+/* CROSS BUTTON */
+
+.cross-button {
+  position: fixed;
+  border: none;
+  background: transparent;
+  float: right;
+  box-shadow: none;
+  padding: 1em;
+  top: 2em;
+  right: 2em;
+  width: fit-content;
+  height: fit-content;
+  opacity: 0.5;
+} 
+.cross-button:before , .cross-button:after{
+  position: absolute; 
+  content: ' ';
+  top:1em;
+  right: 0;
+  height: 2px;
+  width: 2em;
+  background-color: #000000ab;
+}
+.cross-button:before {
+  transform: rotate(45deg);
+}
+.cross-button:after {
+  transform: rotate(-45deg);
+}
+
+/* VISUAL ELEMENTS ============================================== VISUAL ELEMENTS */
+
+.checkmark {
+  display: inline-block;
+}
+.checkmark:after {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 15px;
+  border: solid #00ff37;
+  border-width: 0 2px 2px 0;
+
+  transform: rotate(45deg);
+}
+
+.checkmark-small{
+  width: 5px;
+  height: 10px;
+}
+
+.crossmark {
+  border: none;
+  background: transparent;
+  float: right;
+  padding: 0.5em;
+  
+  width: fit-content;
+  height: fit-content;
+  opacity: 1;
+}
+.crossmark:before, .crossmark:after {
+  position: absolute; 
+  content: '';
+  height: 1em;
+  width: 2px;
+  background-color: #ff0000;
+}
+
+.crossmark:before {
+  margin-top: -0.5em;
+  transform: rotate(45deg);
+}
+.crossmark:after {
+  margin-top: -0.5em;
+  transform: rotate(-45deg);
+}
+
+.crossmark-small:before, .crossmark-small:after{
+  height: 10px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 2px solid #86868669;
+  border-radius: 50%;
+  border-top-color: #00aeff;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+
+.spacer {
+  padding: 1em;
+}
+
+.spacer-small {
+  padding: 0.75em;
+}

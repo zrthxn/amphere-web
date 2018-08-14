@@ -153,9 +153,8 @@ class BookingLightbox extends Component {
                                 onChange={this.promoValidator}/>
                         </div>
 
-                        <p className="info">After booking this session, you will recieve a text SMS
-                        telling you your OTP for this session. This is supposed to be supplied to
-                        the vendor of the restaurant.
+                        <p className="info">After booking the session, you will receive 
+                        an SMS with your OTP in it. Supply it to the restaurant’s staff.
                         </p>
 
                         {

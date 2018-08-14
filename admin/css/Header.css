@@ -1,0 +1,196 @@
+header {
+    position: fixed;
+    z-index: 1000;
+	transition: all 0.2s linear;
+	width: 100%;
+	padding: 1em;
+} header.active {
+    background: #fff;
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+} header.active .button {
+	background-color: #ffd800;	
+	border: none !important;
+	-webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+} header.active .header-container {
+	margin: 0.25em auto 0.25em auto;	
+	transition: all 0.2s linear;
+}
+
+/* MOBILE MENU ==================================== MOBILE MENU */
+
+.header-container {
+	margin: 1em auto 1em auto;
+	max-width: 1000px;
+	font-size: 1em;
+	font-weight: 300;
+    transition: all 0.2s linear;
+    
+    display: grid;
+    grid-template-columns: 1fr 3fr 2fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "hamburger logo button";
+    align-content: center;
+}
+
+.header-container .header-logo {
+	max-height: 2.5em;
+	align-self: center;
+    justify-self: center;
+    grid-area: logo;
+}
+
+.header-container .button {
+	color: #000;
+    font-weight: 600;
+    font-size: 0.65em;
+	background: #fff;
+	border: none !important;
+	border-radius: 10px;
+	padding: 1.25em;
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+
+	align-self: center;
+    justify-self: right;
+    grid-area: button;
+}
+
+.header-container .header-nav {
+    display: none;
+}
+.header-nav ul {
+	list-style: none;
+	display: flex;
+	padding: 0;
+}
+.header-nav li {
+	margin-left: 2em;
+	align-self: center;
+}
+.header-nav a {
+	text-decoration: none;
+	color: #000;
+}
+
+/*----------------- SIDEBAR -----------------*/
+.sidebar {
+	position: absolute;
+	height: 100vh;
+	width: 75%;
+	max-width: 300px;
+    top: 0;
+	background: #fff;
+	z-index: 2000;
+
+	left: -75%;
+	transition: all 0.5s ease-in-out;
+}
+.sidebar-nav ul {
+    padding: 0;
+    margin-top: 7.5em;
+	margin-left: 2em;
+    list-style: none;
+    text-align: left;
+}
+.sidebar-nav li {
+	margin-bottom: 1em;
+	font-weight: 600;
+}
+.sidebar-nav a {
+	text-decoration: none;
+	color: #4b4b4b;
+}
+.checkbox:checked ~ .sidebar {
+	left: 0;
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+/*----------------- HAMBURGER -----------------*/
+.hamburger {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.hamburger span,
+.hamburger span::before,
+.hamburger span::after {
+    display: block;
+    background: #000;
+    height: 2px;
+    width: 25px;
+    border-radius: 2px;
+    position: relative;
+	z-index: 5000;
+    transition: all 0.5s ease-in-out;
+}
+
+.hamburger span::before,
+.hamburger span::after {
+    content: '';
+    position: absolute;
+}
+
+.hamburger span::before {
+    bottom: 7px;
+}
+.hamburger span::after {
+    top: 7px;
+}
+
+.checkbox:checked ~ .hamburger span::before {
+	bottom: 0;
+	transform: rotate(-45deg);
+}
+.checkbox:checked ~ .hamburger span {
+	background: transparent;
+}
+.checkbox:checked ~ .hamburger span::after {
+	top: 0;
+	transform: rotate(45deg);
+}
+
+/* DESKTOP MENU ==================================== DESKTOP MENU */
+
+@media screen and (min-width: 800px) {
+    .header-container{
+        margin: 2.5em auto 1em auto;
+        grid-template-columns: 1fr 5fr 1fr;
+        grid-template-areas: "logo nav button";
+    }
+
+    .header-container .header-logo {        
+        align-self: center;
+        justify-self: left;
+        grid-area: logo;
+    }
+    .header-container .button {    
+        align-self: center;
+        justify-self: right;
+        grid-area: button;
+    }
+    .header-container .header-nav {    
+        display: block;    
+        align-self: center;
+        justify-self: right;
+        grid-area: nav;
+    }
+    
+    .hamburger {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 330px) {
+    .header-container .button {
+        padding: 1.25em 0.8em;
+        font-size: 0.65em;
+    }
+}

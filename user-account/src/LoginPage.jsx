@@ -51,7 +51,7 @@ class LoginPage extends Component {
                 }
             });
         } else {
-            alert("Phone or Password empty");
+            alert("Please enter the registered phone number and correct password");
         }
     }
 

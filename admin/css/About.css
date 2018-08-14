@@ -1,0 +1,99 @@
+.about {
+    padding: 2em;
+}
+
+.about-container {
+    width: fit-content;
+    max-width: 1000px;
+    margin: auto;
+    text-align: center;
+}
+.about-container .title {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.start {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 2em 0 4em 0;
+    text-align: justify;
+}
+
+.need {    
+    text-align: justify;
+}
+
+/* INSTRUCTIONAL ============================= INSTRUCTIONAL */
+
+.instructional {
+    height: fit-content;
+    padding: 4em;
+    text-align: center;
+    background-color: #1c1c1c;
+}
+.instructional-container {
+    max-width: 1000px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.instructional-step {
+    margin-bottom: 2em;
+    text-align: center;
+}
+.instructional-step .step-title {
+    font-weight: 200;
+    color: #ffd800;
+}
+.instructional-step p {
+    color: #fff;
+    font-size: 1em;
+    font-weight: 300;
+    line-height: 1.75em;
+}
+.instructional a {
+    text-decoration: none;
+    width: 100%;
+    padding: 1em 2em;
+    margin: auto;
+}
+
+/* ============================= @MEDIA ============================= */
+
+@media screen and (min-width: 800px) {
+    /*============== INSTRUCTIONAL ==============*/
+
+    .instructional {
+        width: 100%;
+        height: fit-content;
+        padding: 4em;
+        background-color: #1c1c1c;
+    }
+    .instructional-container {
+        max-width: 1000px;
+        margin: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .instructional-step {
+        margin: 0 4em 0 4em;
+        text-align: center;
+    }
+    .instructional-step .step-title {
+        font-weight: 200;
+        color: #ffd800;
+    }
+    .instructional-step p {
+        color: #fff;
+        font-size: 1em;
+        font-weight: 300;
+        line-height: 1.75em;
+    }
+}

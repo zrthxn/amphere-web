@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="../css/Header.css">
+
+    <script>
+        $(window).on("scroll", function() {
+            if($(window).scrollTop() > 50) {
+                $("header").addClass("active");
+            } else {
+               $("header").removeClass("active");
+            }
+        });
+    </script>
+
+<!--===============//// HEADER AND SIDEBAR NAV MENU ////===============-->
+
+<header>
+    <div class="header-container">
+        <input id="sidebar-toggle" type="checkbox" class="checkbox" hidden="true"/>
+        <label for="sidebar-toggle" class="hamburger"><span></span></label>
+
+        <img class="header-logo" src="/assets/amphere-text.svg">
+
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/signup">Sign Up</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <nav class="header-nav">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/signup">Sign Up</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+        
+        <button class="button btn-small btn-noborder" id="entry-button">My Account</button>
+
+    </div>
+</header>
+
+<script>
+    document.getElementById("entry-button").onclick = () => window.location = "http://account.amphere.in";
+</script>
