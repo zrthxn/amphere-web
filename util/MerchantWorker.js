@@ -20,23 +20,29 @@ const ssConfig = require('../config.json');
 
 exports.MerchantLogin = function (params) {
     return new Promise((resolve, reject)=>{
+
         MerchantFirebaseCreds.ref().child('merchants').orderByChild('mid').equalTo(params.mid).limitToFirst(1)
-        .on('child_added', (merchantDetails)=>{
+        .once('value', (merch)=>{
+            if(merch.val()===null) {
+                reject("NO-MERCH");
+            }
+        });
+
+        MerchantFirebaseCreds.ref().child('merchants').orderByChild('mid').equalTo(params.mid).limitToFirst(1)
+        .once('child_added', (merchantDetails)=>{
             if(merchantDetails.val()!==null){
                 var hash = Hasher.generateHash(params.password, merchantDetails.val().salt);
                 if(hash===merchantDetails.val().password){
                     resolve({
-                        "success": true,
-                        "mid" : merchantDetails.val().mid,
-                        "phone" : merchantDetails.val().phone,
-                        "name" : merchantDetails.val().name,
-                        "token" : merchantDetails.val().mid + "/" + hash
+                        success: true,
+                        mid : merchantDetails.val().mid,
+                        phone : merchantDetails.val().phone,
+                        name : merchantDetails.val().name,
+                        token : merchantDetails.val().mid + "/" + hash
                     });
                 } else {
-                    resolve({"success": false});
+                    resolve({success: false});
                 }
-            } else {
-                reject("NO_MERCHANT");
             }
         });
     });

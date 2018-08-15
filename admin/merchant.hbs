@@ -4,7 +4,7 @@
         <h1>Merchant Addition</h1>
         <p>Add merchants here</p>
 
-        <input id="name" type="text" placeholder="Name"><br>
+        <input id="_name" type="text" placeholder="Name"><br>
         <input id="phone" type="text" placeholder="Phone"><br>
         <input id="mid" type="text" placeholder="Merchant Code"><br>
         <input id="password" type="text" placeholder="Password">
@@ -22,7 +22,7 @@
 </div>
 
 <script>
-    var name = document.getElementById("name");
+    var _name = document.getElementById("_name");
     var phone = document.getElementById("phone");
     var mid = document.getElementById("mid");
     var password = document.getElementById("password");
@@ -31,7 +31,7 @@
 
         if(name.value!=="" && phone.value!=="" && password.value!=="" && mid.value!=="") {
             const request = new XMLHttpRequest();
-            let url = `name=${encodeURI(name.value)}&` +
+            let url = `name=${encodeURI(_name.value)}&` +
             `phone=${encodeURI(phone.value)}&` +
             `mid=${encodeURI(mid.value)}&` +
             `password=${encodeURI(password.value)}`;

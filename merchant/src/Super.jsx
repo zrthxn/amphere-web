@@ -53,7 +53,8 @@ class Super extends Component {
                         loginValidated: true
                     });
                 } else {
-                    alert("Code or password incorrect");
+                    if(result.status==="NO-USER") alert("No account with the given code");
+                    else if(result.status==="PASSWORD-INCORRECT") alert("Code or password incorrect");
                 }
             }).catch((err)=>{
                 alert("ERROR: Signin error occurred :: " + (err===undefined? "" : err));

@@ -15,16 +15,14 @@ exports.ValidateLogin = function (credentials) {
                 let loginResponse = JSON.parse(loginRequest.response);
                 if(loginResponse.state==="SUCCESS"){
                     resolve({
-                        "validated" : true,
-                        "mid" : loginResponse.mid,
-                        "phone" : loginResponse.phone,
-                        "name" : loginResponse.name,
-                        "token" : loginResponse.token
+                        validated : true,
+                        mid : loginResponse.mid,
+                        phone : loginResponse.phone,
+                        name : loginResponse.name,
+                        token : loginResponse.token
                     });
                 } else {
-                    resolve({
-                        "validated" : false
-                    });
+                    resolve({ validated: false, status: loginResponse.state });
                 }
             } else if(loginRequest.status!==200) {
                 reject();
