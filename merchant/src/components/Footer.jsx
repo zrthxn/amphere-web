@@ -8,19 +8,19 @@ class Footer extends Component {
                 <div className="container">
                     <div className="footer-grid-container">
 
-                        <a href="/">Home</a>
-                        <a href="/about?">About Us</a>
-                        <a href="/contact?">Contact</a>
+                        <a href="http://amphere.in/">Home</a>
+                        <a href="http://amphere.in/about?">About Us</a>
+                        <a href="http://amphere.in/contact?">Contact</a>
                         <a href=""></a>
 
-                        <a href="/support?">Help & Support</a>
-                        <a href="/partner?q=onboard">Partner with Us</a>
+                        <a href="http://amphere.in/support?">Help & Support</a>
+                        <a href="http://amphere.in/partner?q=onboard">Partner with Us</a>
                         <a href=""></a>
                         <a href=""></a>
                         
-                        <a className="last" href="/terms?">Terms and Conditions</a>
-                        <a className="last" href="/terms?q=damage">Damage Policy</a>
-                        <a className="last" href="/terms?q=refunds">Cancellation & Refunds</a>
+                        <a className="last" href="#">Terms and Conditions</a>
+                        <a className="last" href="#">Damage Policy</a>
+                        <a className="last" href="#">Cancellation & Refunds</a>
                         <a className="last" href=""></a>
                     </div>
 
