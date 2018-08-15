@@ -55,7 +55,7 @@
                     if(response.state==="SUCCESS"){
                         console.log("SUCCESS");
                         createLoginToken(response).then(()=> {
-                            window.location = 'http://account.boltbite.com/';
+                            window.location = 'http://account.amphere.in/';
                         });
                     } else if(response.state==="PHONE-EXISTS"){
                         $(phone).addClass('error');
