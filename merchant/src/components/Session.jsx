@@ -197,6 +197,7 @@ class Session extends Component {
     setCollected = () => {
         let conf = window.confirm("Please confirm if the equipment has been collected fom the user.");
         if(conf) {
+            this.CalculateAmount(this.state.duration - this.state.timeRemain);
             SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).child('status')
             .once('value', (statuss)=>{
                 let stat = statuss.val().split(' : ')[1];
