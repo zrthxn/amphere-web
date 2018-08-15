@@ -89,17 +89,8 @@ class Session extends Component {
             });
         }
     }
-
-    setOTP = (otp_f) => {
-        if(otp_f.target.value!=="" && /^\d+$/.test(otp_f.target.value) && otp_f.target.value.length === 4){
-            $(otp_f.target).removeClass('error');
-            this.setState({_otp: otp_f.target.value.trim()});
-        } else if(otp_f.target.value==="") {
-            $(otp_f.target).removeClass('error');
-        } else {
-            $(otp_f.target).addClass('error');
-        }
-    }
+    
+    //  ========================= STATE CHANGE FUNCTIONS ============================= //
 
     activate = () => {
         if(this.state.table!==null){
@@ -183,6 +174,19 @@ class Session extends Component {
             }
         }
     }
+    
+    //  ========================= VALUE SETTERS AND LIGHTBOX OPENERS ============================= //
+
+    setOTP = (otp_f) => {
+        if(otp_f.target.value!=="" && /^\d+$/.test(otp_f.target.value) && otp_f.target.value.length === 4){
+            $(otp_f.target).removeClass('error');
+            this.setState({_otp: otp_f.target.value.trim()});
+        } else if(otp_f.target.value==="") {
+            $(otp_f.target).removeClass('error');
+        } else {
+            $(otp_f.target).addClass('error');
+        }
+    }
 
     setTable = (table) => {
         if(table.target.value!==""){
@@ -207,16 +211,52 @@ class Session extends Component {
 
     cancelConfirmationDialog = (state) => this.setState({cancelLightboxOpen: state})
     preCancelConfirmationDialog = (state) => this.setState({preCancelLightboxOpen: state})
+
+    //  ================================== SESSION TIMING FUNCTION ================================== //
     
     TimingFunction = (time) => {
         let timeElapsed = time - this.state.startTime;
         let _timeRemain = this.state.duration - timeElapsed;
+        this.CalculateAmount(timeElapsed);
         if(_timeRemain>0){
             this.setState({timeRemain: _timeRemain});
         } else {
             this.expire();
         }
     }
+
+    //  ================================== AMOUNT CALCULATION ================================== //
+
+    CalculateAmount = (timeElapsed) => {
+        let amt;
+
+        let activated = this.state.activated;
+        let device = this.state.device;
+        let duration = this.state.duration;
+
+        if(activated) {
+            if(timeElapsed<=5) {
+                amt = 10;
+            } else {
+                if(device==="iOS") {
+                    if(duration < 50 ) amt = 30;
+                    else amt = 40
+                } else if (device==="microUSB" || device==="USB-C") {
+                    if(duration < 50 ) amt = 20;
+                    else amt = 30
+                }
+            }
+        } else {
+            amt = 0;
+        }
+
+        this.setState({ amount : amt });
+    }
+
+    
+    //  ---------------------------------------------------------------------------------------- //
+    //  ======================================== B O D Y ======================================= //
+    //  ---------------------------------------------------------------------------------------- //
 
     render() {
         return (

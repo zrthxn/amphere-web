@@ -11,7 +11,7 @@ class BookingLightbox extends Component {
     constructor(){
         super();
         this.state = {
-            duration: 30,
+            duration: 42,
             locCode: null,
             location: null,
             locCodeValid: null,
@@ -31,14 +31,10 @@ class BookingLightbox extends Component {
 
     setDuration = (_value) => {
         let set = 0;
-        if(_value===1){
-            set = 30;
-        } else if(_value===2){
-            set = 60;
-        }
-        this.setState({
-            duration: set
-        })
+        if(_value===1) set = 42;
+        else if(_value===2) set = 62;
+        
+        this.setState({ duration: set });
     }
 
     setDevice = (_value) => {
@@ -131,7 +127,7 @@ class BookingLightbox extends Component {
                         <div className="toggle-bars">
                             <ButtonToolbar className="duration-bar">
                                 <ToggleButtonGroup onChange={this.setDuration} type="radio" name="options" defaultValue={1} className="toggle-group">
-                                    <ToggleButton className="toggle-btn" value={1}>30 mins</ToggleButton>
+                                    <ToggleButton className="toggle-btn" value={1}>40 mins</ToggleButton>
                                     <ToggleButton className="toggle-btn" value={2}>60 mins</ToggleButton>
                                 </ToggleButtonGroup>
                             </ButtonToolbar>
@@ -140,7 +136,7 @@ class BookingLightbox extends Component {
                                 <ToggleButtonGroup onChange={this.setDevice} type="radio" name="options" defaultValue={2} className="toggle-group">
                                     <ToggleButton className="toggle-btn" value={1}>iOS</ToggleButton>
                                     <ToggleButton className="toggle-btn" value={2}>microUSB</ToggleButton>
-                                    <ToggleButton className="toggle-btn" value={3} disabled>USB-C</ToggleButton>
+                                    <ToggleButton className="toggle-btn" value={3}>USB-C</ToggleButton>
                                 </ToggleButtonGroup>
                             </ButtonToolbar>
                         </div>

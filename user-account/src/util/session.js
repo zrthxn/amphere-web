@@ -50,3 +50,28 @@ exports.CancelSession = (params) => {
         }
     });
 }
+
+exports.CancelActiveSession = (params) => {
+
+    var cancellationRequest = new XMLHttpRequest();
+
+    return new Promise((resolve, reject)=>{
+        cancellationRequest.open('POST', `/userCancelActiveSession?sid=${params.sid}`, true);
+        cancellationRequest.send();
+        cancellationRequest.onreadystatechange = event => {
+            if (cancellationRequest.readyState === 4 && cancellationRequest.status === 200) {
+                let cancellationResponse = JSON.parse(cancellationRequest.response);
+                if(cancellationResponse.state==="SUCCESS"){
+                    resolve({
+                        "cancelled" : true,
+                        "time" : cancellationResponse.time
+                    });
+                } else {
+                    resolve({
+                        "cancelled" : false
+                    });
+                }
+            }
+        }
+    });
+}

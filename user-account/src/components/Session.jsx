@@ -19,7 +19,8 @@ class Session extends Component {
             expired: false,
             startTime: 0,
             timeRemain: 0,
-            cancelLightboxOpen: false
+            cancelLightboxOpen: false,
+            amount: 10
         }
     }    
 
@@ -44,15 +45,7 @@ class Session extends Component {
                     startTime: session.val().startTime,
                     activated: true
                 });
-                Timer.ref('time').on('value', (timeNow)=>{
-                    let timeElapsed = timeNow.val() - this.state.startTime;
-                    let _timeRemain = this.state.duration - timeElapsed;
-                    if(_timeRemain>0){
-                        this.setState({timeRemain:  _timeRemain});
-                    } else {
-                        this.expire();
-                    }
-                });
+                Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
             } else if(session.val().expired===true){
                 this.expire();
             } else if(session.val().isDeleted===true){
@@ -60,17 +53,7 @@ class Session extends Component {
             }
         });
 
-        if(this.state.activated===true){
-            Timer.ref('time').on('value', (timeNow)=>{
-                let timeElapsed = timeNow.val() - this.state.startTime;
-                let _timeRemain = this.state.duration - timeElapsed;
-                if(_timeRemain>0){
-                    this.setState({timeRemain:  _timeRemain});
-                } else {
-                    this.expire();
-                }
-            });
-        }
+        if(this.state.activated===true) Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
     }
 
     expire = () => {
@@ -85,14 +68,13 @@ class Session extends Component {
     cancelSession = () => {
         this.cancelConfirmationDialog(false);
         if(this.state.activated===true){
-            if(this.state.timeRemain <= (this.state.duration/2)){
-                alert("Session cannot be cancelled after half the time has elapsed");
+            if(this.state.timeRemain <= (this.state.duration - 5)){
+                alert("Session cannot be cancelled after more than 5 minutes of activation");
             } else {
                 this.setState({ activated : false });
                 Timer.ref('time').off('value');
-                SessionUtil.CancelSession({
-                    "sid": this.state.sid,
-                    "exp": "USER-CANCELLED"
+                SessionUtil.CancelActiveSession({
+                    "sid": this.state.sid
                 }).then((res)=>{
                     if(res.cancelled===true){
                         this.props.cancel();
@@ -118,10 +100,47 @@ class Session extends Component {
         }
     }
 
-    cancelConfirmationDialog = (state) => {
-        this.setState({
-            cancelLightboxOpen: state
-        })
+    cancelConfirmationDialog = (state) =>  this.setState({ cancelLightboxOpen: state });
+
+    //  ================================== SESSION TIMING FUNCTION ================================== //
+        
+    TimingFunction = (time) => {
+        let timeElapsed = time - this.state.startTime;
+        let _timeRemain = this.state.duration - timeElapsed;
+        this.CalculateAmount(timeElapsed);
+        if(_timeRemain>0){
+            this.setState({timeRemain: _timeRemain});
+        } else {
+            this.expire();
+        }
+    }
+
+    //  ================================== AMOUNT CALCULATION ================================== //
+
+    CalculateAmount = (timeElapsed) => {
+        let amt;
+
+        let activated = this.state.activated;
+        let device = this.state.device;
+        let duration = this.state.duration;
+
+        if(activated) {
+            if(timeElapsed<=5) {
+                amt = 10;
+            } else {
+                if(device==="iOS") {
+                    if(duration < 50 ) amt = 30;
+                    else amt = 40
+                } else if (device==="microUSB" || device==="USB-C") {
+                    if(duration < 50 ) amt = 20;
+                    else amt = 30
+                }
+            }
+        } else {
+            amt = 0;
+        }
+
+        this.setState({ amount : amt });
     }
 
     render() {
@@ -153,8 +172,11 @@ class Session extends Component {
 
                 {
                     this.state.cancelLightboxOpen ? (
-                        <SessionCancelLightbox confirm={()=>this.cancelSession()} 
-                                               decline={() => this.cancelConfirmationDialog(false)}/>
+                        <SessionCancelLightbox 
+                            confirm={()=>this.cancelSession()} 
+                            decline={() => this.cancelConfirmationDialog(false)}
+                            active={this.state.activated}
+                            amount={this.state.amount}/>
                     ) : console.log()
                 }
             </div>

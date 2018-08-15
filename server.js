@@ -253,6 +253,27 @@ account.post('/userCancelSession', (req, res)=> {
         }
     });
 });
+account.post('/userCancelActiveSession', (req, res)=> {
+    let params = getParameters(req);
+    // SessionsWorker.CancelSession(params.sid).then((_res)=>{
+    //     if(_res.success===true){
+    //         res.status(200).json({
+    //             "state" : "SUCCESS"
+    //         });
+    //     } else {
+    //         res.status(200).json({"state" : "NO-USER"});
+    //     }
+    // });
+    SessionsWorker.ExpireSession(params.sid).then((_res)=>{
+        if(_res.success===true){
+            res.status(200).json({
+                "state" : "SUCCESS"
+            });
+        } else {
+            res.status(200).json({"state" : "NO-USER"});
+        }
+    });
+});
 //===================================================================//
 
 

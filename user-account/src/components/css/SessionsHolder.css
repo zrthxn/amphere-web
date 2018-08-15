@@ -3,6 +3,8 @@
     flex-direction: column;
     padding: 2em 2em;
     z-index: 1000;
+    max-width: 1000px;
+    margin: auto;
 }
 
 .caution {
