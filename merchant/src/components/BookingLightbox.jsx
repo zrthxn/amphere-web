@@ -8,7 +8,7 @@ class BookingLightbox extends Component {
     constructor(){
         super();
         this.state = {
-            duration: 30,
+            duration: 42,
             phone: null,
             phoneValid: false,
             device: "microUSB",
