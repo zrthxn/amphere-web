@@ -226,16 +226,16 @@ function generateSessionId() {
 
     let dateOrder = [ mon, day, min, sec ];
 
-        // GEN 8 RANDOM HEX
-        for(let i=0 ; i<8 ; i++){
+        // GEN 6 RANDOM HEX
+        for(let i=0 ; i<6 ; i++){
             sid = sid + Math.floor(Math.random()*16).toString(16); 
         }
         // GEN 2 DEFINED DATE
         for(let i=0 ; i<2 ; i++){
             sid = sid + dateOrder[Math.floor(Math.random()*2)].toString(); 
         }
-        // GEN 8 RANDOM HEX
-        for(let i=0 ; i<8 ; i++){
+        // GEN 6 RANDOM HEX
+        for(let i=0 ; i<6 ; i++){
             sid = sid + Math.floor(Math.random()*16).toString(16); 
         }
         // GEN 2 DEFINED DATE
