@@ -12,6 +12,7 @@
     -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     
+    transition: all 0.5s ease-in-out;
     animation-name: slideIn-right;
     animation-duration: 0.5s;
     animation-timing-function: ease-in-out;
@@ -25,6 +26,8 @@
         right:0;
         opacity:1;
     }
+} .session:last-of-type{
+    margin-bottom: 0;
 }
 
 .session-details-container {
@@ -102,39 +105,44 @@
     grid-column: 2/3;
 }
 
-.active-indicator {
-    position: absolute;
-    left: 50%;
-    margin-left: -2em;
-    padding: 0.25rem 0.75rem;
-    background-color: #00d812;
-    width: 4em;
-    height: fit-content;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    animation: glide 0.5s ease-in-out;
-    transform-origin: top;
+/* ============================================ */
+
+.purda {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5000;
+    padding: 0.5em;
+
+    text-align: center;
+    color: #fff;
+    border-radius: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    transform-origin: bottom;
+} 
+
+.prestart{
+    background: linear-gradient(90deg, #ffd800, #ff9e00);
 }
-.expired-indicator {
-    position: absolute;
-    left: 50%;
-    margin-left: -2em;
-    padding: 0.25rem 0.75rem;
-    background-color: #888888;
-    width: 4em;
-    height: fit-content;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    animation: glide 0.5s ease-in-out;
-    transform-origin: top;
+.active {    
+    background: linear-gradient(90deg, #00ff4c,#008a29);
 }
-.indicator-text {
-    color: #FFF;
-    font-size: 0.5em;
-    font-weight: 400;
+.expiry {
+    background-color: #444444;
+}
+
+.purda p {
     margin: 0;
-}
-@keyframes glide {
-    from {transform: scaleY(0)}
-    to {transform: scaleY(1)}
-}
+    font-size: 0.85em;
+    animation: fade 0.5s ease-in-out;
+} @keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    } to {
+        opacity: 1;
+    }
+} 

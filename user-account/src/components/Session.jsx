@@ -46,6 +46,7 @@ class Session extends Component {
                     activated: true
                 });
                 Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
+                this.CalculateAmount(this.state.duration - this.state.timeRemain);
             } else if(session.val().expired===true){
                 this.expire();
             } else if(session.val().isDeleted===true){
@@ -58,6 +59,7 @@ class Session extends Component {
 
     expire = () => {
         Timer.ref('time').off('value');
+        this.CalculateAmount(this.state.duration - this.state.timeRemain);
         this.setState({
             expired: true,
             activated : false,
@@ -73,6 +75,7 @@ class Session extends Component {
             } else {
                 this.setState({ activated : false });
                 Timer.ref('time').off('value');
+                this.CalculateAmount(this.state.duration - this.state.timeRemain);
                 SessionUtil.CancelActiveSession({
                     "sid": this.state.sid
                 }).then((res)=>{
@@ -147,12 +150,6 @@ class Session extends Component {
         return (
             <div className="session">
 
-                {
-                    this.state.activated ? <div className="active-indicator"><p className="indicator-text">ACTIVE</p></div> : (
-                        this.state.expired ? <div className="expired-indicator"><p className="indicator-text">EXPIRED</p></div> : console.log()
-                    )
-                }
-
                 <div className="session-details-container">
                     <div className="session-number">
                         <strong>{this.state.device} SESSION</strong>
@@ -169,6 +166,14 @@ class Session extends Component {
                     </div>
 
                 </div>
+
+                {
+                    this.state.activated ? <div className="active purda"><p>Your session is running</p></div> : (
+                        this.state.expired ? <div className="expiry purda"><p>Your session has expired. <b>Amount: Rs.{this.state.amount}</b></p></div> : (
+                            <div className="prestart purda"><p>Give your OTP to start session</p></div>
+                        ) 
+                    )
+                }
 
                 {
                     this.state.cancelLightboxOpen ? (
