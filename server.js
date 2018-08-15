@@ -48,7 +48,7 @@ homepage.engine('hbs', handle({
 }));
 
 homepage.use(express.static(path.join(__dirname, 'homepage')));
-account.use(express.static(path.join(__dirname, 'user-account/build')));
+account.use(express.static(path.join(__dirname, 'account/build')));
 merchant.use(express.static(path.join(__dirname, 'merchant/build')));
 admin.use(express.static(path.join(__dirname, 'admin')));
 
@@ -193,7 +193,7 @@ homepage.post('/signupWorker', (req, res) => {
 //----------------------------- ACCOUNT -----------------------------// 
 
 account.get((req, res) => {
-    res.sendFile(path.resolve(__dirname, 'user-account/build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, 'account/build', 'index.html'));
 });
 account.post('/userLoginWorker', (req, res)=> {
     let params = getParameters(req);
