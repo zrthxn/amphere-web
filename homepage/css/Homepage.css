@@ -128,7 +128,7 @@
 @media screen and (min-width: 800px) {
     /*============== HERO ==============*/
     .hero {
-        height: 75vh;
+        height: fit-content;
         padding: 10em 2em 2em 2em;
     }
     
