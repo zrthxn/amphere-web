@@ -77,7 +77,7 @@ class App extends Component {
 
   addNewSession = (params) => {    
     BookSession.addNewSession({
-        "uid" : "null",
+        "uid" : "AMPHERE-DEAD-SESSION",
         "phone" : params.phone,
         "name" : "Unknown",
         "location" : this.state.mid,

@@ -137,7 +137,7 @@ exports.CancelSession = function (sid, exp) {
                 "sheet" : "Sessions",
                 "values" : [
                     `${getDateTime()}`,
-                    `${snapshot.val().sid}`,
+                    `${snapshot.val().uid}`,
                     `CANCELLED`,
                     `${snapshot.val().mid}`,
                     `${snapshot.val().name}`,
@@ -178,7 +178,7 @@ exports.CompleteSession = function (sid) {
                 "sheet" : "Sessions",
                 "values" : [
                     `${getDateTime()}`,
-                    `${snapshot.val().sid}`,
+                    `${snapshot.val().uid}`,
                     `COMPLETED`,
                     `${snapshot.val().mid}`,
                     `${snapshot.val().name}`,
