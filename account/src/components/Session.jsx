@@ -64,6 +64,7 @@ class Session extends Component {
         this.CalculateAmount(this.state.duration - this.state.timeRemain);
         this.setState({
             expired: true,
+            activated: false,
             timeRemain: 0
         });
     }
@@ -82,6 +83,7 @@ class Session extends Component {
                     if(res.cancelled===true){
                         this.setState({
                             expired: true,
+                            activated : false,
                             timeRemain: 0
                         });
                     }
