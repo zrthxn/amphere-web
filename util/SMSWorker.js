@@ -5,10 +5,10 @@ const querystring = require('querystring');
 exports.SendSMSSessionOTP = (otp, phone) => {
     let sms = `[AMPHERE] Thank you for booking an Amphere session! Your OTP is ${otp}.`;
     var postData = querystring.stringify({
-    apikey: SMSConfig.apikey,
-    numbers: "91" + phone,
-    sender: SMSConfig.sender,
-    message: encodeURI(sms)
+        apikey: SMSConfig.apikey,
+        numbers: "91" + phone,
+        sender: SMSConfig.sender,
+        message: encodeURI(sms)
     });
 
     var options = {
