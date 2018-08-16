@@ -64,7 +64,7 @@ class Session extends Component {
         this.CalculateAmount(this.state.duration - this.state.timeRemain);
         this.setState({
             expired: true,
-            activated: false,
+            // activated: false,
             timeRemain: 0
         });
     }
@@ -83,7 +83,7 @@ class Session extends Component {
                     if(res.cancelled===true){
                         this.setState({
                             expired: true,
-                            activated : false,
+                            // activated : false,
                             timeRemain: 0
                         });
                     }
@@ -173,10 +173,10 @@ class Session extends Component {
                 </div>
 
                 {
-                    this.state.activated ? <div className="active purda"><p>Your session is running</p></div> : (
-                        this.state.expired ? <div className="expiry purda"><p>Your session has expired. <b>Amount: Rs.{this.state.amount}</b></p></div> : (
+                    this.state.expired ? <div className="expiry purda"><p>Your session has expired. <b>Amount: Rs.{this.state.amount}</b></p></div> : (
+                        this.state.activated ? <div className="active purda"><p>Your session is running</p></div> : (
                             <div className="prestart purda"><p>Give your OTP to start session</p></div>
-                        ) 
+                        )
                     )
                 }
 
