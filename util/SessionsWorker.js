@@ -170,8 +170,8 @@ exports.CompleteSession = function (sid) {
 
             for(let i=0; i<2; i++) time.push(parseInt(((snapshot.val().status.split(' : ')[1]).split(' ')[0]).split(':')[i], 10));
 
-            ttc.push(date.getHours()>time[0] ? date.getHours() - time[0] : time[0] - date.getHours());
-            ttc.push(date.getMinutes()>time[1] ? date.getMinutes() - time[1] :  time[1] - date.getMinutes());
+            ttc.push(date.getHours()>time[0] ? (date.getHours() - time[0]) : (time[0] - date.getHours()) );
+            ttc.push(date.getMinutes()>time[1] ? (date.getMinutes() - time[1]) : (time[1] - date.getMinutes()) );
 
             SpreadsheetWorker.WriteToSpreadsheet({
                 "ssId" : ssConfig.spreadsheets.records,

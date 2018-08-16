@@ -47,9 +47,11 @@ class Session extends Component {
                 });
                 Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
                 this.CalculateAmount(this.state.duration - this.state.timeRemain);
-            } else if(session.val().expired===true){
+            } 
+            if(session.val().expired===true){
                 this.expire();
-            } else if(session.val().isDeleted===true){
+            } 
+            if(session.val().isDeleted===true){
                 this.props.complete();
             }
         });
