@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import SessionCancelLightbox from './SessionCancelLightbox';
 import SessionUtil from '../util/session';
 import $ from 'jquery';
-
 import './css/Session.css';
-
 import SessionFirebase from '../util/Database';
+
 var SessionUpdates = SessionFirebase.firebase.database();
 var Timer = SessionFirebase.firebase.database();
 
@@ -36,9 +35,40 @@ class Session extends Component {
 
     componentWillMount() {
         let table_set = localStorage.getItem('session-'+ this.props.sid + '-table');
-        if(this.props.activated===true && table_set!==null) table_set = table_set.split('-')[1];
-        else if(this.props.activated===true && this.props.table!==null) table_set = this.props.table;
-        else table_set = null
+        
+        if(this.props.activated===true && table_set!==null) {
+            table_set = table_set.split('-')[1];
+        } else if(this.props.activated===true && this.props.table!==null) {
+            table_set = this.props.table;
+        } else { 
+            table_set = null 
+        }
+
+        let amt = 0;
+        var timeNow;
+        Timer.ref('time').once('value', time => { timeNow = time.val() });
+
+        let device = this.props.device;
+        let duration = this.props.duration;
+
+        let timeElapsed = timeNow - (this.props.startTime!==null ? this.props.startTime : 0);
+        let timeRemain = ((this.props.duration - timeElapsed) > 0) ? (this.props.duration - timeElapsed) : 0;
+
+        if(this.props.activated) {
+            if(timeElapsed<5) {
+                amt = 10;
+            } else {
+                if(device==="iOS") {
+                    if(duration < 50 ) amt = 30;
+                    else amt = 40
+                } else if (device==="microUSB" || device==="USB-C") {
+                    if(duration < 50 ) amt = 20;
+                    else amt = 30
+                }
+            }
+        } else {
+            amt = 0;
+        }
 
         this.setState({
             sid: this.props.sid,
@@ -47,13 +77,14 @@ class Session extends Component {
             userphone: this.props.userphone,
             device: this.props.device,
             duration: this.props.duration,
-            timeRemain: this.props.duration,
+            timeRemain: timeRemain,
             startTime: this.props.startTime,
             activated: this.props.activated,
             expired: this.props.expired,
             otp: this.props.otp,
             dead: this.props.dead,
-            table: table_set
+            table: table_set,
+            amount: amt
         });
     }
 

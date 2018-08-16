@@ -84,8 +84,9 @@ class SessionsHolder extends Component {
                     this.state.sessions.length!==0 ? emptinessValue : <EmptySessions/>
                 }
                 {
-                    this.state.sessions.length!==0 ? (
-                        <div className="caution">
+                    this.state.sessions.length!==0 ? ( 
+                        !this.emptinessChecker() ? (
+                            <div className="caution">
                             <div className="caution-holder">
                                 <input id="collapse-toggle" type="checkbox" className="checkbox"/>
 
@@ -99,6 +100,7 @@ class SessionsHolder extends Component {
                                 <label htmlFor="collapse-toggle" className="collapse"><span></span></label>
                             </div>                    
                         </div>
+                        ) : console.log()
                     ) : console.log()
                 }
                 

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './css/Session.css';
 import SessionCancelLightbox from './SessionCancelLightbox';
-
 import SessionUtil from '../util/session';
 import SessionFirebase from '../util/Database';
+
+var SessionUpdates = SessionFirebase.firebase.database();
 var Timer = SessionFirebase.firebase.database();
 
 class Session extends Component {
@@ -25,38 +26,72 @@ class Session extends Component {
     }    
 
     componentWillMount() {
+        let amt = 0;
+        var timeNow;
+        Timer.ref('time').once('value', time => { timeNow = time.val() });
+
+        let device = this.props.device;
+        let duration = this.props.duration;
+
+        let timeElapsed = timeNow - (this.props.startTime!==null ? this.props.startTime : 0);
+        let timeRemain = ((this.props.duration - timeElapsed) > 0) ? (this.props.duration - timeElapsed) : 0;
+
+        if(this.props.activated) {
+            if(timeElapsed<5) {
+                amt = 10;
+            } else {
+                if(device==="iOS") {
+                    if(duration < 50 ) amt = 30;
+                    else amt = 40
+                } else if (device==="microUSB" || device==="USB-C") {
+                    if(duration < 50 ) amt = 20;
+                    else amt = 30
+                }
+            }
+        } else {
+            amt = 0;
+        }
+
         this.setState({
             sid: this.props.sid,
             mid: this.props.mid,
             device: this.props.device,
-            duration: this.props.duration,            
-            timeRemain: this.props.duration,
+            duration: this.props.duration,
+            timeRemain: timeRemain,
             startTime: this.props.startTime,
             activated: this.props.activated,
-            expired: this.props.expired
+            expired: this.props.expired,
+            amount: amt
         });
     }
 
     componentDidMount() {
-        SessionFirebase.firebase.database().ref().child('sessions').orderByChild('sid').equalTo(this.state.sid)
-        .once('child_changed', (session, prevChildKey)=>{
-            if(session.val().activated===true){
-                this.setState({
-                    startTime: session.val().startTime,
-                    activated: true
-                });
-                Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
-                this.CalculateAmount(this.state.duration - this.state.timeRemain);
-            } 
-            if(session.val().expired===true){
-                this.expire();
-            } 
-            if(session.val().isDeleted===true){
-                this.props.complete();
-            }
-        });
-
-        if(this.state.activated===true) Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
+        if(this.state.activated===true && this.state.expired===false){
+            Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
+        } else {
+            SessionUpdates.ref('sessions/session-' + this.state.sid).on('value', (session)=>{
+                let event;
+                if(session.val()!==null) event = session.child('status').val().split(' : ')[0];
+                if(event!==""){
+                    if(event==="ACTIVATED"){
+                        this.setState({
+                            activated : true,
+                            startTime: session.child('startTime').val()
+                        });
+                        Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
+                    } else if(event==="EXPIRED"){
+                        Timer.ref('time').off('value');
+                        this.setState({ timeRemain: 0, expired: true });
+                    } else if(event==="COMPLETED"){
+                        SessionUpdates.ref().off();
+                        this.props.complete();
+                    } else if(event==="CANCELLED"){
+                        SessionUpdates.ref().off();
+                        this.props.cancel();
+                    }
+                }
+            });
+        }
     }
 
     expire = () => {
@@ -64,7 +99,6 @@ class Session extends Component {
         this.CalculateAmount(this.state.duration - this.state.timeRemain);
         this.setState({
             expired: true,
-            // activated: false,
             timeRemain: 0
         });
     }
@@ -83,7 +117,6 @@ class Session extends Component {
                     if(res.cancelled===true){
                         this.setState({
                             expired: true,
-                            // activated : false,
                             timeRemain: 0
                         });
                     }
@@ -133,7 +166,7 @@ class Session extends Component {
         let duration = this.state.duration;
 
         if(activated) {
-            if(timeElapsed<=5) {
+            if(timeElapsed<5) {
                 amt = 10;
             } else {
                 if(device==="iOS") {
