@@ -64,7 +64,6 @@ class Session extends Component {
         this.CalculateAmount(this.state.duration - this.state.timeRemain);
         this.setState({
             expired: true,
-            activated : false,
             timeRemain: 0
         });
     }
@@ -75,14 +74,16 @@ class Session extends Component {
             if(this.state.timeRemain <= (this.state.duration - 5)){
                 alert("Session cannot be cancelled after more than 5 minutes of activation");
             } else {
-                this.setState({ activated : false });
                 Timer.ref('time').off('value');
                 this.CalculateAmount(this.state.duration - this.state.timeRemain);
                 SessionUtil.CancelActiveSession({
                     "sid": this.state.sid
                 }).then((res)=>{
                     if(res.cancelled===true){
-                        this.props.cancel();
+                        this.setState({
+                            expired: true,
+                            timeRemain: 0
+                        });
                     }
                 }).catch((err)=>{
                     alert(err);
