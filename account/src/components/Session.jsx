@@ -32,9 +32,14 @@ class Session extends Component {
 
         let device = this.props.device;
         let duration = this.props.duration;
-
+        let timeRemain;
         let timeElapsed = timeNow - (this.props.startTime!==null ? this.props.startTime : 0);
-        let timeRemain = ((this.props.duration - timeElapsed) > 0) ? (this.props.duration - timeElapsed) : 0;
+
+        if(this.props.activated) {
+            timeRemain = ((this.props.duration - timeElapsed) > 0) ? (this.props.duration - timeElapsed) : 0;
+        } else {
+            timeRemain = this.props.duration;
+        }
 
         if(this.props.activated) {
             if(timeElapsed<5) {
@@ -71,6 +76,7 @@ class Session extends Component {
         } else {
             SessionUpdates.ref('sessions/session-' + this.state.sid).on('value', (session)=>{
                 let event;
+                this.CalculateAmount();
                 if(session.val()!==null) event = session.child('status').val().split(' : ')[0];
                 if(event!==""){
                     if(event==="ACTIVATED"){
@@ -96,7 +102,7 @@ class Session extends Component {
 
     expire = () => {
         Timer.ref('time').off('value');
-        this.CalculateAmount(this.state.duration - this.state.timeRemain);
+        this.CalculateAmount();
         this.setState({
             expired: true,
             timeRemain: 0
@@ -110,7 +116,7 @@ class Session extends Component {
                 alert("Session cannot be cancelled after more than 5 minutes of activation");
             } else {
                 Timer.ref('time').off('value');
-                this.CalculateAmount(this.state.duration - this.state.timeRemain);
+                this.CalculateAmount();
                 SessionUtil.CancelActiveSession({
                     "sid": this.state.sid
                 }).then((res)=>{
@@ -148,7 +154,7 @@ class Session extends Component {
     TimingFunction = (time) => {
         let timeElapsed = time - this.state.startTime;
         let _timeRemain = this.state.duration - timeElapsed;
-        this.CalculateAmount(timeElapsed);
+        this.CalculateAmount();
         if(_timeRemain>0){
             this.setState({timeRemain: _timeRemain});
         } else {
@@ -158,15 +164,15 @@ class Session extends Component {
 
     //  ================================== AMOUNT CALCULATION ================================== //
 
-    CalculateAmount = (timeElapsed) => {
+    CalculateAmount = () => {
         let amt;
-
         let activated = this.state.activated;
         let device = this.state.device;
         let duration = this.state.duration;
+        let timeRemain = this.state.timeRemain;
 
         if(activated) {
-            if(timeElapsed<5) {
+            if(timeRemain > (duration-5) ) {
                 amt = 10;
             } else {
                 if(device==="iOS") {
