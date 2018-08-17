@@ -20,5 +20,8 @@
     "nodemon": "^1.17.5",
     "path": "^0.12.7",
     "vhost": "^3.0.2"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.1.5"
   }
 }
