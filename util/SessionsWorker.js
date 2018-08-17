@@ -2,6 +2,7 @@ const firebaseSessions = require('./Database');
 const SMSWorker = require('./SMSWorker');
 const SpreadsheetWorker = require('./SpreadsheetWorker');
 const ssConfig = require('../config.json');
+const SMSConfig = require('../config.json').smsService;
 
 var SessionsData = firebaseSessions.firebase.database();
 
@@ -33,7 +34,7 @@ exports.BookSession = function (params) {
                     "table" : null
                 });
                 
-                SMSWorker.SendSMSSessionOTP(otp, params.phone).then(()=>{
+                SMSWorker.SendSMSSessionOTP(otp, params.phone, SMSConfig.senders.otp).then(()=>{
                     resolve({
                         "success": true,
                         "sid" : sid,
