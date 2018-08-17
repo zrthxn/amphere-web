@@ -26,6 +26,6 @@ exports.SendSMSSessionOTP = (otp, phone, sender) => {
         
         req.write(qs.stringify({}));
         req.end();
-        resolve(result);
+        resolve();
     });
 }

@@ -8,7 +8,7 @@ exports.StartupScreen = function (info){
 
     if(info.ServerState==="NORMAL"){
         console.log(`\t    ---=== [INITIALIZING] : PORT ${info.PORT} ===---    `);
-    } else {
+    } else if(info.ServerState==="MAINT") {
         console.log("\t[UNABLE TO START] SORRY, This server is under maintainence!");
         console.log("\n- - - = = = [PROCESS TERMINATED] = = = - - -\n");
     }
