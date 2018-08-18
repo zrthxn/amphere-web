@@ -4,8 +4,9 @@ import SessionCancelLightbox from './SessionCancelLightbox';
 import SessionUtil from '../util/session';
 import SessionFirebase from '../util/Database';
 
-var SessionUpdates = SessionFirebase.firebase.database();
-var Timer = SessionFirebase.firebase.database();
+const SessionUpdates = SessionFirebase.firebase.database();
+const SessionTime = SessionFirebase.firebase.database();
+const Timer = SessionFirebase.firebase.database();
 
 class Session extends Component {
 
@@ -26,36 +27,19 @@ class Session extends Component {
     }    
 
     componentWillMount() {
-        let amt = 0;
-        var timeNow;
-        Timer.ref('time').once('value', time => { timeNow = time.val() });
-
-        let device = this.props.device;
-        let duration = this.props.duration;
+        let timeNow;
+        SessionTime.ref('time').once('value', time => { timeNow = time.val() });    
+        let timeElapsed = this.props.startTime!==null ? (timeNow - this.props.startTime) : 0;
         let timeRemain;
-        let timeElapsed = timeNow - (this.props.startTime!==null ? this.props.startTime : 0);
 
-        if(this.props.activated) {
-            timeRemain = ((this.props.duration - timeElapsed) > 0) ? (this.props.duration - timeElapsed) : 0;
+        if(this.props.activated===true) {
+            timeRemain = (this.props.duration - timeElapsed) > 0 ? (this.props.duration - timeElapsed) : 0;
         } else {
             timeRemain = this.props.duration;
         }
-
-        if(this.props.activated) {
-            if(timeElapsed<5) {
-                amt = 10;
-            } else {
-                if(device==="iOS") {
-                    if(duration < 50 ) amt = 30;
-                    else amt = 40
-                } else if (device==="microUSB" || device==="USB-C") {
-                    if(duration < 50 ) amt = 20;
-                    else amt = 30
-                }
-            }
-        } else {
-            amt = 0;
-        }
+        if(this.props.expired===true) {
+            timeRemain = 0;
+        } 
 
         this.setState({
             sid: this.props.sid,
@@ -66,7 +50,7 @@ class Session extends Component {
             startTime: this.props.startTime,
             activated: this.props.activated,
             expired: this.props.expired,
-            amount: amt
+            amount: this.props.amount
         });
     }
 
@@ -76,7 +60,6 @@ class Session extends Component {
         } else {
             SessionUpdates.ref('sessions/session-' + this.state.sid).on('value', (session)=>{
                 let event;
-                this.CalculateAmount();
                 if(session.val()!==null) event = session.child('status').val().split(' : ')[0];
                 if(event!==""){
                     if(event==="ACTIVATED"){
@@ -87,7 +70,7 @@ class Session extends Component {
                         Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
                     } else if(event==="EXPIRED"){
                         Timer.ref('time').off('value');
-                        this.setState({ timeRemain: 0, expired: true });
+                        this.setState({ timeRemain: 0, expired: true, amount: session.child('amount').val() });
                     } else if(event==="COMPLETED"){
                         SessionUpdates.ref().off();
                         this.props.complete();
@@ -102,10 +85,11 @@ class Session extends Component {
 
     expire = () => {
         Timer.ref('time').off('value');
-        this.CalculateAmount();
+        let amt = this.CalculateAmount();
         this.setState({
             expired: true,
-            timeRemain: 0
+            timeRemain: 0,
+            amount: amt
         });
     }
     
@@ -116,7 +100,6 @@ class Session extends Component {
                 alert("Session cannot be cancelled after more than 5 minutes of activation");
             } else {
                 Timer.ref('time').off('value');
-                this.CalculateAmount();
                 SessionUtil.CancelActiveSession({
                     "sid": this.state.sid
                 }).then((res)=>{
@@ -147,14 +130,16 @@ class Session extends Component {
         }
     }
 
-    cancelConfirmationDialog = (state) =>  this.setState({ cancelLightboxOpen: state });
+    cancelConfirmationDialog = (state) => {
+        this.CalculateAmount();
+        this.setState({ cancelLightboxOpen: state });
+    }
 
     //  ================================== SESSION TIMING FUNCTION ================================== //
         
     TimingFunction = (time) => {
         let timeElapsed = time - this.state.startTime;
         let _timeRemain = this.state.duration - timeElapsed;
-        this.CalculateAmount();
         if(_timeRemain>0){
             this.setState({timeRemain: _timeRemain});
         } else {
@@ -165,29 +150,22 @@ class Session extends Component {
     //  ================================== AMOUNT CALCULATION ================================== //
 
     CalculateAmount = () => {
-        let amt;
-        let activated = this.state.activated;
+        let amt = 10;
         let device = this.state.device;
         let duration = this.state.duration;
         let timeRemain = this.state.timeRemain;
 
-        if(activated) {
-            if(timeRemain > (duration-5) ) {
-                amt = 10;
-            } else {
-                if(device==="iOS") {
-                    if(duration < 50 ) amt = 30;
-                    else amt = 40
-                } else if (device==="microUSB" || device==="USB-C") {
-                    if(duration < 50 ) amt = 20;
-                    else amt = 30
-                }
+        if( timeRemain <= (duration-5) ) {
+            if(device==="iOS") {
+                if(duration < 50 ) amt = 30;
+                else amt = 40
+            } else if (device==="microUSB" || device==="USB-C") {
+                if(duration < 50 ) amt = 20;
+                else amt = 30
             }
-        } else {
-            amt = 0;
         }
 
-        this.setState({ amount : amt });
+        return amt;
     }
 
     render() {

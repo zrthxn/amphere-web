@@ -103,6 +103,7 @@ class SessionsHolder extends Component {
                         otp={this.state.sessions[index].otp}
                         dead={this.state.sessions[index].dead}
                         table={this.state.sessions[index].table}
+                        amount={this.state.sessions[index].amount}
                         key={index}
                         complete = {()=>{this.completeSession(index)}}
                         cancel = {() => this.cancelSession(index)}

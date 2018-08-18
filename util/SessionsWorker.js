@@ -31,7 +31,8 @@ exports.BookSession = function (params) {
                     "expired" : false,
                     "isDeleted" : false,
                     "status" : `BOOKED : ${getDateTime()}`,
-                    "table" : null
+                    "table" : null,
+                    "amount" : 10
                 });
                 
                 SMSWorker.SendSMSSessionOTP(otp, params.phone, SMSConfig.senders.otp).then(()=>{

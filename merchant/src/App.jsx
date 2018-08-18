@@ -45,11 +45,11 @@ class App extends Component {
           expired: session.val().expired,
           otp: session.val().otp,
           dead: session.val().dead,
-          table: session.val().table
+          table: session.val().table,
+          amount: session.val().amount
         });
         // payload.push(session.val());
         // payload = this.sortSessions(payload.slice());
-        
       }
     });
   }

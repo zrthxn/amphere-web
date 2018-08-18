@@ -40,7 +40,8 @@ class App extends Component {
           duration: session.val().duration,
           startTime: session.val().startTime,
           activated:session.val().activated,
-          expired: session.val().expired
+          expired: session.val().expired,
+          amount: session.val().amount
         });
       }
     });
