@@ -1,5 +1,5 @@
 const http = require('http');
-const file = require('fs');
+const fs = require('fs');
 const path = require('path');
 const handle = require('express-handlebars');
 const express = require('express');
@@ -584,7 +584,7 @@ function getParameters(request){
 }
 
 function getFile(filepath){
-	file.readFile(filepath, function(err, _file){
+	fs.readFile(filepath, function(err, _file){
 		if(err){
             return(err);
 		} else {
