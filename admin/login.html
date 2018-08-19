@@ -80,9 +80,11 @@
     }
 
     document.getElementById("reset").onclick = () => {
-        const logoutReq = new XMLHttpRequest();
-        logoutReq.open('POST', '/u/logout', true);
-        logoutReq.send();
+        if(window.sessionStorage.getItem('machine')!==null) {
+            const logoutReq = new XMLHttpRequest();
+            logoutReq.open('POST', '/u/logout', true);
+            logoutReq.send();
+        }
     }
 </script>
 
