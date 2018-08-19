@@ -80,7 +80,6 @@
     }
 
     document.getElementById("reset").onclick = () => {
-        window.sessionStorage.removeItem('machine');
         const logoutReq = new XMLHttpRequest();
         logoutReq.open('POST', '/u/logout', true);
         logoutReq.send();

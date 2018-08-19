@@ -443,7 +443,7 @@ admin.get('/u/login/p', (req,res)=>{
         if(params.id===JSON.parse(content).key.pvtkey && params.mac===JSON.parse(content).machine) {
             res.render('merchant', { title: 'Admin | Amphere Solutions' });
         }
-    });    
+    });
 });
 admin.post('/u/logout', (req,res)=>{
     fs.readFile('key.json', (err,content)=>{
