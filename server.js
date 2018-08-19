@@ -399,9 +399,10 @@ admin.engine('hbs', handle({
     ]
 }));
 
-admin.get('/QXJwaXRHdWpqYXJAMTIz', (req, res) => {
-    res.render('merchant', { title: 'Admin | Amphere Solutions' });
+admin.get('/', (req,res)=>{
+    res.sendFile(path.resolve(__dirname, 'admin', 'login.html'));
 });
+
 admin.post( '/addMerchant', (req, res)=>{
     let params = getParameters(req);
     if(params.phone!==null && params.mid!==null && params.password!==null) {    
@@ -417,29 +418,49 @@ admin.post( '/addMerchant', (req, res)=>{
         res.status(200).json({"state" : "FAILED"});
     }
 } );
-// admin.get('/login', (req, res) => {
-//     let params = getParameters(req);
-//     switch (params.q) {
-//         case 'verify' :
-//             const atob = require('atob');
-//             const pass = require('./admin.json').hash;
-//             const salt = require('./admin.json').salt;
-
-//             const hash = Hasher.generateHash(atob(params.vfypwd), salt);
-//             if ( pass === hash){
-//                 res.render('merchant', { title: 'Merchant Admin | Amphere Solutions' });
-//             } else {
-//                 res.status(400);
-//             }
-//             break;
-//         default: 
-//             res.render('index', { title: 'Admin | Amphere Solutions' });
-//             break;
-//     }
-// });
-// admin.get('/merch', (req, res) => {
-//     res.render('merchant', { title: 'Merchant Admin | Amphere Solutions' });
-// });
+admin.get('/u/verify', (req,res)=>{
+    let params = getParameters(req);
+    let key = generateKey(params.mac);
+    res.status(200).json({'key' : key});
+    res.end();
+});
+admin.post('/u/pass', (req,res)=>{
+    let params = {
+        password : Buffer.from( ((req.url.split('?')[1]).split('&')[0]).split('=')[1] , 'base64').toString('ascii'),
+        pubkey : ((req.url.split('?')[1]).split('&')[1]).split('=')[1]
+    }
+    fs.readFile('key.json', (err,content)=>{
+        if(err) return console.log("error");
+        if(params.password==="ArpitGujjar@123" && params.pubkey=== JSON.parse(content).key.pubkey) {
+            res.status(200).json({ 'pvtkey' : JSON.parse(content).key.pvtkey });
+        }
+    });
+});
+admin.get('/u/login/p', (req,res)=>{
+    let params = getParameters(req);
+    fs.readFile('key.json', (err,content)=>{
+        if(err) return console.log("error");
+        if(params.id===JSON.parse(content).key.pvtkey && params.mac===JSON.parse(content).machine) {
+            res.render('merchant', { title: 'Admin | Amphere Solutions' });
+        }
+    });    
+});
+admin.post('/u/logout', (req,res)=>{
+    fs.readFile('key.json', (err,content)=>{
+        if(err) return console.log("error");
+        let key = JSON.parse(content).key;
+        let machine = JSON.parse(content).machine;
+        fs.writeFile('key.json', JSON.stringify({
+            'key' : key,
+            'machine' : machine,
+            'lock' : false
+        }), (err) => {
+            if (err) return console.error(err);
+            res.status(200);
+            res.end();
+        });
+    });
+});
 //===================================================================//
 
 
@@ -518,6 +539,32 @@ http.createServer((request,response)=>{
 //------------------------------------------------------------------------------------------------------//
 // DIRECT UTILITY FUNCTIONS =================================================== DIRECT UTILITY FUNCTIONS//
 //------------------------------------------------------------------------------------------------------//
+
+function generateKey(mac) {
+    let pubkey = '', pvtkey = '';
+    for(var i=0 ; i<12 ; i++)
+        pubkey = pubkey + Math.floor(Math.random()*16).toString(16);
+    
+    for(var i=0 ; i<24 ; i++)
+        pvtkey = pvtkey + Math.floor(Math.random()*16).toString(16);
+    
+    fs.readFile('key.json', (err,content)=>{
+        if(err) return console.log("error");
+        if(JSON.parse(content).lock===false) {
+            fs.writeFile('key.json', JSON.stringify({
+                'key' : {
+                    'pubkey' : pubkey,
+                    'pvtkey' : pvtkey
+                },
+                'machine' : mac,
+                'lock' : true
+            }), (err) => {
+                if (err) return console.error(err);
+            });
+        }
+    });
+    return Buffer.from(pubkey).toString('base64');
+}
 
 function getParameters(request){
     url = request.url.split('?');

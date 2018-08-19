@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script> -->
+</head>
+<body>
+    <div class="login">
+        <div class="login-container">
+            <h1>LOGIN</h1>
+            <input id="pwd" type="text" placeholder="PASSWORD">
+            <button id="submit">LOGIN</button>
+        </div>
+    </div>
+</body>
+
+<style>
+    .login {
+        width: 75%;
+        max-width: 500px;
+        margin: auto;
+        height: fit-content;
+    }
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+    .login-container input {
+        padding: 1em;
+        border-radius: 10px;
+        border: 1px solid #000;
+    }
+    .login-container button {
+        padding: 1em;
+        margin: 1em;
+    }
+</style>
+
+<script>
+    let pwd = document.getElementById("pwd");
+    let macId = '';
+
+    window.onload = () => {
+        for(var i=0 ; i<12 ; i++)
+            macId = macId + Math.floor(Math.random()*10).toString(10);
+        window.sessionStorage.setItem('machine', macId);
+    }
+
+    document.getElementById("submit").onclick = () => {
+        const pubkeyReq = new XMLHttpRequest();
+        pubkeyReq.open('GET', `/u/verify?mac=${macId}`, true);
+        pubkeyReq.send();
+        pubkeyReq.onreadystatechange = () => {
+            if(pubkeyReq.readyState===4 && pubkeyReq.status===200){
+                let pubkey = atob(JSON.parse(pubkeyReq.response).key);
+
+                const loginReq = new XMLHttpRequest();
+                let query = "pwd=" + btoa(pwd.value) + '&' + "pubkey=" + pubkey;
+
+                loginReq.open('POST', `/u/pass?${query}`, true);
+                loginReq.send();
+                loginReq.onreadystatechange = () => {
+                    if(loginReq.readyState===4 && loginReq.status===200){
+                        let pagekey = JSON.parse(loginReq.response).pvtkey;
+                        let machineId = window.sessionStorage.getItem('machine');
+                        
+                        window.location = '/u/login/p?id=' + pagekey + '&mac=' + machineId;
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+</html>

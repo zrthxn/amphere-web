@@ -4,6 +4,8 @@
         <h1>Merchant Addition</h1>
         <p>Add merchants here</p>
 
+        <button id="logout">LOGOUT</button>
+
         <input id="_name" type="text" placeholder="Name"><br>
         <input id="phone" type="text" placeholder="Phone"><br>
         <input id="mid" type="text" placeholder="Merchant Code"><br>
@@ -20,6 +22,23 @@
 
     </div>
 </div>
+
+<script>
+    window.onload = () => {
+        if(window.sessionStorage.getItem('machine')===null) {
+            window.location = '/';
+        }
+    }
+
+    document.getElementById("logout").onclick = () => {
+        window.sessionStorage.removeItem('machine');
+        const logoutReq = new XMLHttpRequest();
+        logoutReq.open('POST', '/u/logout', true);
+        logoutReq.send();
+
+        window.location = '/';
+    }
+</script>
 
 <script>
     var _name = document.getElementById("_name");
