@@ -448,11 +448,12 @@ admin.get('/u/login/p', (req,res)=>{
 admin.post('/u/logout', (req,res)=>{
     fs.readFile('key.json', (err,content)=>{
         if(err) return console.log("error");
-        let key = JSON.parse(content).key;
-        let machine = JSON.parse(content).machine;
         fs.writeFile('key.json', JSON.stringify({
-            'key' : key,
-            'machine' : machine,
+            'key' : {
+                'pubkey' : '',
+                'pvtkey' : ''
+            },
+            'machine' : '',
             'lock' : false
         }), (err) => {
             if (err) return console.error(err);
