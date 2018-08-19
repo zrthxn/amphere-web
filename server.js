@@ -432,18 +432,6 @@ admin.post('/u/pass', (req,res)=>{
     fs.readFile('key.json', (err,content)=>{
         if(err) return console.log("error");
         if(params.password==="ArpitGujjar@123" && params.pubkey=== JSON.parse(content).key.pubkey) {
-            fs.readFile('key.json', (err,content)=>{
-                if(err) return console.log("error");
-                let key = JSON.parse(content).key;
-                let mac = JSON.parse(content).machine;
-                    fs.writeFile('key.json', JSON.stringify({
-                        'key' : key,
-                        'machine' : mac,
-                        'lock' : false
-                    }), (err) => {
-                        if (err) return console.error(err);
-                    });
-            });
             res.status(200).json({ 'pvtkey' : JSON.parse(content).key.pvtkey });
         }
     });
@@ -569,7 +557,7 @@ function generateKey(mac) {
                     'pvtkey' : pvtkey
                 },
                 'machine' : mac,
-                'lock' : false
+                'lock' : true
             }), (err) => {
                 if (err) return console.error(err);
             });

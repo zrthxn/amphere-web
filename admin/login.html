@@ -15,6 +15,7 @@
             <h1>LOGIN</h1>
             <input id="pwd" type="text" placeholder="PASSWORD">
             <button id="submit">LOGIN</button>
+            <button id="reset">RESET</button>
         </div>
     </div>
 </body>
@@ -37,6 +38,7 @@
         border: 1px solid #000;
     }
     .login-container button {
+        width: fit-content;
         padding: 1em;
         margin: 1em;
     }
@@ -75,6 +77,13 @@
                 }
             }
         }
+    }
+
+    document.getElementById("reset").onclick = () => {
+        window.sessionStorage.removeItem('machine');
+        const logoutReq = new XMLHttpRequest();
+        logoutReq.open('POST', '/u/logout', true);
+        logoutReq.send();
     }
 </script>
 
