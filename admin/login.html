@@ -79,9 +79,13 @@
         loginReq.send();
         loginReq.onreadystatechange = () => {
             if(loginReq.readyState===4 && loginReq.status===200){
-                let pid = JSON.parse(loginReq.response).pid;     
-                window.sessionStorage.setItem('amp-admin-pvt', pid);           
-                window.location = '/u/login/p?id=' + pid + '&mac=' + mac;
+                if(JSON.parse(loginReq.response).verify===true) {
+                    let pid = JSON.parse(loginReq.response).pid;     
+                    window.sessionStorage.setItem('amp-admin-pvt', pid);           
+                    window.location = '/u/login/p?id=' + pid + '&mac=' + mac;
+                } else {
+                    alert("Incorrect Password");
+                }
             }
         }
     }

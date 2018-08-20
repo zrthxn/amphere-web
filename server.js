@@ -10,6 +10,7 @@ const ServerState = ServerConfig.ServerState;
 const PORT = process.env.PORT || ServerConfig.PORT
 const SpreadsheetWorker = require('./util/SpreadsheetWorker');
 const ssConfig = require('./config.json');
+const AdminPassword = require('./config.json').AdminPassword;
 
 const amphere = express();          
 const homepage = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
@@ -415,8 +416,10 @@ admin.post('/u/login', (req,res)=>{
     }
     fs.readFile('admin-access-keys/key-'+ params.mac +'.json', (err,content)=>{
         if(err) return console.log("error");
-        if(params.password===AdminConfig.password && params.pubkey=== JSON.parse(content).key.pubkey) {
-            res.status(200).json({'pid' : JSON.parse(content).key.pvtkey});
+        if(Hasher.generateHash(params.password, "")===AdminPassword && params.pubkey=== JSON.parse(content).key.pubkey) {
+            res.status(200).json({'verify': true, 'pid' : JSON.parse(content).key.pvtkey});
+        } else {
+            res.status(200).json({'verify' : false});
         }
     });
 });

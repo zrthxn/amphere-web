@@ -2,7 +2,7 @@
     "PORT" : "9000",
     "ServerState" : "NORMAL",
     "data_mode" : "TESTING",
-    "other_data" : "data",
+    "AdminPassword" : "3935852410b526f22b13567cab404e2a87e1146be51de75c0f117c2ccd7e1b2303616bd586a2f87489b102b87dba99bbaa84d41b74991c2d0aa2825365d21c14",
     "spreadsheets" : {
         "records" : "1BzIv7vu_GJ1kyBVajo29S2_d5KvbYiHQyowhd3FOgwI",
         "onboarding" : "11AuCs9gFL6C9EtonF_nZ-zznchi4cvjSeZNhdyejq4c",
