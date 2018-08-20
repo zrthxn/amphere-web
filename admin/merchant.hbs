@@ -79,7 +79,7 @@
             `mid=${encodeURI(mid.value)}&` +
             `password=${encodeURI(password.value)}`;
 
-            request.open('POST', `/addMerchant?${url}`, true);
+            request.open('POST', `/u/addMerchant?${url}`, true);
             request.send();
 
             request.onreadystatechange = e => {

@@ -457,6 +457,21 @@ admin.post('/u/logout', (req,res)=>{
     });
     res.sendStatus(200);
 });
+admin.post( '/u/addMerchant', (req, res)=>{
+    let params = getParameters(req);
+    if(params.phone!==null && params.mid!==null && params.password!==null) {    
+        Admin.AddMerchant({
+            "name": decodeURI(params.name),
+            "phone": decodeURI(params.phone),
+            "mid": decodeURI(params.mid),
+            "password": decodeURI(params.password)
+        }).then((_res)=>{
+            res.status(200).json({"state" : "SUCCESS"});
+        });
+    } else {
+        res.status(200).json({"state" : "FAILED"});
+    }
+} );
 
 //===================================================================//
 
