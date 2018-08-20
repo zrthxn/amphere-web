@@ -12,10 +12,9 @@
 <body>
     <div class="login">
         <div class="login-container">
-            <h1>LOGIN</h1>
+            <h1>ADMIN LOGIN</h1>
             <input id="pwd" type="text" placeholder="PASSWORD">
             <button id="submit">LOGIN</button>
-            <button id="reset">RESET</button>
         </div>
     </div>
 </body>
@@ -30,60 +29,60 @@
     .login-container {
         display: flex;
         flex-direction: column;
+        justify-items: center;
         text-align: center;
     }
     .login-container input {
         padding: 1em;
         border-radius: 10px;
         border: 1px solid #000;
+        margin: 1em;
     }
     .login-container button {
         width: fit-content;
         padding: 1em;
-        margin: 1em;
+        margin: auto;
     }
 </style>
 
 <script>
     let pwd = document.getElementById("pwd");
-    let macId = '';
+    let mac = '';
 
     window.onload = () => {
-        for(var i=0 ; i<12 ; i++)
-            macId = macId + Math.floor(Math.random()*10).toString(10);
-        window.sessionStorage.setItem('machine', macId);
-    }
-
-    document.getElementById("submit").onclick = () => {
+        if(window.localStorage.getItem('amp-admin-mac')!==null) {
+            mac = window.localStorage.getItem('amp-admin-mac');
+        } else {
+            for(var i=0 ; i<12 ; i++)
+                mac = mac + Math.floor(Math.random()*10).toString(10);
+            window.localStorage.setItem('amp-admin-mac', mac);
+        }
         const pubkeyReq = new XMLHttpRequest();
-        pubkeyReq.open('GET', `/u/verify?mac=${macId}`, true);
+        pubkeyReq.open('GET', `/u/keygen?mac=${mac}`, true);
         pubkeyReq.send();
         pubkeyReq.onreadystatechange = () => {
             if(pubkeyReq.readyState===4 && pubkeyReq.status===200){
-                let pubkey = atob(JSON.parse(pubkeyReq.response).key);
-
-                const loginReq = new XMLHttpRequest();
-                let query = "pwd=" + btoa(pwd.value) + '&' + "pubkey=" + pubkey;
-
-                loginReq.open('POST', `/u/pass?${query}`, true);
-                loginReq.send();
-                loginReq.onreadystatechange = () => {
-                    if(loginReq.readyState===4 && loginReq.status===200){
-                        let pagekey = JSON.parse(loginReq.response).pvtkey;
-                        let machineId = window.sessionStorage.getItem('machine');
-                        
-                        window.location = '/u/login/p?id=' + pagekey + '&mac=' + machineId;
-                    }
-                }
+                let pubkey = JSON.parse(pubkeyReq.response).pubkey;
+                window.sessionStorage.setItem('amp-admin-pub', pubkey);
             }
         }
     }
 
-    document.getElementById("reset").onclick = () => {
-        if(window.sessionStorage.getItem('machine')!==null) {
-            const logoutReq = new XMLHttpRequest();
-            logoutReq.open('POST', '/u/logout', true);
-            logoutReq.send();
+    document.getElementById("submit").onclick = () => {
+        let pubkey = window.sessionStorage.getItem('amp-admin-pub');
+        let mac = window.localStorage.getItem('amp-admin-mac');
+
+        const loginReq = new XMLHttpRequest();
+        let query = 'pwd=' + btoa(pwd.value) + '&pubkey=' + pubkey + '&mac=' + mac;
+
+        loginReq.open('POST', `/u/login?${query}`, true);
+        loginReq.send();
+        loginReq.onreadystatechange = () => {
+            if(loginReq.readyState===4 && loginReq.status===200){
+                let pid = JSON.parse(loginReq.response).pid;     
+                window.sessionStorage.setItem('amp-admin-pvt', pid);           
+                window.location = '/u/login/p?id=' + pid + '&mac=' + mac;
+            }
         }
     }
 </script>

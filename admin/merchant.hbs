@@ -25,15 +25,39 @@
 
 <script>
     window.onload = () => {
-        if(window.sessionStorage.getItem('machine')===null) {
+        if(window.localStorage.getItem('amp-admin-mac')!==null && window.sessionStorage.getItem('amp-admin-pvt')!==null) {
+            let mac = window.localStorage.getItem('amp-admin-mac');
+            let pvt = window.sessionStorage.getItem('amp-admin-pvt');
+            
+            const pageReq = new XMLHttpRequest();
+            let url = 'pvt=' + pvt + '&mac=' + mac;
+            pageReq.open('POST', `/u/login/p?${url}`, true);
+            pageReq.send();
+            pageReq.onreadystatechange = () => {
+                if(pageReq.readyState===4 && pageReq.status===200) {
+                    let pageRes = JSON.parse(pageReq.response).verify;
+                    if(pageRes) {
+                        // correct ID
+                    } else {
+                        // wrong ID
+                        window.location = '/';
+                    }
+                }
+            }
+        } else {
             window.location = '/';
         }
     }
 
     document.getElementById("logout").onclick = () => {
-        window.sessionStorage.removeItem('machine');
+        let mac = window.localStorage.getItem('amp-admin-mac');
+        let index = window.sessionStorage.getItem('amp-admin-index');
+
+        window.sessionStorage.removeItem('amp-admin-pvt');
+        window.sessionStorage.removeItem('amp-admin-pub');
+
         const logoutReq = new XMLHttpRequest();
-        logoutReq.open('POST', '/u/logout', true);
+        logoutReq.open('POST', '/u/logout?mac=' + mac, true);
         logoutReq.send();
 
         window.location = '/';

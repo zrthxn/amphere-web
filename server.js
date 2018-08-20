@@ -402,66 +402,59 @@ admin.engine('hbs', handle({
 admin.get('/', (req,res)=>{
     res.sendFile(path.resolve(__dirname, 'admin', 'login.html'));
 });
-
-admin.post( '/addMerchant', (req, res)=>{
+admin.get('/u/keygen', (req,res)=>{
     let params = getParameters(req);
-    if(params.phone!==null && params.mid!==null && params.password!==null) {    
-        Admin.AddMerchant({
-            "name": decodeURI(params.name),
-            "phone": decodeURI(params.phone),
-            "mid": decodeURI(params.mid),
-            "password": decodeURI(params.password)
-        }).then((_res)=>{
-            res.status(200).json({"state" : "SUCCESS"});
-        });
-    } else {
-        res.status(200).json({"state" : "FAILED"});
-    }
-} );
-admin.get('/u/verify', (req,res)=>{
-    let params = getParameters(req);
-    let key = generateKey(params.mac);
-    res.status(200).json({'key' : key});
-    res.end();
+    let pubkey = generateKey(params.mac);
+    res.status(200).json({'pubkey' : pubkey, });
 });
-admin.post('/u/pass', (req,res)=>{
+admin.post('/u/login', (req,res)=>{
     let params = {
         password : Buffer.from( ((req.url.split('?')[1]).split('&')[0]).split('=')[1] , 'base64').toString('ascii'),
-        pubkey : ((req.url.split('?')[1]).split('&')[1]).split('=')[1]
+        pubkey : ((req.url.split('?')[1]).split('&')[1]).split('=')[1],
+        mac : ((req.url.split('?')[1]).split('&')[2]).split('=')[1]
     }
-    fs.readFile('key.json', (err,content)=>{
+    fs.readFile('admin-access-keys/key-'+ params.mac +'.json', (err,content)=>{
         if(err) return console.log("error");
-        if(params.password==="ArpitGujjar@123" && params.pubkey=== JSON.parse(content).key.pubkey) {
-            res.status(200).json({ 'pvtkey' : JSON.parse(content).key.pvtkey });
+        if(params.password===AdminConfig.password && params.pubkey=== JSON.parse(content).key.pubkey) {
+            res.status(200).json({'pid' : JSON.parse(content).key.pvtkey});
         }
     });
 });
 admin.get('/u/login/p', (req,res)=>{
     let params = getParameters(req);
-    fs.readFile('key.json', (err,content)=>{
+    fs.readFile('admin-access-keys/key-'+ params.mac +'.json', (err,content)=>{
         if(err) return console.log("error");
-        if(params.id===JSON.parse(content).key.pvtkey && params.mac===JSON.parse(content).machine) {
+        if(params.id=== JSON.parse(content).key.pvtkey) {
+            // ACCOUNT/PRIVATE PAGE HERE
             res.render('merchant', { title: 'Admin | Amphere Solutions' });
         }
     });
 });
-admin.post('/u/logout', (req,res)=>{
-    fs.readFile('key.json', (err,content)=>{
+admin.post('/u/login/p', (req,res)=>{
+    let params = getParameters(req);
+    fs.readFile('admin-access-keys/key-'+ params.mac +'.json', (err,content)=>{
         if(err) return console.log("error");
-        fs.writeFile('key.json', JSON.stringify({
-            'key' : {
-                'pubkey' : '',
-                'pvtkey' : ''
-            },
-            'machine' : '',
-            'lock' : false
-        }), (err) => {
-            if (err) return console.error(err);
-            res.status(200);
-            res.end();
-        });
+        if(params.pvt=== JSON.parse(content).key.pvtkey) {
+            res.status(200).json({'verify' : true});
+        } else {
+            res.status(200).json({'verify' : false});
+        }
     });
 });
+admin.post('/u/logout', (req,res)=>{
+    let params = getParameters(req);
+    fs.writeFile('admin-access-keys/key-'+ params.mac +'.json', JSON.stringify({
+        'key' : {
+            'pubkey' : '',
+            'pvtkey' : ''
+        },
+        'mac' : ''
+    }), (e) => {
+        if (e) return console.error(e);
+    });
+    res.sendStatus(200);
+});
+
 //===================================================================//
 
 
@@ -549,22 +542,23 @@ function generateKey(mac) {
     for(var i=0 ; i<24 ; i++)
         pvtkey = pvtkey + Math.floor(Math.random()*16).toString(16);
     
-    fs.readFile('key.json', (err,content)=>{
-        if(err) return console.log("error");
-        if(JSON.parse(content).lock===false) {
-            fs.writeFile('key.json', JSON.stringify({
-                'key' : {
-                    'pubkey' : pubkey,
-                    'pvtkey' : pvtkey
-                },
-                'machine' : mac,
-                'lock' : true
-            }), (err) => {
-                if (err) return console.error(err);
-            });
+    fs.readFile('admin-access-keys/key-'+ mac +'.json', (err,content)=>{
+        if(err) {
+
+        } else {
+            // EMAIL to admin => 'Access from new machine';
         }
-    });
-    return Buffer.from(pubkey).toString('base64');
+        fs.writeFile('admin-access-keys/key-'+ mac +'.json', JSON.stringify({
+            'key' : {
+                'pubkey' : pubkey,
+                'pvtkey' : pvtkey
+            },
+            'mac' : mac
+        }), (e) => {
+            if (e) return console.error(e);
+        });
+    });    
+    return pubkey;
 }
 
 function getParameters(request){
