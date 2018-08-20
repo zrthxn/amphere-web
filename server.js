@@ -416,7 +416,7 @@ admin.post('/u/login', (req,res)=>{
     }
     fs.readFile('admin-access-keys/key-'+ params.mac +'.json', (err,content)=>{
         if(err) return console.log("error");
-        if(Hasher.generateHash(params.password, "")===AdminPassword && params.pubkey=== JSON.parse(content).key.pubkey) {
+        if(Hasher.generateHash(params.password, AdminPassword.salt)===AdminPassword.pwd && params.pubkey=== JSON.parse(content).key.pubkey) {
             res.status(200).json({'verify': true, 'pid' : JSON.parse(content).key.pvtkey});
         } else {
             res.status(200).json({'verify' : false});
