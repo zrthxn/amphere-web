@@ -23,12 +23,30 @@
     </div>
 </div>
 
+<!-- =================================================================================================-->
+<!--@adil-->
+<div style="height:5px;background-color:black;"></div>
+<div class="coupans-admin">
+      <div class="coupans-generate">
+          <h1>Coupans Generation</h1>
+          <h2>Click on the button to generate coupans</h2>
+          <input type="text" class="textbox" id="count" placeholder="Number of Coupans"><br>
+          <input type="text" class="textbox" id="length" placeholder="Length of Coupans"><br>
+          <input type="text" class="textbox" id="pattern" placeholder="Pattern 1111-1111 in accordance with length"><br>
+          <button id="coupans-button">Generate</button>
+      </div>
+      <div class="coupans" id="coupans-check">
+
+      </div>
+</div>
+<!-- =================================================================================================-->
+
 <script>
     window.onload = () => {
         if(window.localStorage.getItem('amp-admin-mac')!==null && window.sessionStorage.getItem('amp-admin-pvt')!==null) {
             let mac = window.localStorage.getItem('amp-admin-mac');
             let pvt = window.sessionStorage.getItem('amp-admin-pvt');
-            
+
             const pageReq = new XMLHttpRequest();
             let url = 'pvt=' + pvt + '&mac=' + mac;
             pageReq.open('POST', `/u/login/p?${url}`, true);
@@ -112,7 +130,7 @@
                 document.getElementById("status").innerHTML = "Add a merchant";
                 document.getElementById("ok").hidden = true;
             }
-        }        
+        }
         return false;
     }
 
@@ -124,6 +142,40 @@
     }
 
 </script>
+
+<!-- =================================================================================================-->
+<!--@adil-->
+<script>
+  var count = document.getElementById("count");
+  var len = document.getElementById("length");
+  var pattern = document.getElementById("pattern");
+
+  document.getElementById('coupans-button').onclick = function()
+  {
+      const genReq = new XMLHttpRequest();
+      genReq.open('GET',`/u/coupans?len=${len.value}&count=${count.value}&pattern=${pattern.value}`,true);
+      genReq.send();
+
+      genReq.onreadystatechange = () => {
+          if(genReq.readyState === 4 && genReq.status === 200){
+              let gen = JSON.parse(genReq.response);
+              if (gen.state === "SUCCESS")
+              {
+                  var coupans = gen.coupans;
+                  for(var i=0;i<coupans.length;i++)
+                  {
+                      var div = document.createElement('div');
+                      var text = document.createTextNode(coupans[i]);
+                      div.appendChild(text);
+                      document.getElementById('coupans-check').appendChild(div);
+                  }
+              }
+          }
+      }
+  }
+</script>
+<!-- =================================================================================================-->
+
 
 <style>
     .merchant-form {
@@ -156,5 +208,31 @@
         margin: 1em;
         flex-direction: row;
     }
-</style>
 
+/*=================================================================================================--*/
+/*@adil*/
+    .coupans-admin
+    {
+
+    }
+    .coupans-generate
+    {
+        padding: 2em;
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+    }
+    .coupans
+    {
+        padding: 2em;
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+    }
+    .coupans div
+    {
+        margin: 2% 0%;
+        font-size: 30px;
+    }
+/*=================================================================================================--*/
+</style>
