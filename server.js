@@ -477,8 +477,8 @@ admin.post( '/u/addMerchant', (req, res)=>{
 //-------------------------------------------------------------------//
 //author @adil
 admin.get('/u/coupans',(req,res)=>{
-    CoupanWorker.generateCoupans(req.query).then(_res =>{
-        console.log(_res);
+  let params = getParameters(req);
+    CoupanWorker.generateCoupans(params).then(_res =>{
         if(_res.success === true)
         {
             res.status(200).json({

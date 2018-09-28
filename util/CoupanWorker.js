@@ -1,14 +1,15 @@
 //author @adil
 
 const firebase = require('./Database');
-const voucher_codes = require('voucher-code-generator');
+const voucher_codes = require('voucher-code-generator');  //install voucher-code-generator
 
 exports.generateCoupans = function(params)
 {
     var len = params.len;
     var count = params.count;
     var pattern = params.pattern;
-    pattern = pattern.replace(/1/g,'#');
+
+    //pattern = pattern.replace(/1/g,'#');
 
     const cpn_db = firebase.firebase.database();
     var coupans;
@@ -18,7 +19,7 @@ exports.generateCoupans = function(params)
             length:len,
             count:count,
             prefix:"AMP-",
-            pattern: pattern,
+            pattern: '####-####',
             charset:"0123456789ABCDEFGHIJKLMNOPQRSTUVXYZ"
         });
         for(var i =0;i<count;i++)
@@ -50,7 +51,6 @@ exports.validateCoupan = function(params)
         cpn_db.ref().child('coupans').orderByChild('code').equalTo(promoCode).limitToFirst(1).once('value').then((coupans)=>{
             if (coupans.val()!==null)
             {
-
                 var coupan = coupans.val();
                 var key;
                 for(var field in coupan){
