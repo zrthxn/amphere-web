@@ -25,6 +25,7 @@ const MerchantWorker = require('./util/MerchantWorker');
 const ConsoleScreen = require('./util/ConsoleScreen');
 const Hasher = require('./util/PasswordHasher');
 const Admin = require('./util/Admin');
+const CoupanWorker = require('./util/CoupanWorker');
 
 //------------------------------------------------------------------------------------------------------//
 // S E R V E R ============================== E X P R E S S =============================== S E R V E R //
