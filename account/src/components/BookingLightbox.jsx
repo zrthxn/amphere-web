@@ -33,7 +33,7 @@ class BookingLightbox extends Component {
         let set = 0;
         if(_value===1) set = 42;
         else if(_value===2) set = 62;
-        
+
         this.setState({ duration: set });
     }
 
@@ -106,7 +106,7 @@ class BookingLightbox extends Component {
                 <button className="cross-button" onClick={this.closeLightbox.bind(this)}></button>
                     <div className="session-settings-holder">
                         <h2 className="lightbox-title">NEW SESSION</h2>
-                        
+
                         <div className="location">
                             <div className="location-code">
                                 <input id="location-code" required className="textbox" placeholder="Enter Location Code" onChange={(event)=>{this.locCodeValidator(event)}}/>
@@ -142,28 +142,28 @@ class BookingLightbox extends Component {
                         </div>
 
                         <div className="promo-holder">
-                            <input id="promo-code" 
+                            <input id="promo-code"
                                 required="true"
-                                className="textbox-small" 
+                                className="textbox-small"
                                 placeholder="Promo Code (Optional)"
                                 onChange={this.promoValidator}/>
                         </div>
 
-                        <p className="info">After booking the session, you will receive 
+                        <p className="info">After booking the session, you will receive
                         an SMS with your OTP in it. Supply it to the restaurant’s staff.
                         </p>
 
                         {
                             (this.state.locCodeValid) ? (
-                                <button className="confirm-session-button" 
+                                <button className="confirm-session-button"
                                         onClick={this.confirmSession}>CONFIRM SESSION</button>
                             ) : (
-                                <button className="confirm-session-button button-disabled" 
-                                        onClick={this.confirmSession} 
+                                <button className="confirm-session-button button-disabled"
+                                        onClick={this.confirmSession}
                                         disabled>CONFIRM SESSION</button>
                             )
                         }
-                    </div>                        
+                    </div>
                 </div>
             </div>
         );

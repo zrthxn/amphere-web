@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const handle = require('express-handlebars');
 const express = require('express');
-const vhost = require('vhost');   
+const vhost = require('vhost');
 
 const ServerConfig = require('./config.json');
 const ServerState = ServerConfig.ServerState;
@@ -12,7 +12,7 @@ const SpreadsheetWorker = require('./util/SpreadsheetWorker');
 const ssConfig = require('./config.json');
 const AdminPassword = require('./config.json').AdminPassword;
 
-const amphere = express();          
+const amphere = express();
 const homepage = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
 const account = express();          // EXPRESS FOR MULTIPLE SUBDOMAINS
 const merchant = express();         // EXPRESS FOR MULTIPLE SUBDOMAINS
@@ -40,8 +40,8 @@ amphere.listen(PORT, () => {
 homepage.set('views', path.join(__dirname, 'homepage'));
 homepage.set('view engine', 'hbs');
 homepage.engine('hbs', handle({
-    defaultLayout: 'main', 
-    extname: 'hbs', 
+    defaultLayout: 'main',
+    extname: 'hbs',
     layoutsDir: __dirname + '/homepage/layouts',
     partialsDir  : [
         __dirname + '/homepage/partials',
@@ -75,12 +75,12 @@ homepage.get('/contact', (req,res)=> {
     let params = getParameters(req);
     switch(params.q) {
         case 'completion':
-            res.render('contact', { 
+            res.render('contact', {
                 title: 'About Us | Amphere Solutions',
                 completion: true
             });
             break;
-        default: 
+        default:
             res.render('contact', { title: 'About Us | Amphere Solutions' });
             break;
     }
@@ -99,7 +99,7 @@ homepage.post('/contact', (req,res)=> {
                 ]
             });
             res.status(200);
-        default: 
+        default:
             res.render('contact', { title: 'About Us | Amphere Solutions' });
             break;
     }
@@ -108,7 +108,7 @@ homepage.get('/partner', (req,res)=> {
     let params = getParameters(req);
     switch(params.q) {
         case 'onboard':
-            res.render('onboarding', { 
+            res.render('onboarding', {
                 title: 'Partner | Amphere Solutions',
                 onboarding: true
             });
@@ -138,7 +138,7 @@ homepage.get('/join', (req, res) => {
 homepage.get('/support', (req, res) => {
     let params = getParameters(req);
     switch(params.q){
-        default: 
+        default:
             res.sendFile(path.resolve(__dirname, 'homepage', 'LEGACY', 'support.html'));
             break;
     }
@@ -148,7 +148,7 @@ homepage.get('/support', (req, res) => {
 //     switch(params.q){
 //         case 'damage':
 //         case 'refunds':
-//         default: 
+//         default:
 //             res.sendFile(path.resolve(__dirname, 'homepage', 'userterms.html'));
 //             break;
 //     }
@@ -191,7 +191,7 @@ homepage.post('/signupWorker', (req, res) => {
 
 
 //===================================================================//
-//----------------------------- ACCOUNT -----------------------------// 
+//----------------------------- ACCOUNT -----------------------------//
 
 account.get((req, res) => {
     res.sendFile(path.resolve(__dirname, 'account/build', 'index.html'));
@@ -392,8 +392,8 @@ merchant.post('/merchantCompleteSession', (req, res)=> {
 admin.set('views', path.join(__dirname, 'admin'));
 admin.set('view engine', 'hbs');
 admin.engine('hbs', handle({
-    defaultLayout: 'main', 
-    extname: 'hbs', 
+    defaultLayout: 'main',
+    extname: 'hbs',
     layoutsDir: __dirname + '/admin/layouts',
     partialsDir  : [
         __dirname + '/admin/partials',
@@ -459,7 +459,7 @@ admin.post('/u/logout', (req,res)=>{
 });
 admin.post( '/u/addMerchant', (req, res)=>{
     let params = getParameters(req);
-    if(params.phone!==null && params.mid!==null && params.password!==null) {    
+    if(params.phone!==null && params.mid!==null && params.password!==null) {
         Admin.AddMerchant({
             "name": decodeURI(params.name),
             "phone": decodeURI(params.phone),
@@ -472,6 +472,26 @@ admin.post( '/u/addMerchant', (req, res)=>{
         res.status(200).json({"state" : "FAILED"});
     }
 } );
+
+//-------------------------------------------------------------------//
+//author @adil
+admin.get('/u/coupans',(req,res)=>{
+    CoupanWorker.generateCoupans(req.query).then(_res =>{
+        console.log(_res);
+        if(_res.success === true)
+        {
+            res.status(200).json({
+                "state":"SUCCESS",
+                "coupans":_res.coupans
+            });
+        }
+        else{
+            res.status(200).json({"state" : "ERROR"});
+        }
+    });
+});
+//-------------------------------------------------------------------//
+
 
 //===================================================================//
 
@@ -489,21 +509,21 @@ amphere.use(vhost('admin.amphere.in', admin));
 // S E R V E R =============================== L E G A C Y ================================ S E R V E R //
 //------------------------------------------------------------------------------------------------------//
 /*
-http.createServer((request,response)=>{                                                        
+http.createServer((request,response)=>{
     params = _params(request);
     //console.log(`Request => \n\taction : ${params.action}`);
     //console.log(`Request => ${JSON.stringify(params)}`);
-	
+
 	switch(params.action){
-        case '/': 
+        case '/':
             getFile(response, 'homepage/index.html', 'text/html');
             break;
 
-        case '/about': 
+        case '/about':
             getFile(response, 'homepage/about.html', 'text/html');
             break;
-        
-        case '/contact': 
+
+        case '/contact':
             getFile(response, 'homepage/contact.html', 'text/html');
             break;
 
@@ -556,10 +576,10 @@ function generateKey(mac) {
     let pubkey = '', pvtkey = '';
     for(var i=0 ; i<12 ; i++)
         pubkey = pubkey + Math.floor(Math.random()*16).toString(16);
-    
+
     for(var i=0 ; i<24 ; i++)
         pvtkey = pvtkey + Math.floor(Math.random()*16).toString(16);
-    
+
     fs.readFile('admin-access-keys/key-'+ mac +'.json', (err,content)=>{
         if(err) {
 
@@ -575,7 +595,7 @@ function generateKey(mac) {
         }), (e) => {
             if (e) return console.error(e);
         });
-    });    
+    });
     return pubkey;
 }
 
@@ -611,7 +631,7 @@ function getObjects(obj, key, val) {
     for (var i in obj) {
         if (!obj.hasOwnProperty(i)) continue;
         if (typeof obj[i] === 'object') {
-            objects = objects.concat(getObjects(obj[i], key, val));    
+            objects = objects.concat(getObjects(obj[i], key, val));
         } else if (i === key && obj[i] === val || i === key && val === '') {
             objects.push(obj);
         } else if (obj[i] === val && key === ''){
