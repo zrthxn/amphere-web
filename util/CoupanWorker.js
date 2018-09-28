@@ -1,4 +1,12 @@
-//author @adil
+/**
+ * @author Alisamar Husain
+ * 
+ *  == DEPRECATED WORKER ==
+ *  Scheduled for deletion
+ * ========================
+ */
+
+// DO NOT USE THIS FILE
 
 const firebase = require('./Database');
 const voucher_codes = require('voucher-code-generator');  //install voucher-code-generator

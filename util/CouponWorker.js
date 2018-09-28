@@ -2,7 +2,7 @@
 
 //author @adil
 
-const firebase = require('./Database');
+const CouponsData = require('./Database').firebase.database();
 const voucher_codes = require('voucher-code-generator');
 
 exports.generateCoupons = function(params)
@@ -13,40 +13,40 @@ exports.generateCoupons = function(params)
 
     //pattern = pattern.replace(/1/g,'#');
 
-    const cpn_db = firebase.firebase.database();
-    var coupons;
-
     return new Promise((resolve,reject)=>{
-        coupons = voucher_codes.generate({
+        var coupons = voucher_codes.generate({
             length:len,
             count:count,
             prefix:"AMP-",
             pattern: '####-####',
             charset:"0123456789ABCDEFGHIJKLMNOPQRSTUVXYZ"
         });
-        if(coupons!==null)
-        {
-            for(var i =0;i<count;i++)
-            {
-                cpn_db.ref('coupons/cid-'+coupons[i]).set({
+
+        if(coupons!==null) {
+            //for(var i =0;i<count;i++)
+            /**
+             * @author Alisamar Husain
+             * Deprecated traditional for loops
+             * Use forEach instead
+            */
+
+            coupons.forEach(coupon => {
+                CouponsData.ref('coupons/cid-' + coupon).set({
                     "addedOn": getDateTime(),
-                    "code" : coupons[i],
+                    "code" : coupon,
                     "amount" : 20,
                     "expireDate" : null,
                     "isActive" : true,
-                    "isDeleted":false
+                    "isDeleted": false
                 });
-            }
+            });
             resolve({
-                "success":true,
-                "coupons":coupons
+                "success": true,
+                "coupons": coupons
             });
         }
-        else
-        {
-            resolve({
-                "success":false
-            });
+        else {
+            resolve({ "success":false });
         }
 
     });
@@ -56,11 +56,11 @@ exports.generateCoupons = function(params)
 exports.validateCoupon = function(params)
 {
     let promoCode = params.code;
-    const cpn_db = firebase.firebase.database();
 
     return new Promise((resolve,reject)=>{
 
-        cpn_db.ref().child('coupons').orderByChild('code').equalTo(promoCode).limitToFirst(1).once('value').then((coupons)=>{
+        CouponsData.ref().child('coupons').orderByChild('code').equalTo(promoCode).limitToFirst(1)
+        .once('value').then((coupons)=>{
             if (coupons.val()!==null)
             {
                 var coupon = coupons.val();
@@ -72,7 +72,7 @@ exports.validateCoupon = function(params)
                 var amount = coupon[key]['amount'];
 
                 resolve({
-                    "status":true,
+                    "success": true,
                     "promoCode":code,
                     "amount":amount
                 });
@@ -80,7 +80,7 @@ exports.validateCoupon = function(params)
             else
             {
                 resolve({
-                    "status":false,
+                    "success":false,
                 })
             }
         });
