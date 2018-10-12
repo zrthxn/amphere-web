@@ -475,25 +475,60 @@ admin.post( '/u/addMerchant', (req, res)=>{
 } );
 
 //-------------------------------------------------------------------//
-//author @adil
+//@adil
 admin.post('/u/coupons',(req,res)=>{
     let params = getParameters(req);
-      CouponWorker.generateCoupons({
-          "len":decodeURI(params.len),
-          "count":decodeURI(params.count),
-          "pattern":decodeURI(params.pattern)
-      }).then((_res) =>{
-          if(_res.success === true)
-          {
-              res.status(200).json({
-                  "state":"SUCCESS",
-                  "coupons":_res.coupons
-              });
-          }
-          else{
-              res.status(200).json({"state" : "FAILED"});
-          }
-      });
+    if (params.class === '1') {
+        CouponWorker.generateCoupons({
+            "len":decodeURI(params.len),
+            "count":decodeURI(params.count),
+            "pattern":decodeURI(params.pattern)
+        }).then((_res) =>{
+            if(_res.success === true)
+            {
+                res.status(200).json({
+                    "state":"SUCCESS",
+                    "coupons":_res.coupons
+                });
+            }
+            else{
+                res.status(200).json({"state" : "FAILED"});
+            }
+        });
+    }
+    else if(params.class === '2'){
+        CouponWorker.generateSelfCoupon({
+            "coupon":decodeURI(params.coupon)
+        }).then((_res)=>{
+            if(_res.success === true)
+            {
+                res.status(200).json({
+                    "state":"SUCCESS"
+                });
+            } else {
+                res.status(200).json({
+                    "state":"EXISTS"
+                });
+            }
+        });
+    }
+    else if(params.class === '3')
+    {
+        CouponWorker.generateGenCoupon({
+            "coupon":decodeURI(params.coupon)
+        }).then((_res)=>{
+            if(_res.success === true)
+            {
+                res.status(200).json({
+                    "state":"SUCCESS"
+                });
+            } else {
+                res.status(200).json({
+                    "state":"EXISTS"
+                });
+            }
+        });
+    }
   });
 //-------------------------------------------------------------------//
 
