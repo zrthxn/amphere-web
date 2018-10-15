@@ -36,9 +36,32 @@
             <button id="coupons-button">Generate</button>
         </div>
         <div class="coupons" id="coupons-check">
-
         </div>
 </div>
+<div style="height:5px;background-color:black;"></div>
+<div class="coupons-admin">
+    <div class="coupons-generate">
+        <h1>Coupons Generation II</h1>
+        <h2>Input coupon and click generate</h2>
+        <input type="text" class="textbox" id="self-coupon" placeholder="Input Coupon">
+        <button id="self-coupon-btn">Generate</button>
+    </div>
+    <div class="coupons" id="coupon-status"></div>
+</div>
+
+<div style="height:5px;background-color:black;"></div>
+<div class="coupons-admin">
+    <div class="coupons-generate">
+        <h1>Coupons Generation III</h1>
+        <h2>Input coupon for all users and click generate</h2>
+        <input type="text" class="textbox" id="gen-coupon" placeholder="Input Coupon">
+        <input type="password" name="password" id="gen-password" placeholder="Password">
+        <button id="gen-coupon-btn">Generate</button>
+    </div>
+    <div class="coupons" id="gen-coupon-status"></div>
+</div>
+
+
 <!-- =================================================================================================-->
 
 <script>
@@ -157,7 +180,8 @@
             const genReq = new XMLHttpRequest();
             let url = `count=${encodeURI(count.value)}&` +
                       `len=${encodeURI(len.value)}&` +
-                      `pattern=${encodeURI(pattern.value)}`;
+                      `pattern=${encodeURI(pattern.value)}&` +
+                      `class=1`;
 
             genReq.open('POST',`/u/coupons?${url}`,true);
             genReq.send();
@@ -187,6 +211,68 @@
             }
         }
       }
+</script>
+
+<script>
+    var coupon = document.getElementById('self-coupon');
+    document.getElementById('self-coupon-btn').onclick = function()
+    {
+        if (coupon.value !== "")
+        {
+            const request = new XMLHttpRequest();
+            let url = `coupon=${encodeURI(coupon.value)}&` +
+                    `class=2`;
+
+            request.open('POST',`/u/coupons?${url}`,true);
+            request.send();
+
+            request.onreadystatechange = e => {
+                if(request.readyState === 4 && request.status === 200){
+                    let _res = JSON.parse(request.response);
+                    if(_res.state === "SUCCESS"){
+                        var div = document.createElement('div');
+                        var text = document.createTextNode("SUCCESS! Coupon Saved in Database");
+                        div.appendChild(text);
+                        document.getElementById('coupon-status').appendChild(div);
+                    } else {
+                        alert("Coupon exists with this code");
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<script>
+    var gen_coupon = document.getElementById('gen-coupon');
+    var gen_pass = document.getElementById('gen-password');
+
+    document.getElementById('gen-coupon-btn').onclick = function()
+    {
+        if (gen_coupon.value !== "")
+        {
+            const request = new XMLHttpRequest();
+            let url = `coupon=${encodeURI(gen_coupon.value)}&` +
+                    `class=3`;
+
+            request.open('POST',`/u/coupons?${url}`,true);
+            request.send();
+
+            request.onreadystatechange = e => {
+                if(request.readyState === 4 && request.status === 200){
+                    let _res = JSON.parse(request.response);
+                    if(_res.state === "SUCCESS"){
+                        var div = document.createElement('div');
+                        var text = document.createTextNode("SUCCESS! Coupon Saved in Database");
+                        div.appendChild(text);
+                        document.getElementById('gen-coupon-status').appendChild(div);
+                    } else {
+                        alert("Coupon exists with this code");
+                    }
+                }
+            }
+        }
+    }
 </script>
 <!-- =================================================================================================-->
 
