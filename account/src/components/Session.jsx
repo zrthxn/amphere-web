@@ -157,13 +157,16 @@ class Session extends Component {
     }
 
     cancelConfirmationDialog = (state) => {
-        this.CalculateAmount();
+        let amt = this.CalculateAmount();
         //------//
         if(!state){
             SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({ "amount" : amt });
         }
         //------//
-        this.setState({ cancelLightboxOpen: state });
+        this.setState({
+            cancelLightboxOpen: state,
+            amount:amt
+        });
     }
 
     //  ================================== SESSION TIMING FUNCTION ================================== //
