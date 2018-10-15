@@ -22,13 +22,18 @@ class Session extends Component {
             startTime: 0,
             timeRemain: 0,
             cancelLightboxOpen: false,
-            amount: 10
+            amount: 10,
+            //------//
+            promoValid:false,
+            promoCode:null,
+            promoAmount:null
+            //------//
         }
-    }    
+    }
 
     componentWillMount() {
         let timeNow;
-        SessionTime.ref('time').once('value', time => { timeNow = time.val() });    
+        SessionTime.ref('time').once('value', time => { timeNow = time.val() });
         let timeElapsed = this.props.startTime!==null ? (timeNow - this.props.startTime) : 0;
         let timeRemain;
 
@@ -39,7 +44,7 @@ class Session extends Component {
         }
         if(this.props.expired===true) {
             timeRemain = 0;
-        } 
+        }
 
         this.setState({
             sid: this.props.sid,
@@ -52,6 +57,24 @@ class Session extends Component {
             expired: this.props.expired,
             amount: this.props.amount
         });
+        //------//
+        if(this.props.promoValid==='true')
+        {
+            this.setState({
+                promoValid:true,
+                promoCode:this.props.promoCode,
+                promoAmount:this.props.promoAmount
+            });
+        }
+        else
+        {
+            this.setState({
+                promoValid:false,
+                promoCode:this.props.promoCode,
+                promoAmount:this.props.promoAmount
+            });
+        }
+        //------//
     }
 
     componentDidMount() {
@@ -92,7 +115,7 @@ class Session extends Component {
             amount: amt
         });
     }
-    
+
     cancelSession = () => {
         this.cancelConfirmationDialog(false);
         if(this.state.activated===true){
@@ -136,7 +159,7 @@ class Session extends Component {
     }
 
     //  ================================== SESSION TIMING FUNCTION ================================== //
-        
+
     TimingFunction = (time) => {
         let timeElapsed = time - this.state.startTime;
         let _timeRemain = this.state.duration - timeElapsed;
@@ -175,10 +198,10 @@ class Session extends Component {
                 <div className="session-details-container">
                     <div className="session-number">
                         <strong>{this.state.device} SESSION</strong>
-                    </div>                    
-                    
+                    </div>
+
                     <button className="session-cancel-button" onClick={() => this.cancelConfirmationDialog(true)}>Cancel</button>
-                    
+
                     <p className="session-detail-location"><b>Location Code:</b> {this.state.mid}</p>
                     <p className="session-detail-duration"><b>Duration:</b> {this.state.duration} mins</p>
 
@@ -199,8 +222,8 @@ class Session extends Component {
 
                 {
                     this.state.cancelLightboxOpen ? (
-                        <SessionCancelLightbox 
-                            confirm={()=>this.cancelSession()} 
+                        <SessionCancelLightbox
+                            confirm={()=>this.cancelSession()}
                             decline={() => this.cancelConfirmationDialog(false)}
                             active={this.state.activated}
                             amount={this.state.amount}/>

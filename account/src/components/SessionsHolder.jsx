@@ -61,7 +61,7 @@ class SessionsHolder extends Component {
 
         let _addNewSession = this.state.sessions.map((sess, index)=>{
             return (
-                <Session 
+                <Session
                     sid={this.state.sessions[index].sid}
                     mid={this.state.sessions[index].mid}
                     device={this.state.sessions[index].device}
@@ -70,6 +70,11 @@ class SessionsHolder extends Component {
                     activated={this.state.sessions[index].activated}
                     expired={this.state.sessions[index].expired}
                     amount={this.state.sessions[index].amount}
+                    //-----//
+                    promoValid={this.state.sessions[index].promoValid}
+                    promoCode={this.state.sessions[index].promoCode}
+                    promoAmount={this.state.sessions[index].promoAmount}
+                    //-----//
                     key={index}
                     complete = {()=>{this.completeSession(index, this.state.sessions[index].sid)}}
                     cancel = {() => this.cancelSession(index)}
@@ -85,7 +90,7 @@ class SessionsHolder extends Component {
                     this.state.sessions.length!==0 ? emptinessValue : <EmptySessions/>
                 }
                 {
-                    this.state.sessions.length!==0 ? ( 
+                    this.state.sessions.length!==0 ? (
                         !this.emptinessChecker() ? (
                             <div className="caution">
                             <div className="caution-holder">
@@ -99,12 +104,12 @@ class SessionsHolder extends Component {
                                 </ul>
 
                                 <label htmlFor="collapse-toggle" className="collapse"><span></span></label>
-                            </div>                    
+                            </div>
                         </div>
                         ) : console.log()
                     ) : console.log()
                 }
-                
+
             </div>
         );
     }
