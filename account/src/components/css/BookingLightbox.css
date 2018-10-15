@@ -1,7 +1,7 @@
 .lightbox {
     height: 30em;
     max-width: 500px;
-    top: 15vh; 
+    top: 15vh;
 }
 
 .session-settings-holder{
@@ -48,7 +48,7 @@
 
     border: none;
     border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px; 
+    border-bottom-right-radius: 20px;
 }
 .button-disabled{
     background: #cccccc;
@@ -68,7 +68,7 @@
     height: fit-content;
 
     margin-top: auto;
-    margin-bottom: auto; 
+    margin-bottom: auto;
 }
 .location .location-code {
     height: fit-content;
@@ -131,7 +131,7 @@
     grid-row: 2/3;
 } .device-bar .toggle-btn {
     width: 33%;
-} 
+}
 @media (max-width: 320px){
     .device-bar .toggle-btn {
         font-size: 0.75em;
@@ -154,19 +154,46 @@
     text-align: center;
 }
 
+.textbox:focus{
+    outline: none;
+}
+.textbox-small{
+    outline:none;
+}
+
+input:focus{
+    outline: none;
+}
+button:focus{
+    outline:none;
+}
+
 .error {
     border-color: #ff000080;
     color: #ff000080 !important;
 } .error::placeholder {
     color: #ff000080 !important;
 }
-  
+.success {
+    border-color: green;
+    border-width: 2px;
+    color: green !important;
+} .success::placeholder {
+    color: green !important;
+}
+
+
 
 .session-settings {
     text-align: left;
     max-width: 500px;
 }
 
+.promo-holder div
+{
+    display: flex;
+    flex-flow: row;
+}
 /*TYPOGRAPHY================================================================*/
 
 .info {

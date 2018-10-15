@@ -5,13 +5,13 @@
     border-radius: 10px;
     position: relative;
     padding: 0;
-    width: 100%; 
+    width: 100%;
     margin-bottom: 1em;
-    
+
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-    
+
     transition: all 0.5s ease-in-out;
     animation-name: slideIn-right;
     animation-duration: 0.5s;
@@ -19,9 +19,9 @@
 }
 @keyframes slideIn-right{
     from{
-        right:-50px; 
+        right:-50px;
         opacity:0;
-    } 
+    }
     to{
         right:0;
         opacity:1;
@@ -37,6 +37,20 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 1fr auto auto;
+}
+.session-detail-promocode{
+    margin: 6px 0 0 0;
+    text-align: left;
+    font-size: .8em;
+    line-height: 1.125em;
+    grid-row: 4/5;
+}
+.session-detail-promoamount{
+    margin: 0;
+    text-align: left;
+    font-size: .8em;
+    line-height: 1.125em;
+    grid-row: 5/6;
 }
 
 .session-cancel-button {
@@ -59,7 +73,7 @@
     margin-bottom: 0.25em;
     grid-row: 1/2;
     grid-column: 1/2;
-} 
+}
 .session-detail-location {
     text-align: left;
     font-size: 0.8em;
@@ -121,12 +135,12 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     transform-origin: bottom;
-} 
+}
 
 .prestart{
     background: linear-gradient(90deg, #ffd800, #ff9e00);
 }
-.active {    
+.active {
     background: linear-gradient(90deg, #00ff4c,#008a29);
 }
 .expiry {

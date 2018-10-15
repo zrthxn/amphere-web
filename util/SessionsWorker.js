@@ -32,9 +32,14 @@ exports.BookSession = function (params) {
                     "isDeleted" : false,
                     "status" : `BOOKED : ${getDateTime()}`,
                     "table" : null,
-                    "amount" : 10
+                    "amount" : 10,
+                    //-----//
+                    "promoValid":params.promoValid,
+                    "promoCode":params.promoCode,
+                    "promoAmount":params.promoAmount
+                    //-----//
                 });
-                
+
                 SMSWorker.SendSMSSessionOTP(otp, params.phone, SMSConfig.senders.otp).then(()=>{
                     resolve({
                         "success": true,
@@ -212,7 +217,7 @@ function getDateTime() {
     var sec  = (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
     var year = date.getFullYear();
     var month = ((date.getMonth() + 1) < 10 ? "0" : "") + (date.getMonth() + 1);
-    var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();   
+    var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();
 
     return (`${hour}:${min}:${sec} ${day}/${month}/${year}`);
 }
@@ -230,19 +235,19 @@ function generateSessionId() {
 
         // GEN 6 RANDOM HEX
         for(let i=0 ; i<6 ; i++){
-            sid = sid + Math.floor(Math.random()*16).toString(16); 
+            sid = sid + Math.floor(Math.random()*16).toString(16);
         }
         // GEN 2 DEFINED DATE
         for(let i=0 ; i<2 ; i++){
-            sid = sid + dateOrder[Math.floor(Math.random()*2)].toString(); 
+            sid = sid + dateOrder[Math.floor(Math.random()*2)].toString();
         }
         // GEN 6 RANDOM HEX
         for(let i=0 ; i<6 ; i++){
-            sid = sid + Math.floor(Math.random()*16).toString(16); 
+            sid = sid + Math.floor(Math.random()*16).toString(16);
         }
         // GEN 2 DEFINED DATE
         for(let i=0 ; i<2 ; i++){
-            sid = sid + dateOrder[Math.floor(Math.random()*2 + 2)].toString(); 
+            sid = sid + dateOrder[Math.floor(Math.random()*2 + 2)].toString();
         }
 
     // if( DUPLICATE CHECK ){

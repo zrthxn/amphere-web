@@ -1,13 +1,13 @@
 /**
  * @author Alisamar Husain
- * 
+ *
  * Signup User Service API
  * -----------------------
  * Send user parameters to
  * the server as HTTP request
  * and this function registers
  * the user.
- * 
+ *
  * @param phone {}
  * @param name {}
  * @param password {}
@@ -18,6 +18,9 @@ const Hasher = require('./PasswordHasher');
 const firebaseSignup = require('./Database');
 const SpreadsheetWorker = require('./SpreadsheetWorker');
 const ssConfig = require('../config.json');
+
+const CouponsData = require('./Database').firebase.database();
+const UsersData = require('./Database').firebase.database();
 
 exports.CreateNewUser = function (params) {
 
@@ -50,6 +53,20 @@ exports.CreateNewUser = function (params) {
                             `${params.phone}`
                         ]
                     });
+                    //---------//
+                    CouponsData.ref().child('coupons').orderByChild('user').equalTo('general').on('value',(coupons)=>{
+                        if(coupons.val() !== null)
+                        {
+                            var Coupons = coupons.val();
+                            for(key in Coupons){
+                                var coupon = Coupons[key]['code'];
+                                UsersData.ref('users/user-' + uid + '/coupons').update({
+                                    [coupon]:3
+                                });
+                            }
+                        }
+                    });
+                    //--------//
                     resolve({
                         "success" : true,
                         "uid" : uid,
@@ -78,7 +95,7 @@ function getDateTime() {
     var sec  = (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
     var year = date.getFullYear();
     var month = ((date.getMonth() + 1) < 10 ? "0" : "") + (date.getMonth() + 1);
-    var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();   
+    var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();
 
     return ( `${hour}:${min}:${sec} ${day}/${month}/${year}`);
 }
@@ -96,19 +113,19 @@ function generateUserId() {
 
         // GEN 8 RANDOM HEX
         for(var i=0 ; i<8 ; i++){
-            userId = userId + Math.floor(Math.random()*16).toString(16); 
+            userId = userId + Math.floor(Math.random()*16).toString(16);
         }
         // GEN 2 DEFINED DATE
         for(var i=0 ; i<2 ; i++){
-            userId = userId + dateOrder[Math.floor(Math.random()*2)].toString(); 
+            userId = userId + dateOrder[Math.floor(Math.random()*2)].toString();
         }
         // GEN 8 RANDOM HEX
         for(var i=0 ; i<8 ; i++){
-            userId = userId + Math.floor(Math.random()*16).toString(16); 
+            userId = userId + Math.floor(Math.random()*16).toString(16);
         }
         // GEN 2 DEFINED DATE
         for(var i=0 ; i<2 ; i++){
-            userId = userId + dateOrder[Math.floor(Math.random()*2 + 2)].toString(); 
+            userId = userId + dateOrder[Math.floor(Math.random()*2 + 2)].toString();
         }
 
     // if(){
