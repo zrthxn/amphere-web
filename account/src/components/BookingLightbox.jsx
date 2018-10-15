@@ -4,10 +4,8 @@ import '../GlobalStyles.css';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import $ from 'jquery';
 
-import SessionConfirmLightbox from './SessionConfirmLightbox';
 import LocationValidation from '../util/LocationValidation';
-import PromoCodeValidation from '../util/PromoCodeValidation';
-import PromoCode from '../util/PromoCode';
+import validatePromoCode from '../util/PromoValidation';
 
 class BookingLightbox extends Component {
     constructor(){
@@ -18,45 +16,14 @@ class BookingLightbox extends Component {
             location: null,
             locCodeValid: null,
             device: "microUSB",
-            //------//
             promoCode: null,
-            promoValid: false,
-            promoAmount:null,
-            confirmBox:false
-            //------//
+            promoValid: null
         };
     }
 
-    //-------//
-    confirmSession = (promoValid) => {
-      if(promoValid)
-      {
-          this.couponAmount(20);
-          this.setState({
-              confirmBox:true
-          });
-      }
-      else
-      {
-          this.sessionAmount();
-          this.setState({
-              confirmBox:true
-          });
-
-      }
+    confirmSession = () => {
+        this.props.paramsHandler(this.state);
     }
-    confirmSessionBox = (promoValid) =>{
-        if(promoValid)
-        {
-            this.props.paramsHandler(this.state);
-            PromoCode.RemovePromoCode(this.state.promoCode,this.props.user);
-        }
-        else
-        {
-            this.props.paramsHandler(this.state);
-        }
-    }
-    //---------//
 
     closeLightbox = () => {
         this.props.aborter();
@@ -113,86 +80,24 @@ class BookingLightbox extends Component {
     }
 
     promoValidator = (_code) => {
-      //-------//
-      _code.persist();
-      if(_code.target.value===""){
-          $(_code.target).removeClass('error');
-          this.setState({
-              promoCode: null,
-              promoAmount: null,
-              promoValid:false
-          });
-      } else{
-          PromoCodeValidation.ValidatePromoCode(_code.target.value,this.props.user).then((result)=>{
-              if(result.valid){
-                  $(_code.target).addClass("success");
-                      this.setState({
-                          promoCode: result.promoCode,
-                          promoAmount:result.amount,
-                          promoValid: true
-                      });
-
-              } else {
-                  $(_code.target).removeClass("success");
-                  $(_code.target).addClass("error");
-                  this.setState({
-                      promoCode: "Invalid Code",
-                      promoValid: false,
-                      promoAmount:null
-                  });
-              }
-          });
-      }
-      //------//
-    }
-    //-------//
-    couponAmount = (promoAmount) => {
-        var amt = 10;
-        var device = this.state.device;
-        var duration = this.state.duration;
-
-        return new Promise((resolve,reject)=>{
-            if(device==="iOS") {
-                if(duration < 50 ) amt = 0;
-                else amt = 40 - promoAmount;
-            } else if (device==="microUSB" || device==="USB-C") {
-                if(duration < 50 ) amt = 0;
-                else amt = 30 - promoAmount;
-            }
+        let result = validatePromoCode(_code.target.value);
+        if(result){
             this.setState({
-                amount:amt
-            });
-            resolve();
-        });
-    }
-
-    sessionAmount = () => {
-        var amt = 10;
-        var device = this.state.device;
-        var duration = this.state.duration;
-
-        return new Promise((resolve,reject)=>{
-            if(device==="iOS") {
-                if(duration < 50 ) amt = 30;
-                else amt = 40;
-            } else if (device==="microUSB" || device==="USB-C") {
-                if(duration < 50 ) amt = 20;
-                else amt = 30;
-            }
+                promoCode: "Amphere Solutions",
+                promoValid: true
+            })
+        } else if (result===null) {
             this.setState({
-                amount:amt
-            });
-            resolve();
-        });
+                promoCode: null,
+                promoValid: null
+            })
+        }else {
+            this.setState({
+                promoCode: "Invalid Code",
+                promoValid: false
+            })
+        }
     }
-
-    cancelConfirmLightbox = (state) => {
-        this.setState({
-            confirmBox: state
-        });
-    }
-
-    //------//
 
     render() {
         return (
@@ -251,21 +156,12 @@ class BookingLightbox extends Component {
                         {
                             (this.state.locCodeValid) ? (
                                 <button className="confirm-session-button"
-                                        onClick={() => this.confirmSession(this.state.promoValid)}>CONFIRM SESSION</button>
+                                        onClick={this.confirmSession}>CONFIRM SESSION</button>
                             ) : (
                                 <button className="confirm-session-button button-disabled"
-                                        onClick={() => this.confirmSession(this.state.promoValid)}
+                                        onClick={this.confirmSession}
                                         disabled>CONFIRM SESSION</button>
                             )
-                        }
-                        {
-                            (this.state.confirmBox) ? (
-                                <SessionConfirmLightbox
-                                    confirm={()=>this.confirmSessionBox(this.state.promoValid)}
-                                    decline={() => this.cancelConfirmLightbox(false)}
-                                    duration={this.state.duration}
-                                    amount={this.state.amount}/>
-                            ) : console.log()
                         }
                     </div>
                 </div>

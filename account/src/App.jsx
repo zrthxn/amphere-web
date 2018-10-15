@@ -41,12 +41,7 @@ class App extends Component {
           startTime: session.val().startTime,
           activated:session.val().activated,
           expired: session.val().expired,
-          amount: session.val().amount,
-          //--------//
-          promoValid:session.val().promoValid,
-          promoCode:session.val().promoCode,
-          promoAmount:session.val().promoAmount
-          //--------//
+          amount: session.val().amount
         });
       }
     });
@@ -60,19 +55,14 @@ class App extends Component {
     this.addNewSession(params);
   }
 
-  addNewSession = (params) => {
+  addNewSession = (params) => {    
     BookSession.addNewSession({
         "uid" : this.state.uid,
         "phone" : this.state.phone,
         "name" : this.state.name,
         "location" : params.locCode,
         "device" : params.device,
-        "duration" : params.duration,
-        //-------//
-        "promoValid": params.promoValid,
-        "promoCode":params.promoCode,
-        "promoAmount":params.promoAmount
-        //-------//
+        "duration" : params.duration
     }).then((response)=>{
         // this.SessionsHolder.addNewSession({
         //   sid : response.sid,
@@ -96,16 +86,15 @@ class App extends Component {
                 name={this.state.name}
                 logoutWorker={this.props.logoutWorker}
                 button={true}/>
-
-        <Banner addNewSession={this.addNewSession.bind(this)}
+        
+        <Banner addNewSession={this.addNewSession.bind(this)} 
                 lightboxOpener={this.lightboxOpener.bind(this)}/>
-
+        
         <SessionsHolder ref={SessionsHolder => this.SessionsHolder = SessionsHolder}/>
         {
           this.state.lightboxOpen ? (
-            <BookingLightbox paramsHandler={this.paramsHandler.bind(this)}
-                             aborter={this.lightboxAborter.bind(this)}
-                             user={this.state.phone} />
+            <BookingLightbox paramsHandler={this.paramsHandler.bind(this)} 
+                             aborter={this.lightboxAborter.bind(this)} /> 
           ) : console.log()
         }
         <Footer />

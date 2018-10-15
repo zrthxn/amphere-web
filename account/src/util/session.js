@@ -8,13 +8,8 @@ exports.addNewSession = (params) => {
         `location=${params.location}&` +
         `duration=${params.duration}&` +
         `device=${params.device}&` +
-        //@adil//
-        `promoValid=${params.promoValid}&` +
-        `promoCode=${params.promoCode}&` +
-        `promoAmount=${params.promoAmount}&` +
-        //-----//
         `verify=true`
-
+        
         request.open('POST', `/sessionsWorker?${url}`, true);
         request.send();
 
@@ -28,7 +23,7 @@ exports.addNewSession = (params) => {
                 alert(err);
             }
         };
-    });
+    });    
 }
 
 exports.CancelSession = (params) => {
