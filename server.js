@@ -312,7 +312,7 @@ account.post('/validatePromo',(req,res)=>{
 account.post('/removePromo',(req,res)=>{
     CouponWorker.RemovePromoCode({
         "code":decodeURI(req.query.code),
-        "phone":decodeURI(req.query.phone)
+        "user":decodeURI(req.query.user)
     }).then((_res)=>{
         if(_res.success === true)
         {
