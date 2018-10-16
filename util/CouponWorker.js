@@ -192,7 +192,7 @@ exports.ValidateCoupon = function(params)
 
 exports.RemovePromoCode = (params) => {
     var code = params.code;
-    var phone = params.phone;
+    var phone = params.user;
 
     return new Promise((resolve,reject)=>{
         if(code!==null){

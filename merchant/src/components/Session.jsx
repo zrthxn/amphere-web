@@ -30,19 +30,24 @@ class Session extends Component {
             preCancelLightboxOpen: false,
             table: null,
             collected: false,
-            amount: 10
+            amount: 10,
+            //-------//
+            promoValid: false,
+            promoCode:null,
+            promoAmount:null
+            //-------//
         }
     }
 
     componentWillMount() {
         let table_set = localStorage.getItem('session-'+ this.props.sid + '-table');
-        
+
         if(this.props.activated===true && table_set!==null) {
             table_set = table_set.split('-')[1];
         } else if(this.props.activated===true && this.props.table!==null) {
             table_set = this.props.table;
-        } else { 
-            table_set = null 
+        } else {
+            table_set = null
         }
 
         let timeNow;
@@ -57,7 +62,7 @@ class Session extends Component {
         }
         if(this.props.expired===true) {
             timeRemain = 0;
-        } 
+        }
 
         this.setState({
             sid: this.props.sid,
@@ -75,6 +80,24 @@ class Session extends Component {
             table: table_set,
             amount: this.props.amount
         });
+        //------//
+        if(this.props.promoValid==='true' || this.props.promovalid === true)
+        {
+            this.setState({
+                promoValid:true,
+                promoCode:this.props.promoCode,
+                promoAmount:this.props.promoAmount
+            });
+        }
+        else
+        {
+            this.setState({
+                promoValid:false,
+                promoCode:this.props.promoCode,
+                promoAmount:this.props.promoAmount
+            });
+        }
+        //------//
     }
 
     componentDidMount() {
@@ -88,7 +111,7 @@ class Session extends Component {
                     if(event==="ACTIVATED"){
                         this.setState({
                             activated : true,
-                            startTime: session.child('startTime').val(), 
+                            startTime: session.child('startTime').val(),
                             table: session.child('table').val()
                         });
                         Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
@@ -109,7 +132,7 @@ class Session extends Component {
             });
         }
     }
-    
+
     //  ========================= STATE CHANGE FUNCTIONS ============================= //
 
     activate = () => {
@@ -142,7 +165,7 @@ class Session extends Component {
         let amt = this.CalculateAmount();
 
         SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({ "amount" : amt });
-        SessionUtil.ExpireSession(this.state.sid).then(()=>{    
+        SessionUtil.ExpireSession(this.state.sid).then(()=>{
             this.setState({
                 timeRemain: 0,
                 expired: true,
@@ -150,7 +173,7 @@ class Session extends Component {
             });
         });
     }
-    
+
     cancelSession = (reasons) => {
         this.cancelConfirmationDialog(false);
         if(this.state.activated===true){
@@ -163,7 +186,7 @@ class Session extends Component {
                     "sid": this.state.sid,
                     "exp": reasons
                 }).then((res)=>{
-                    if(res.cancelled===true) this.props.cancel(); 
+                    if(res.cancelled===true) this.props.cancel();
                 }).catch((err)=>{
                     alert(err);
                 });
@@ -198,7 +221,7 @@ class Session extends Component {
             }
         }
     }
-    
+
     //  ========================= VALUE SETTERS AND LIGHTBOX OPENERS ============================= //
 
     setOTP = (otp_f) => {
@@ -225,9 +248,9 @@ class Session extends Component {
             SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).child('status')
             .once('value', (statuss)=>{
                 let stat = statuss.val().split(' : ')[1];
-                SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({ 
+                SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({
                     "status" : "COLLECTED" + " : " + stat,
-                    "collected" : true 
+                    "collected" : true
                 });
             });
             this.setState({ collected: true });
@@ -242,7 +265,7 @@ class Session extends Component {
     preCancelConfirmationDialog = (state) => this.setState({preCancelLightboxOpen: state})
 
     //  ================================== SESSION TIMING FUNCTION ================================== //
-    
+
     TimingFunction = (time) => {
         let timeElapsed = time - this.state.startTime;
         let _timeRemain = this.state.duration - timeElapsed;
@@ -260,6 +283,11 @@ class Session extends Component {
         let device = this.state.device;
         let duration = this.state.duration;
         let timeRemain = this.state.timeRemain;
+        //------//
+        let promoCode = this.state.promoCode;
+        let promoValid = this.state.promoValid;
+        let promoAmount = this.state.promoAmount;
+        //------//
 
         if( timeRemain <= (duration-5) ) {
             if(device==="iOS") {
@@ -270,11 +298,24 @@ class Session extends Component {
                 else amt = 30
             }
         }
+        //------//
+        if(promoValid)
+        {
+            if (duration < 50 || amt <= promoAmount)
+            {
+                amt = 0;
+            }
+            else
+            {
+                amt = amt - promoAmount ;
+            }
+        }
+        //-------//
 
         return amt;
     }
 
-    
+
     //  ---------------------------------------------------------------------------------------- //
     //  ======================================== B O D Y ======================================= //
     //  ---------------------------------------------------------------------------------------- //
@@ -290,10 +331,22 @@ class Session extends Component {
                             <p>This session has expired. Please collect the equipment from the user.</p>
 
                             {
-                                !this.state.collected ? 
-                                <button className="button" onClick={() => this.setCollected()}>EQUIPMENT COLLECTED</button> 
-                                : 
-                                <h2><b>Amount :</b> Rs {this.state.amount}</h2>
+                                !this.state.collected ?
+                                <button className="button" onClick={() => this.setCollected()}>EQUIPMENT COLLECTED</button>
+                                :
+                                //--------------//
+                                (
+                                    <div>
+                                        <h2><b>Amount :</b> Rs {this.state.amount}</h2>
+                                        {
+                                            this.state.promoValid ?
+                                            (
+                                                <h3><b>Promo Code :</b>{this.state.promoCode}</h3>
+                                            ) : console.log()
+                                        }
+                                    </div>
+                                )
+                                //--------------//
                             }
 
                         </div>
@@ -313,14 +366,14 @@ class Session extends Component {
                     <p className="user-name">{this.state.username}</p>
                     {
                         this.state.dead ? <p>For 0% battery</p> : (
-                            this.state.activated ? 
+                            this.state.activated ?
                             <input id="otp" type="text" className="textbox-small otp lock" placeholder={this.state.otp} disabled/> :
                             <input id="otp"
                                 type="text"
-                                className="textbox-small otp" 
+                                className="textbox-small otp"
                                 placeholder="Enter OTP"
                                 onChange={this.setOTP}/>
-                        )                        
+                        )
                     }
                 </div>
 
@@ -352,18 +405,18 @@ class Session extends Component {
 
                 {
                     this.state.activated ?
-                    ( 
+                    (
                         this.state.expired ?
                             <button className="session-expired-button"
                                     onClick={this.paymentComplete}
                                     onPointerEnter={(btn)=>btn.target.innerHTML="BILL PAID"}
                                     onPointerLeave={(btn)=>btn.target.innerHTML="EXPIRED"}>EXPIRED</button>
-                            :         
+                            :
                             <button className="session-activated-button"
                                     onClick={() => this.cancelConfirmationDialog(true)}
                                     onPointerEnter={(btn)=>btn.target.innerHTML="CANCEL"}
-                                    onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button> 
-                                    
+                                    onPointerLeave={(btn)=>btn.target.innerHTML="ACTIVE"}>ACTIVE</button>
+
                     ) : (
                             <button className="session-start-button" onClick={() => this.activate()}>START</button>
                     )
