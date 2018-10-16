@@ -1,0 +1,77 @@
+.confirm-lightbox {
+    position: fixed;
+    display: flex;
+    flex-flow: column;
+    width: 75%;
+    max-width: 500px;
+    height: fit-content;
+    top: 17vh;
+    padding: 1em 2em;
+    text-align: center;
+    background-color: #FFF;
+    border-radius: 20px;
+    left: 50%;
+    margin-left: -37.5%;
+    z-index: 20000;
+
+    animation-name: pop-lightbox;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+@keyframes pop-lightbox {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+.confirm-container {
+    align-self: center;
+    margin: auto;
+}
+
+.confirm-lightbox .button {
+    padding: 0.5em 0.75em;
+    margin: 0.5em;
+}
+.confirm {
+    color: #FFF;
+    font-weight: 600;
+    background: linear-gradient(#12a112,#12a112);
+    border: 1px solid #12a112;
+
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+} .confirm:active {
+    background: linear-gradient(#12a112,#12a112);
+}
+button:focus{
+    outline: none;
+}
+@media (min-width: 600px){
+    .confirm-lightbox {
+        width: 500px;
+        left: 50%;
+        top: 30vh;
+        margin-left: -250px;
+        animation-name: pop-lightbox;
+    }
+    .textbox {
+        margin-bottom: unset;
+    }
+    .button {
+        padding: 0.5em;
+        margin: 2em 1em;
+    }
+    @keyframes pop-lightbox {
+        from{
+            opacity: 0;
+        }
+        to{
+            opacity: 1;
+        }
+    }
+}

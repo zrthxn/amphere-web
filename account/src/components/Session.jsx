@@ -22,13 +22,18 @@ class Session extends Component {
             startTime: 0,
             timeRemain: 0,
             cancelLightboxOpen: false,
-            amount: 10
+            amount: 10,
+            //------//
+            promoValid:false,
+            promoCode:null,
+            promoAmount:null
+            //------//
         }
-    }    
+    }
 
     componentWillMount() {
         let timeNow;
-        SessionTime.ref('time').once('value', time => { timeNow = time.val() });    
+        SessionTime.ref('time').once('value', time => { timeNow = time.val() });
         let timeElapsed = this.props.startTime!==null ? (timeNow - this.props.startTime) : 0;
         let timeRemain;
 
@@ -39,7 +44,7 @@ class Session extends Component {
         }
         if(this.props.expired===true) {
             timeRemain = 0;
-        } 
+        }
 
         this.setState({
             sid: this.props.sid,
@@ -52,6 +57,24 @@ class Session extends Component {
             expired: this.props.expired,
             amount: this.props.amount
         });
+        //------//
+        if(this.props.promoValid==='true')
+        {
+            this.setState({
+                promoValid:true,
+                promoCode:this.props.promoCode,
+                promoAmount:this.props.promoAmount
+            });
+        }
+        else
+        {
+            this.setState({
+                promoValid:false,
+                promoCode:this.props.promoCode,
+                promoAmount:this.props.promoAmount
+            });
+        }
+        //------//
     }
 
     componentDidMount() {
@@ -70,7 +93,7 @@ class Session extends Component {
                         Timer.ref('time').on('value', (time) => this.TimingFunction(time.val()));
                     } else if(event==="EXPIRED"){
                         Timer.ref('time').off('value');
-                        this.setState({ timeRemain: 0, expired: true, amount: session.child('amount').val() });
+                        this.setState({ timeRemain: 0, activated:false, expired: true, amount: session.child('amount').val() });
                     } else if(event==="COMPLETED"){
                         SessionUpdates.ref().off();
                         this.props.complete();
@@ -86,13 +109,16 @@ class Session extends Component {
     expire = () => {
         Timer.ref('time').off('value');
         let amt = this.CalculateAmount();
+        //------//
+        SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({ "amount" : amt });
+        //-------//
         this.setState({
             expired: true,
             timeRemain: 0,
             amount: amt
         });
     }
-    
+
     cancelSession = () => {
         this.cancelConfirmationDialog(false);
         if(this.state.activated===true){
@@ -131,12 +157,20 @@ class Session extends Component {
     }
 
     cancelConfirmationDialog = (state) => {
-        this.CalculateAmount();
-        this.setState({ cancelLightboxOpen: state });
+        let amt = this.CalculateAmount();
+        //------//
+        if(!state){
+            SessionFirebase.firebase.database().ref('sessions/session-' + this.state.sid).update({ "amount" : amt });
+        }
+        //------//
+        this.setState({
+            cancelLightboxOpen: state,
+            amount:amt
+        });
     }
 
     //  ================================== SESSION TIMING FUNCTION ================================== //
-        
+
     TimingFunction = (time) => {
         let timeElapsed = time - this.state.startTime;
         let _timeRemain = this.state.duration - timeElapsed;
@@ -154,6 +188,11 @@ class Session extends Component {
         let device = this.state.device;
         let duration = this.state.duration;
         let timeRemain = this.state.timeRemain;
+        //----//
+        let promoCode = this.state.promoCode;
+        let promoValid = this.state.promoValid;
+        let promoAmount = this.state.promoAmount;
+        //----//
 
         if( timeRemain <= (duration-5) ) {
             if(device==="iOS") {
@@ -164,6 +203,19 @@ class Session extends Component {
                 else amt = 30
             }
         }
+        //-----//
+        if(promoValid)
+        {
+            if (duration < 50 || amt <= promoAmount)
+            {
+                amt = 0;
+            }
+            else
+            {
+                amt = amt - promoAmount ;
+            }
+        }
+        //------//
 
         return amt;
     }
@@ -175,12 +227,22 @@ class Session extends Component {
                 <div className="session-details-container">
                     <div className="session-number">
                         <strong>{this.state.device} SESSION</strong>
-                    </div>                    
-                    
+                    </div>
+
                     <button className="session-cancel-button" onClick={() => this.cancelConfirmationDialog(true)}>Cancel</button>
-                    
+
                     <p className="session-detail-location"><b>Location Code:</b> {this.state.mid}</p>
                     <p className="session-detail-duration"><b>Duration:</b> {this.state.duration} mins</p>
+
+                    {
+                        this.state.promoValid ?
+                        (
+                            <div>
+                                <p className="session-detail-promocode"><b>Promo Code:</b>{this.state.promoCode}</p>
+                            </div>
+                        ) : (console.log())
+
+                    }
 
                     <div className="session-detail-time">
                         <p className="session-time-counter"><b>{this.state.timeRemain}</b></p>
@@ -199,8 +261,8 @@ class Session extends Component {
 
                 {
                     this.state.cancelLightboxOpen ? (
-                        <SessionCancelLightbox 
-                            confirm={()=>this.cancelSession()} 
+                        <SessionCancelLightbox
+                            confirm={()=>this.cancelSession()}
                             decline={() => this.cancelConfirmationDialog(false)}
                             active={this.state.activated}
                             amount={this.state.amount}/>
