@@ -46,7 +46,12 @@ class App extends Component {
           otp: session.val().otp,
           dead: session.val().dead,
           table: session.val().table,
-          amount: session.val().amount
+          amount: session.val().amount,
+          //--------------//
+          promoValid:session.val().promoValid,
+          promoCode:session.val().promoCode,
+          promoAmount:session.val().promoAmount
+          //-------------//
         });
         // payload.push(session.val());
         // payload = this.sortSessions(payload.slice());
@@ -75,7 +80,7 @@ class App extends Component {
     this.addNewSession(params);
   }
 
-  addNewSession = (params) => {    
+  addNewSession = (params) => {
     BookSession.addNewSession({
         "uid" : "AMPHERE-DEAD-SESSION",
         "phone" : params.phone,
@@ -94,7 +99,7 @@ class App extends Component {
         //   startTime: params.startTime || 0,
         //   activated: params.activated || false,
         //   expired: params.expired || false,
-        //   otp: "AMPDEAD", 
+        //   otp: "AMPDEAD",
         //   dead: true
         // });
     }).catch((err)=>{
@@ -121,8 +126,8 @@ class App extends Component {
 
         {
           this.state.lightboxOpen ? (
-            <BookingLightbox paramsHandler={this.paramsHandler.bind(this)} 
-                             aborter={this.lightboxAborter.bind(this)} /> 
+            <BookingLightbox paramsHandler={this.paramsHandler.bind(this)}
+                             aborter={this.lightboxAborter.bind(this)} />
           ) : console.log()
         }
         <Footer />

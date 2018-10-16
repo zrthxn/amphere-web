@@ -90,7 +90,7 @@ class SessionsHolder extends Component {
         let _addNewSession = this.state.sessions.map((sess, index)=>{
             if(this.state.sessions[index]!==null){
                 return (
-                    <Session 
+                    <Session
                         sid={this.state.sessions[index].sid}
                         uid={this.state.sessions[index].uid}
                         username={this.state.sessions[index].username}
@@ -104,6 +104,11 @@ class SessionsHolder extends Component {
                         dead={this.state.sessions[index].dead}
                         table={this.state.sessions[index].table}
                         amount={this.state.sessions[index].amount}
+                        //---------------//
+                        promoValid={this.state.sessions[index].promoValid}
+                        promoCode={this.state.sessions[index].promoCode}
+                        promoAmount={this.state.sessions[index].promoAmount}
+                        //----------------//
                         key={index}
                         complete = {()=>{this.completeSession(index)}}
                         cancel = {() => this.cancelSession(index)}
