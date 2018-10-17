@@ -18,6 +18,9 @@ const MerchantFirebaseCreds = require('./Database').firebase.database();
 const SpreadsheetWorker = require('./SpreadsheetWorker');
 const ssConfig = require('../config.json');
 
+const UserData = require('./Database').firebase.database();
+const CouponsData = require('./Database').firebase.database();
+
 exports.MerchantLogin = function (params) {
     return new Promise((resolve, reject)=>{
 
