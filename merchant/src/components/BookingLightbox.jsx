@@ -20,7 +20,8 @@ class BookingLightbox extends Component {
             promoValid:false,
             promoCode:null,
             promoAmount:null,
-            phoneNoValid:false
+            phoneNoValid:false,
+            username:null
             //------//
         };
     }
