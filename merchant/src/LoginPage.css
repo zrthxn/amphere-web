@@ -59,6 +59,9 @@ footer {
 .textbox::placeholder {
     color: #b1b1b1;
 }
+.textbox:focus{
+  outline:none;
+}
 
 /*===================   @MEDIA   =======================*/
 

@@ -101,9 +101,7 @@ class BookingLightbox extends Component {
                 phoneValid:false
             });
         } else if(_phone.target.value!=="" && /^\d+$/.test(_phone.target.value) && _phone.target.value.length === 10){
-            console.log('Phone Validation Starts');
             PhoneValidation.ValidatePhone(_phone.target.value).then((result)=>{
-                console.log(result);
                 if(result.valid){
                     $(_phone.target).removeClass("error");
                     $(_phone.target).addClass("success");
@@ -187,7 +185,7 @@ class BookingLightbox extends Component {
                         <div className="location">
 
                             <div className="location-code">
-                                <input id="phone" required className="textbox" placeholder="Enter Phone" onChange={this.phoneValidator}/>
+                                <input id="phone" required className="textbox" placeholder="Enter Phone" onChange={this.phoneValidator} autoComplete="off"/>
                             </div>
                         </div>
 

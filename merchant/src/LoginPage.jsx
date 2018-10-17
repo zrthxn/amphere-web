@@ -61,13 +61,13 @@ class LoginPage extends Component {
                 <Header button={false}/>
                 <div className="login-container">
                     <p className="page-title">Sign In</p>
-                    <input id="codeInput" type="text" className="textbox" placeholder="Merchant Code" onChange={this.setCodeInput}/>
+                    <input id="codeInput" type="text" className="textbox" placeholder="Merchant Code" onChange={this.setCodeInput} autoComplete="off"/>
                     <input id="passwordInput" type="password" className="textbox password" placeholder="Password" onChange={this.setPasswordInput}/>
 
-                    <button className="button" onClick={this.validateLogin.bind(this)}>SIGN IN</button>                        
+                    <button className="button" onClick={this.validateLogin.bind(this)}>SIGN IN</button>
                 </div>
             </div>
-            
+
         );
     }
 }
