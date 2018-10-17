@@ -87,7 +87,12 @@ class App extends Component {
         "name" : "Unknown",
         "location" : this.state.mid,
         "device" : params.device,
-        "duration" : params.duration
+        "duration" : params.duration,
+        //-------//
+        "promoValid": params.promoValid,
+        "promoCode":params.promoCode,
+        "promoAmount":params.promoAmount
+        //-------//
     }).then((response)=>{
         // this.SessionsHolder.addNewSession({
         //   sid : response.sid,

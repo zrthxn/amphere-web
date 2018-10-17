@@ -77,7 +77,12 @@ exports.BookDeadSession = function (params) {
                     "expired" : false,
                     "isDeleted" : false,
                     "status" : "BOOKED",
-                    "table" : null
+                    "table" : null,
+                    //-----//
+                    "promoValid":params.promoValid,
+                    "promoCode":params.promoCode,
+                    "promoAmount":params.promoAmount
+                    //-----//
                 });
                 resolve({
                     "success": true,

@@ -8,7 +8,7 @@
     top: 15vh;
     left: 50%;
     margin-left: -37.5%;
-    text-align: center;    
+    text-align: center;
     animation-name: pop-lightbox;
 }
 @keyframes pop-lightbox {
@@ -54,7 +54,7 @@
 
     border: none;
     border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px; 
+    border-bottom-right-radius: 20px;
 }
 .button-disabled{
     background: #cccccc;
@@ -74,7 +74,7 @@
     height: fit-content;
 
     margin-top: auto;
-    margin-bottom: auto; 
+    margin-bottom: auto;
 }
 .location .location-code {
     height: fit-content;
@@ -124,7 +124,7 @@
     font-size: 1em;
     font-weight: 600;
     text-align: center;
-} 
+}
 
 .textbox-small {
     width: 75%;
@@ -136,6 +136,22 @@
 .session-settings {
     text-align: left;
     max-width: 500px;
+}
+.error {
+    border-color: #ff000080;
+    color: #ff000080!important;
+}
+.success{
+    border-color: green;
+    color: green!important;
+}
+.new{
+    border-color: #1db7e4;
+    color: #1189ac;
+}
+.textbox:focus
+{
+    outline: none;
 }
 
 /*TYPOGRAPHY================================================================*/

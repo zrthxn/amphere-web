@@ -347,7 +347,12 @@ merchant.post('/sessionsWorker', (req, res) => {
         "name" : decodeURI(params.name),
         "location" : params.location,
         "duration" : params.duration,
-        "device" : params.device
+        "device" : params.device,
+        //-----//
+        "promoValid":decodeURI(params.promoValid),
+        "promoCode":decodeURI(params.promoCode),
+        "promoAmount":decodeURI(params.promoAmount)
+        //-----//
     }).then( _res => {
         if(_res.success===true){
             res.status(200).json({
@@ -436,6 +441,55 @@ merchant.post('/merchantCompleteSession', (req, res)=> {
         }
     });
 });
+
+//------------------------------------------------------------------//
+merchant.post('/validatePhone',(req,res)=>{
+    MerchantWorker.ValidatePhone({
+        "user" : decodeURI(req.query.user)
+    }).then((_res)=>{
+        if(_res.success === true)
+        {
+            res.status(200).json({
+                "state":"SUCCESS",
+                "username":_res.username,
+                "CouponValid":false
+            });
+        }
+        else
+        {
+            res.status(200).json({
+                "state":"ERROR"
+            });
+        }
+    });
+});
+
+merchant.post('/validateCoupon',(req,res)=>{
+    console.log("Req",req.query);
+    MerchantWorker.ValidateCoupon({
+        "user" : decodeURI(req.query.user)
+    }).then((_res)=>{
+        console.log(_res);
+        if("Res",_res.success === true)
+        {
+            if(_res.CouponValid === true)
+            {
+                res.status(200).json({
+                    "state":"SUCCESS",
+                    "CouponValid":true,
+                    "Coupon":_res.Coupon,
+                    "Amount":_res.Amount
+                })
+            }
+        }
+        else
+        {
+            res.status(200).json({
+                "state":"NO-COUPON"
+            });
+        }
+    });
+})
 //===================================================================//
 
 
