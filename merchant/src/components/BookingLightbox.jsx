@@ -4,6 +4,10 @@ import '../GlobalStyles.css';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import $ from 'jquery';
 
+import SessionConfirmLightbox from './SessionConfirmLightbox';
+import PhoneValidation from '../util/PhoneValidation';
+import CouponValidation from '../util/PhoneValidation';
+
 class BookingLightbox extends Component {
     constructor(){
         super();
@@ -12,12 +16,35 @@ class BookingLightbox extends Component {
             phone: null,
             phoneValid: false,
             device: "microUSB",
+            //------//
+            promoValid:false,
+            promoCode:null,
+            promoAmount:null,
+            phoneNoValid:false
+            //------//
         };
     }
 
-    confirmSession = () => {
+    //---------//
+    confirmSession = (phoneValid) => {
+        if(phoneValid)
+        {
+            this.couponvalidate(this.state.phone).then(()=>{
+                this.props.paramsHandler(this.state);
+            });
+        }
+        else
+        {
+            this.setState({
+                confirmBox:true
+            });
+        }
+    }
+
+    confirmSessionBox = () =>{
         this.props.paramsHandler(this.state);
     }
+    //--------//
 
     closeLightbox = () => {
         this.props.aborter();
@@ -27,7 +54,7 @@ class BookingLightbox extends Component {
         let set = 0;
         if(_value===1) set = 42;
         else if(_value===2) set = 62;
-        
+
         this.setState({ duration: set });
     }
 
@@ -45,6 +72,7 @@ class BookingLightbox extends Component {
         });
     }
 
+    /*
     addPhone = (_phone) => {
         if(_phone.target.value!=="" && /^\d+$/.test(_phone.target.value) && _phone.target.value.length === 10){
             $(_phone.target).removeClass('error');
@@ -60,21 +88,105 @@ class BookingLightbox extends Component {
             });
         }
     }
+    */
+
+    //---------//
+    phoneValidator = (_phone) => {
+        _phone.persist();
+        if(_phone.target.value===""){
+            $(_phone.target).removeClass('error');
+            this.setState({
+                phone:null,
+                phoneValid:false
+            });
+        } else if(_phone.target.value!=="" && /^\d+$/.test(_phone.target.value) && _phone.target.value.length === 10){
+            console.log('Phone Validation Starts');
+            PhoneValidation.ValidatePhone(_phone.target.value).then((result)=>{
+                console.log(result);
+                if(result.valid){
+                    $(_phone.target).removeClass("error");
+                    $(_phone.target).addClass("success");
+                    this.setState({
+                        phone:result.user,
+                        phoneValid:true,
+                        username: result.username,
+                        phoneNoValid:true
+                    });
+                }
+                else
+                {
+                    $(_phone.target).removeClass("error");
+                    $(_phone.target).addClass("new");
+                    this.setState({
+                        phone:_phone.target.value,
+                        phoneValid:false,
+                        username:"Not Registered",
+                        phoneNoValid:true
+                    });
+                }
+            });
+        } else
+        {
+            $(_phone.target).removeClass("success");
+            $(_phone.target).removeClass("new");
+            $(_phone.target).addClass("error");
+            this.setState({
+                phoneValid:false,
+                phone:null
+            });
+        }
+    }
+
+    couponvalidate = (user) => {
+        return new Promise((resolve,reject)=>{
+            CouponValidation.ValidateCoupon(user).then((result)=>{
+                if(result.valid)
+                {
+                    this.setState({
+                        promoValid:true,
+                        promoCode:result.promoCode,
+                        promoAmount:result.promoAmount
+                    });
+                    resolve({
+                        "success":true
+                    });
+                }
+                else
+                {
+                    this.setState({
+                        promoValid:false,
+                        promoCode:null,
+                        promoAmount:null
+                    });
+                    resolve({
+                        "success":false
+                    });
+                }
+            });
+        });
+    }
+
+    cancelConfirmLightbox = (state) =>{
+        this.setState({
+            confirmBox:state
+        });
+    }
+    //-------//
 
     render() {
         return (
             <div className="lightbox-shadow">
                 <div className="lightbox">
-                
+
                 <button className="cross-button" onClick={this.closeLightbox.bind(this)}></button>
                     <div className="session-settings-holder">
-                        
+
                         <h2 className="lightbox-title">NEW SESSION</h2>
 
                         <div className="location">
 
                             <div className="location-code">
-                                <input id="phone" required className="textbox" placeholder="Enter Phone" onChange={this.addPhone}/>
+                                <input id="phone" required className="textbox" placeholder="Enter Phone" onChange={this.phoneValidator}/>
                             </div>
                         </div>
 
@@ -100,16 +212,25 @@ class BookingLightbox extends Component {
                         </p>
 
                         {
-                            (this.state.phoneValid) ? (
-                                <button className="confirm-session-button" 
-                                        onClick={this.confirmSession}>CONFIRM SESSION</button>
+                            (this.state.phoneNoValid) ? (
+                                <button className="confirm-session-button"
+                                        onClick={() => this.confirmSession(this.state.phoneValid)}>CONFIRM SESSION</button>
                             ) : (
-                                <button className="confirm-session-button button-disabled" 
-                                        onClick={this.confirmSession} 
+                                <button className="confirm-session-button button-disabled"
+                                        onClick={() => this.confirmSession(this.state.phoneValid)}
                                         disabled>CONFIRM SESSION</button>
                             )
                         }
-                    </div>                        
+                        {
+                            (this.state.confirmBox) ? (
+                                <SessionConfirmLightbox
+                                    confirm={()=>this.confirmSessionBox(this.state.phoneValid)}
+                                    decline={() => this.cancelConfirmLightbox(false)}
+                                    phone={this.state.phone}
+                                    username={this.state.username}/>
+                            ) : console.log()
+                        }
+                    </div>
                 </div>
             </div>
         );

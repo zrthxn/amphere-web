@@ -1,13 +1,13 @@
 /**
  * @author Alisamar Husain
- * 
+ *
  * Login Merchant Service API
  * ---------------------------
  * Send Merchant parameters to
  * the server as HTTP request
  * and this function registers
  * the Merchant.
- * 
+ *
  * @param mid {string}
  * @param password {string}
  * @param salt {string}
@@ -67,6 +67,84 @@ exports.MerchantOnboard = function (params) {
     });
 }
 
+//------------------------------------------------------------------------------------------------------------//
+//@adil//
+exports.ValidatePhone = function (params) {
+    let user = params.user;
+    return new Promise((resolve,reject)=>{
+        UserData.ref().child('users').orderByChild('phone').equalTo(user).limitToFirst(1).once('value').then((userch)=>{
+            if(userch.val() !== null){
+                var user = userch.val();
+                var key;
+                for(var field in user){
+                    key = field;
+                }
+                var username = user[key]['name'];
+                resolve({
+                    "success":true,
+                    "username":username,
+                    "CouponValid":false
+                });
+            }
+            else
+            {
+                resolve({
+                    "success":false
+                });
+            }
+        });
+    });
+}
+
+exports.ValidateCoupon = function(params) {
+    let user = params.user;
+    return new Promise((resolve,reject)=>{
+        UserData.ref().child('users').orderByChild('phone').equalTo(user).limitToFirst(1).once('value').then((userch)=>{
+            if(userch.val() !== null){
+                var user = userch.val();
+                var key;
+                for(var field in user){
+                    key = field;
+                }
+                var uid = user[key]['uid'];
+                var DeadSessionCoupon;
+                UserData.ref().child('users/user-' + uid + '/coupons').once('value',(coupons)=>{
+                    var Coupons = coupons.val();
+                    for(var coupon in Coupons){
+                       var count = Coupons[coupon];
+
+                       if (count > 0)
+                       {
+                        DeadSessionCoupon = coupon;
+                        UserData.ref('users/user-' +uid+ '/coupons/').update({
+                            [coupon] : coupons.child(coupon).val() - 1
+                        });
+                        resolve({
+                            "success":true,
+                            "CouponValid":true,
+                            "Coupon":DeadSessionCoupon,
+                            "Amount":20
+                        });
+                        break
+                       }
+                    }
+                    resolve({
+                        "success":false
+                    });
+                });
+            }
+            else
+            {
+                resolve({
+                    "success":false
+                });
+            }
+        });
+    });
+}
+//-------------------------------------------------------------------------------------------------------------//
+//=============================================================================================================//
+
 function getDateTime() {
     var date = new Date();
 
@@ -75,7 +153,7 @@ function getDateTime() {
     var sec  = (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
     var year = date.getFullYear();
     var month = ((date.getMonth() + 1) < 10 ? "0" : "") + (date.getMonth() + 1);
-    var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();   
+    var day  = (date.getDate() < 10 ? "0" : "") + date.getDate();
 
     return (`${hour}:${min}:${sec} ${day}/${month}/${year}`);
 }
