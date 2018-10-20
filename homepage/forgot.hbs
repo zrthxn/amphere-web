@@ -1,0 +1,19 @@
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/forgot.css">
+
+<header>
+    <a href="/"><img class="logo-text" src="assets/amphere-text.svg"></a>
+</header>
+<div class="cover">
+        <div class="reset-container">
+            {{> flash }}
+            <div>
+                <p class="reset">Enter your email to reset password</p>
+                <form class="form-group" action="/resetPassword" method="post">
+                  <input id="email" type="text" name="email" value="" placeholder="Email" autofocus spellcheck="false">
+                  <input id="reset-button" type="submit" name="reset" value="Reset Password">
+                </form>
+            </div>
+        </div>
+</div>
