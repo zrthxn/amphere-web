@@ -31,55 +31,72 @@ exports.CreateNewUser = function (params) {
     let hash = Hasher.generateHash(params.password, salt);
 
     return new Promise((resolve,reject) => {
-        usersData.ref().child('users').orderByChild('phone').equalTo(params.phone).once('value', (searchres)=>{
-            if(searchres.val()===null){
-                usersData.ref('users/user-' + uid).set({
-                    "uid" : uid,
-                    "phone" : params.phone,
-                    "name" : decodeURI(params.name),
-                    "salt" : salt,
-                    "password" : hash,
-                    "addedOn" : getDateTime(),
-                    "isDeleted" : false,
-                    "login" : true
-                }).then(()=>{
-                    SpreadsheetWorker.WriteToSpreadsheet({
-                        "ssId" : ssConfig.spreadsheets.records,
-                        "sheet" : "Users",
-                        "values" : [
-                            `${getDateTime()}`,
-                            `${uid}`,
-                            `${decodeURI(params.name)}`,
-                            `${params.phone}`
-                        ]
-                    });
-                    //---------//
-                    CouponsData.ref().child('coupons').orderByChild('user').equalTo('general').on('value',(coupons)=>{
-                        if(coupons.val() !== null)
-                        {
-                            var Coupons = coupons.val();
-                            for(key in Coupons){
-                                var coupon = Coupons[key]['code'];
-                                UsersData.ref('users/user-' + uid + '/coupons').update({
-                                    [coupon]:3
-                                });
-                            }
-                        }
-                    });
-                    //--------//
-                    resolve({
-                        "success" : true,
-                        "uid" : uid,
-                        "hash" : hash
-                    });
-                });
-            } else {
-                resolve({
-                    "success" : false,
-                    "error" : "PHONE-EXISTS"
-                });
-            }
-        });
+      usersData.ref().child('users').orderByChild('phone').equalTo(params.phone).once('value', (searchres)=>{
+
+          if(searchres.val()===null)
+          {
+              usersData.ref().child('users').orderByChild('email').equalTo(params.email).once('value',(user)=>{
+                  if (user.val()===null)
+                  {
+                      usersData.ref('users/user-' + uid).set({
+                          "uid" : uid,
+                          "phone" : params.phone,
+                          "email" : params.email,
+                          "emailVerify" : false,
+                          "name" : decodeURI(params.name),
+                          "salt" : salt,
+                          "password" : hash,
+                          "addedOn" : getDateTime(),
+                          "isDeleted" : false,
+                          "login" : true
+                      }).then(()=>{
+                          SpreadsheetWorker.WriteToSpreadsheet({
+                              "ssId" : ssConfig.spreadsheets.records,
+                              "sheet" : "Users",
+                              "values" : [
+                                  `${getDateTime()}`,
+                                  `${uid}`,
+                                  `${decodeURI(params.name)}`,
+                                  `${params.phone}`
+                              ]
+                          });
+                          resolve({
+                              "success" : true,
+                              "uid" : uid,
+                              "hash" : hash
+                          });
+                      });
+                      CouponsData.ref().child('coupons').orderByChild('user').equalTo('general').on('value',(coupons)=>{
+                          if(coupons.val() !== null)
+                          {
+                              var Coupons = coupons.val();
+                              for(key in Coupons){
+                                  var coupon = Coupons[key]['code'];
+                                  UsersData.ref('users/user-' + uid + '/coupons').update({
+                                      [coupon]:3
+                                  });
+                              }
+                          }
+                      });
+                      resolve({
+                          "success" : true,
+                          "uid" : uid,
+                          "hash" : hash
+                      });
+                  } else {
+                      resolve({
+                          "success" : false,
+                          "error" : "EMAIL-EXIST"
+                      });
+                  }
+              });
+          }else {
+              resolve({
+                  "success" : false,
+                  "error" : "PHONE-EXISTS"
+              });
+          }
+      });
     });
 }
 

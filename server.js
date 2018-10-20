@@ -170,6 +170,7 @@ homepage.post('/onboarding', (req, res) => {
 homepage.post('/signupWorker', (req, res) => {
     let params = getParameters(req);
     SignupWorker.CreateNewUser({
+        "email": params.email,
         "phone" : params.phone,
         "name" : params.name,
         "password" : params.password,
