@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="/css/reset.css">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+
+<header>
+    <a href="/"><img class="logo-text" src="/assets/amphere-text.svg"></a>
+</header>
+<div class="cover">
+<div class="reset-container">
+    {{>flash}}
+    <div>
+        <p class="form-title">Reset Password</p>
+        <form class="reset" action='/reset/{{token}}' method="post">
+            <input id="password" class="textbox password" type="password" name="password" value="" placeholder="new password">
+            <input id="conf-password" class="textbox password" type="password" name="confirm" value="" placeholder="confirm password">
+            <input id="update-button" class="update-btn" type="submit" name="button" value="Update Passsword">
+        </form>
+    </div>
+</div>
+</div>

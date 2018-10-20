@@ -4,6 +4,13 @@ const path = require('path');
 const handle = require('express-handlebars');
 const express = require('express');
 const vhost = require('vhost');
+//-----//
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const flash = require('express-flash');
+const bodyParser = require('body-parser');
+//-----//
+
 
 const ServerConfig = require('./config.json');
 const ServerState = ServerConfig.ServerState;
@@ -26,6 +33,7 @@ const ConsoleScreen = require('./util/ConsoleScreen');
 const Hasher = require('./util/PasswordHasher');
 const Admin = require('./util/Admin');
 const CouponWorker = require('./util/CouponWorker');
+const PasswordWorker = require('./util/PasswordWorker');
 
 //------------------------------------------------------------------------------------------------------//
 // S E R V E R ============================== E X P R E S S =============================== S E R V E R //
@@ -53,6 +61,26 @@ homepage.use(express.static(path.join(__dirname, 'homepage')));
 account.use(express.static(path.join(__dirname, 'account/build')));
 merchant.use(express.static(path.join(__dirname, 'merchant/build')));
 admin.use(express.static(path.join(__dirname, 'admin')));
+
+//-------------------------------------------------------------------------//
+//Password Reset
+const urlencodedParser = bodyParser.urlencoded({extended : true});
+homepage.use(cookieParser('secret'));
+homepage.use(session({
+    secret: "Once again Rusty wins dog!",
+    resave: false,
+    saveUninitialized : false
+}));
+homepage.use(flash());
+homepage.use(function(req,res,next){
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
+//--------------------------------------------------------------------------//
+
+
+
 
 //--------------------------------------------------------------------------//
 // R O U T E R ================ E X P R E S S ================= R O U T E R //
@@ -187,6 +215,24 @@ homepage.post('/signupWorker', (req, res) => {
             res.status(200).json({"state" : _res.error});
         }
     });
+});
+
+//-------------------------------------------------------------------//
+//forgot password
+homepage.get('/forgot',(req,res)=>{
+    res.render('forgot',{title: 'Forgot | Amphere Solutions'});
+});
+
+homepage.post('/resetPassword',urlencodedParser,(req,res,next)=>{
+    PasswordWorker.ResetPassword(req,res,next);
+});
+
+homepage.get('/reset/:token',(req,res)=>{
+    PasswordWorker.ResetPage(req,res);
+});
+
+homepage.post('/reset/:token',urlencodedParser,(req,res,next)=>{
+    PasswordWorker.UpdatePassword(req,res,next);
 });
 //===================================================================//
 
