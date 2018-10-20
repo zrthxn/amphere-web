@@ -12,6 +12,7 @@
         <div>
             <p class="form-title">Sign Up</p>
 
+            <input id="email" type="text" class="textbox" placeholder="Email" require autocomplete="email" spellcheck="false">
             <input id="phone" type="text" class="textbox" placeholder="Phone" required autocomplete="username"/>
             <input id="name" type="text" class="textbox" placeholder="Name" required autocomplete="name"/>
             <input id="password" type="password" class="textbox password" placeholder="Password" required autocomplete="new-password"/>
@@ -25,15 +26,17 @@
 </div>
 
 <script>
+    var email = document.getElementById('email');
     var phone = document.getElementById("phone");
     var _name = document.getElementById("name");
     var password = document.getElementById("password");
     var confPassword = document.getElementById("conf-password");
-    
+
     document.getElementById("signup-btn").onclick = function () {
-        validityState = validateInputs(phone.value, _name.value, password.value, confPassword.value);
-        
+        validityState = validateInputs(email.value,phone.value, _name.value, password.value, confPassword.value);
+
         if(validityState===true){
+            $(email).removeClass('error');
             $(phone).removeClass('error');
             $(_name).removeClass('error');
             $(password).removeClass('error');
@@ -41,6 +44,7 @@
 
             const request = new XMLHttpRequest();
             let url = generateSignupQueryURL({
+                "email": email.value,
                 "phone" : phone.value,
                 "name" : _name.value,
                 "password" : password.value
@@ -60,6 +64,9 @@
                     } else if(response.state==="PHONE-EXISTS"){
                         $(phone).addClass('error');
                         alert("ERROR: An account with this phone number already exists!");
+                    }   else if (response.state==="EMAIL-EXIST"){
+                        $(email).addClass("error");
+                        alert("ERROR: An account with this email already exists");
                     }
                 }
             }
@@ -75,6 +82,12 @@
             $(confPassword).addClass('error');
         }
         return false;
+    }
+
+    email.onchange = function() {
+        var email_regx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(email.value!=="" && email_regx.test(email.value)) $(email).removeClass('error');
+        else $(email).addClass('error');
     }
 
     phone.onchange = function () {
