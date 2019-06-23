@@ -693,11 +693,11 @@ admin.post('/u/coupons',(req,res)=>{
 //===================================================================//
 //------------------------- VIRTUAL HOST ----------------------------//
 
-amphere.use(vhost('amphere.in', homepage));
-amphere.use(vhost('www.amphere.in', homepage));
-amphere.use(vhost('account.amphere.in', account));
-amphere.use(vhost('merchant.amphere.in', merchant));
-amphere.use(vhost('admin.amphere.in', admin));
+amphere.use(vhost('amphere.zrthxn.com', homepage));
+amphere.use(vhost('www.amphere.zrthxn.com', homepage));
+amphere.use(vhost('account.amphere.zrthxn.com', account));
+amphere.use(vhost('merchant.amphere.zrthxn.com', merchant));
+amphere.use(vhost('admin.amphere.zrthxn.com', admin));
 
 //------------------------------------------------------------------------------------------------------//
 // S E R V E R =============================== L E G A C Y ================================ S E R V E R //

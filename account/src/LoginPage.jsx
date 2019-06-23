@@ -64,10 +64,10 @@ class LoginPage extends Component {
 
                     <input id="phoneInput" type="text" className="textbox" placeholder="Phone" onChange={this.setUserPhoneInput}/>
                     <input id="passwordInput" type="password" className="textbox password" placeholder="Password" onChange={this.setUserPasswordInput}/>
-                    <a id="forget-btn" href="http://amphere.in/forgot">Forgot Password?</a>
+                    <a id="forget-btn" href="http://amphere.zrthxn.com/forgot">Forgot Password?</a>
                     <button className="button" onClick={this.validateLogin.bind(this)}>SIGN IN</button>
 
-                    <p>Don't have an account? <a href="https://amphere.in/signup">Sign Up</a></p>
+                    <p>Don't have an account? <a href="https://amphere.zrthxn.com/signup">Sign Up</a></p>
                 </div>
             </div>
 

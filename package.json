@@ -4,22 +4,27 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node amphere.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^3.0.1",
     "cookie-parser": "^1.4.3",
     "crypto": "^1.0.1",
     "express": "^4.16.3",
+    "express-flash": "0.0.2",
     "express-handlebars": "^3.0.0",
+    "express-session": "^1.16.1",
     "firebase": "^5.0.4",
     "fs": "0.0.1-security",
     "googleapis": "^27.0.0",
     "nodemailer": "^4.6.7",
     "nodemon": "^1.17.5",
     "path": "^0.12.7",
-    "vhost": "^3.0.2"
+    "vhost": "^3.0.2",
+    "voucher-code-generator": "^1.1.1"
   },
   "devDependencies": {
     "babel-loader": "^7.1.5"
